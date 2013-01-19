@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<slideshow xmlns="https://github.com/lindenb/xslt-sandbox/tree/master/stylesheets/fo/slide/"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	>
+
+<slide>
+	<title>Make<h:br/>Pierre Lindenbaum<h:br/><h:a href="http://plindenbaum.blogspot.com">http://plindenbaum.blogspot.com</h:a></title>
+</slide>
+
+
+<slide>
+	<title font-size="72">Problem</title>
+</slide>
+
+<slide>
+	<title>Make a protein</title>
+	<pre><xi:include href="bash01.sh" parse="text"/></pre>
+</slide>
+
+<slide>
+	<title font-size="72">What if file1.pep already exists ?</title>
+</slide>
+
+<slide>
+	<title>Solution: Test if file exists</title>
+	<pre><xi:include href="bash02.sh" parse="text"/></pre>
+</slide>
+
+<slide>
+	<title font-size="72">What if file1.pep is outdated ?</title>
+</slide>
+
+<slide>
+	<title font-size="72">Parallelization ?</title>
+</slide>
+
+<slide>
+	<title font-size="72">GNU make</title>
+	 <image href="https://notendur.hi.is/jonasson/software/make-book/lrg.jpg" width="500" height="656"/>
+</slide>
+
+<slide>
+	<title  font-size="72">&quot;<h:i>a utility that automatically builds executable programs and libraries from source code by reading files called makefiles</h:i>&quot;</title>
+</slide>
+
+<slide>
+	<title font-size="72">1977</title>
+</slide>
+
+<slide>
+	<pre>TARGET1: DEPENDENCIES
+	           COMMAND-LINES</pre>
+</slide>
+
+
+<slide>
+	<title>Makefile</title>
+	<pre font-size="36"><xi:include href="make01.mk.tmp" parse="text"/></pre>
+</slide>
+
+<slide>
+	<title>Output</title>
+	<pre font-size="42"><xi:include href="make01.mk.out" parse="text"/></pre>
+</slide>
+
+<slide>
+	<title>If one file is removed</title>
+	<pre font-size="42">$ rm file2.rna
+$ make
+
+<xi:include href="make01.mk.2.out" parse="text"/>
+	</pre>
+</slide>
+
+<slide>
+	<title>If one file is changed</title>
+	<pre font-size="42">$ touch file1.dna file3.pep
+$ make
+
+<xi:include href="make01.mk.3.out" parse="text"/>
+	</pre>
+</slide>
+
+<slide>
+	<title>Special variables</title>
+</slide>
+
+<slide>
+	<title>"name of the target" : $@ </title>
+	<pre font-size="36">TRANSCRIPT=cat
+TRANSLATE=cat
+
+merged.protein: file1.pep file2.pep file3.pep
+    cat file1.pep file2.pep \
+        file3.pep &gt; $@
+
+file1.pep: file1.rna
+     ${TRANSLATE} file1.rna &gt; $@
+
+file1.rna : file1.dna
+    ${TRANSCRIPT} file1.dna &gt; $@
+
+file1.dna:
+    echo "ATGCTAGTAGATGC" &gt; $@
+
+file2.pep: file2.rna
+     ${TRANSLATE} file2.rna &gt; $@
+
+file2.rna : file2.dna
+    ${TRANSCRIPT} file2.dna &gt; $@
+
+file2.dna:
+    echo "ATGCTAGTAGATGC" &gt; $@
+
+
+file3.pep: file3.rna
+     ${TRANSLATE} file3.rna &gt; $@
+
+file3.rna : file3.dna
+    ${TRANSCRIPT} file3.dna &gt; $@
+
+file3.dna:
+    echo "ATGCTAGTAGATGC" &gt; $@
+</pre>
+</slide>
+
+<slide>
+	<title>"name of the first dependency" : $&lt; </title>
+	<pre font-size="36">TRANSCRIPT=cat
+TRANSLATE=cat
+
+merged.protein: file1.pep file2.pep file3.pep
+    cat file1.pep file2.pep \
+        file3.pep &gt; $@
+
+file1.pep: file1.rna
+     ${TRANSLATE} $&lt; &gt; $@
+
+file1.rna : file1.dna
+    ${TRANSCRIPT} $&lt; &gt; $@
+
+file1.dna:
+    echo "ATGCTAGTAGATGC" &gt; $@
+
+file2.pep: file2.rna
+     ${TRANSLATE} $&lt; &gt; $@
+
+file2.rna : file2.dna
+    ${TRANSCRIPT} $&lt; &gt; $@
+
+file2.dna:
+    echo "ATGCTAGTAGATGC" &gt; $@
+
+
+file3.pep: file3.rna
+     ${TRANSLATE} $&lt; &gt; $@
+
+file3.rna : file3.dna
+    ${TRANSCRIPT} $&lt; &gt; $@
+
+file3.dna:
+    echo "ATGCTAGTAGATGC" &gt; $@
+</pre>
+</slide>
+
+<slide>
+	<title>"all the dependencies" : $^ </title>
+	<pre font-size="36">TRANSCRIPT=cat
+TRANSLATE=cat
+
+merged.protein: file1.pep file2.pep file3.pep
+    cat $^ &gt; $@
+
+file1.pep: file1.rna
+     ${TRANSLATE} $&lt; &gt; $@
+
+file1.rna : file1.dna
+    ${TRANSCRIPT} $&lt; &gt; $@
+
+file1.dna:
+    echo "ATGCTAGTAGATGC" &gt; $@
+
+file2.pep: file2.rna
+     ${TRANSLATE} $&lt; &gt; $@
+
+file2.rna : file2.dna
+    ${TRANSCRIPT} $&lt; &gt; $@
+
+file2.dna:
+    echo "ATGCTAGTAGATGC" &gt; $@
+
+
+file3.pep: file3.rna
+     ${TRANSLATE} $&lt; &gt; $@
+
+file3.rna : file3.dna
+    ${TRANSCRIPT} $&lt; &gt; $@
+
+file3.dna:
+    echo "ATGCTAGTAGATGC" &gt; $@
+</pre>
+</slide>
+
+<slide>
+	<title>Rules</title>
+</slide>
+
+
+
+<slide>
+	<title>How to create a *.pep or a *.rna ?</title>
+	<pre font-size="30"><xi:include href="make02.mk.tmp" parse="text"/></pre>
+</slide>
+
+<slide>
+	<title>Output</title>
+	<pre font-size="42"><xi:include href="make02.mk.out" parse="text"/></pre>
+</slide>
+
+<slide>
+	<title>Function Call Syntax</title>
+	<pre font-size="42">$(function arg1,arg2,arg3...)</pre>
+</slide>
+
+
+<slide>
+	<title>Loops: $(foreach var,list,...)</title>
+	<pre font-size="36">merged.protein: \
+			$(foreach INDEX,1 2 3,file${INDEX}.pep )
+	cat $^ &gt; $@</pre>
+
+</slide>
+
+
+<slide>
+	<title>$(eval )</title>
+	<pre font-size="36"><xi:include href="make03.mk.tmp" parse="text"/></pre>
+
+</slide>
+
+<slide>
+	<title>.PHONY targets</title>
+	<pre font-size="42">.PHONY: all clean
+
+all: file1.dna
+
+file1.dna:
+       echo "ATGCTAGTAGATGC" &gt; $@
+clean:
+       rm -f file1.dna
+</pre>
+
+</slide>
+
+<slide>
+	<title>Useful options</title>
+</slide>
+
+<slide>
+	<title>-B "Unconditionally make all targets"</title>
+</slide>
+
+<slide>
+	<title>-f FILE "Read FILE as a makefile"</title>
+</slide>
+
+<slide>
+	<title>-j [N] "Allow N jobs at once"</title>
+</slide>
+
+
+<slide>
+	<title>-n "Don't actually run any commands; just print them"</title>
+</slide>
+
+
+ <slide><pre>$(subst ee,EE,feet on the street)
+ ‘fEEt on the strEEt’. 
+
+$(patsubst %.c,%.o,x.c.c bar.c)
+ ‘x.c.o bar.o’. 
+
+ $(strip a b c )
+‘a b c’</pre></slide>
+
+ <slide><pre font-size="30">$(filter %.c,src1.c src2.c src3.c file.txt)
+ 
+ $(filter-out %.c,src1.c src2.c src3.c file.txt)
+ 
+$(sort foo bar lose)
+
+$(word 2, foo bar baz)
+ 'bar'
+ 
+$(wordlist 2, 3, foo bar baz)
+‘bar baz’. 
+
+$(firstword foo bar)
+‘foo’.
+
+$(lastword foo bar)
+‘bar’.</pre></slide>
+
+<slide><pre  font-size="30"> $(dir src/foo.c hacks)
+‘src/ ./’
+
+$(notdir src/foo.c hacks)
+‘foo.c hacks’
+
+$(suffix src/foo.c src-1.0/bar.c hacks)
+‘.c .c’
+
+$(basename src/foo.c src-1.0/bar hacks)
+‘src/foo src-1.0/bar hacks’
+
+
+$(addsuffix .c,foo bar)
+‘foo.c bar.c’. 
+
+$(addprefix src/,foo bar)
+‘src/foo src/bar’
+</pre></slide>
+
+<slide><pre>(join a b,.c .o)
+‘a.c b.o’
+</pre></slide>
+
+
+<slide>
+<pre>$(shell cat file1.txt)</pre></slide>
+
+
+
+</slideshow>

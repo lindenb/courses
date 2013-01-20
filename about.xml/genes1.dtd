@@ -1,0 +1,7 @@
+
+<!ELEMENT genes (gene+)>
+<!ELEMENT gene ((name+),sequence)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT sequence (#PCDATA)>
+<!ATTLIST gene id CDATA #REQUIRED>
+

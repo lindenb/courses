@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genes>
+  <gene id="1">
+    <name>Gene1</name>
+    <name>gene-1</name>
+    <sequence>ATAATGCTAGCTAGCTATCGAATG</sequence>
+  </gene>
+  <gene id="2">
+    <name>Gene2</name>
+    <name>gene-2</name>
+    <sequence>AATTGCGATTCATCGATGCTATA</sequence>
+  </gene>
+</genes>

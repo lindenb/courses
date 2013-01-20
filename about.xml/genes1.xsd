@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	>
+
+    <xsd:complexType  name="Genes">
+      <xsd:sequence>
+        <xsd:element name="gene" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+    
+   <xsd:complexType name="Gene"> 
+    <xsd:sequence>
+      <xsd:element name="name" maxOccurs="unbounded" type="xsd:string"/>
+      <xsd:element name="sequence" type="xsd:string"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" use="required" type="xsd:int"/>
+  </xsd:complexType>
+    
+  <xsd:element type="Genes" name="genes"/>  
+    
+  </xsd:schema>
+
+

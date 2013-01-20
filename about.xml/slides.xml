@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<slideshow xmlns="https://github.com/lindenb/xslt-sandbox/tree/master/stylesheets/fo/slide/"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	>
+
+<slide>
+	<title>&lt;XML&gt;<h:br/>Pierre Lindenbaum<h:br/><h:a href="http://plindenbaum.blogspot.com">http://plindenbaum.blogspot.com</h:a></title>
+</slide>
+
+
+
+<slide>
+	<title font-size="72">Extensible Markup Language </title>
+</slide>
+
+<slide>
+	<title font-size="72">Machine Readeable</title>
+</slide>
+<slide>
+	<title font-size="72">Human Readeable</title>
+</slide>
+
+
+<slide>
+	<title>DOM</title>
+	<image src="tmp1.png" width="428" height="443"/>
+</slide>
+
+
+
+<slide>
+	<title font-size="72">... not always</title>
+    <pre><![CDATA[artOfLineage></rdf:Description><rdf:Descriptionrdf:about="http://purl.uniprot.or
+g/taxonomy/12292"><rdf:typerdf:resource="http://purl.uniprot.org/core/Taxon"/><r
+ankrdf:resource="http://purl.uniprot.org/core/Species"/><reviewedrdf:datatype="h
+ttp://www.w3.org/2001/XMLSchema#boolean">true</reviewed><mnemonic>NVMV</mnemonic
+><scientificName>Nicotianavelutinamosaicvirus</scientificName><commonName>NvMV</
+commonName><hostrdf:resource="http://purl.uniprot.org/taxonomy/49454"/><rdfs:sub
+ClassOfrdf:resource="http://purl.uniprot.org/taxonomy/12429"/><partOfLineagerdf:
+datatype="http://www.w3.org/2001/XMLSchema#boolean">false</partOfLineage></rdf:D
+escription><rdf:Descriptionrdf:about="http://purl.uniprot.org/taxonomy/12439"><r
+df:typerdf:resource="http://purl.uniprot.org/core/Taxon"/><rankrdf:resource="htt
+p://purl.uniprot.org/core/Species"/><scientificName>20SRNAreplicon</scientificNa
+me><rdfs:subClassOfrdf:resource="http://purl.uniprot.org/taxonomy/12429"/><partO
+fLineagerdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</partOfLin
+eage></rdf:Description><rdf:Descriptionrdf:about="http://purl.uniprot.org/taxono
+my/12440"><rdf:typerdf:resource="http://purl.uniprot.org/core/Taxon"/><rankrdf:r
+esource="http://purl.uniprot.org/core/Species"/><reviewedrdf:datatype="http://ww
+w.w3.org/2001/XMLSchema#boolean">false</reviewed><replacesrdf:resource="http://p
+url.uniprot.org/taxonomy/36457"/><replacesrdf:resource="http://purl.uniprot.org/
+taxonomy/12646"/><mnemonic>HSVAB</mnemonic><scientificName>Non-Anon-Bhepatitisvi
+rus</scientificName><otherName>Non-A,non-Bhepatitisvirus</otherName><otherName>e
+nterically-transmittednon-A,non-BhepatitisvirusET-NANBHV</otherName><otherName>n
+on-A</otherName><otherName>non-A,non-BhepatitisvirusET-NANBHV</otherName><otherN]]></pre>
+
+</slide>
+
+<slide>
+        <title font-size="72">Just a format</title>
+</slide>
+
+<slide>
+	<title>*.txt</title>
+	<pre font-size="36"><xi:include href="togo1.txt.tmp" parse="text"/></pre>
+</slide>
+
+<slide>
+	<title>*.xml</title>
+	<pre font-size="36"><xi:include href="togo1.xml.tmp" parse="text"/></pre>
+</slide>
+
+<slide>
+	<title>*.json</title>
+	<pre font-size="36"><xi:include href="togo1.json.tmp" parse="text"/></pre>
+</slide>
+
+
+<slide>
+	<image href="tmp2.png" width="318" height="175"/>
+</slide>
+
+<slide>
+	<title>XML namespace</title>
+	<pre font-size="24"><![CDATA[<my-database>
+  <record>
+    <title>Record1</title>
+    <html>
+      <head>
+       <title>hello</title>
+      </head>
+      <body>
+        <h1>Hello</h1>
+      </body>
+    </html>
+  </record>	
+</my-database>
+	]]></pre>
+<pre font-size="24"><![CDATA[<my-database
+	xmlns="http://mydatabase.org"
+	xmlns:h="http://www.w3.org/1999/xhtml">
+  <record>
+    <title>Record1</title>
+    <h:html>
+      <h:head>
+       <h:title>hello</title>
+      </h:head>
+      <h:body>
+        <h:h1>Hello</h:h1>
+      </h:body>
+    </h:html>
+  </record>	
+</my-database>
+	]]></pre>
+</slide>
+
+
+<slide>
+	<title>Parsing</title>
+</slide>
+
+<slide>
+	<title>DOM</title>
+	<pre>Element root = document.getDocumentElement();
+for (Node item=root.getFirstChild();
+        item!=null;
+        item=item.getNextSibling()){
+       if (item.getNodeType()==Node.ELEMENT_NODE)
+          {
+          System.out.println(
+             ((Element)item).getAttribute("id"));
+          }
+}</pre>
+</slide>
+
+
+
+<slide>
+<title>StAx</title>
+<pre>
+public interface XMLStreamReader { 
+  public int next(); 
+  public boolean hasNext() ; 
+  public String getText(); 
+  public String getLocalName(); 
+  public String getNamespaceURI(); 
+  // ...other methods not shown 
+}
+</pre>
+</slide>
+
+<slide>
+<title>SAX</title>
+<pre>
+public interface ContentHandler
+    {
+    public void startDocument () ;
+    public void endDocument();
+    public void startElement(String name, Attributes atts);
+    public void endElement (String name);
+    public void characters (char ch[], int start, int length)
+    }
+</pre></slide>
+
+<slide>
+	<title>xmllint</title>
+</slide>
+
+<slide>
+	<title>XPath</title>
+	<pre font-size="18"><xi:include href="genes1.xml" parse="text"/></pre>
+	<pre font-size="18"><![CDATA[$ xmllint  -xpath \
+	 '/genes/gene[1]/name[2]' \
+	 genes1.xml
+	 
+gene-1
+
+$  xmllint  -xpath  \
+	'/genes/gene[1]/name[2]' \
+	genes1.xml 
+	
+<name>gene-1</name>
+
+$ xmllint  -xpath  \
+	'count(/genes/gene)' \
+	genes1.xml 
+2
+
+$ xmllint  -xpath \
+	 '/genes/gene[@id='2']/name[1]/text()' \
+	 genes1.xml 
+	 
+Gene2
+
+]]></pre>
+</slide>
+
+<slide>
+	<title>XInclude</title>
+	<pre><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<genes xmlns:xi="http://www.w3.org/2001/XInclude">
+  <gene id="1">
+    <name>Gene1</name>
+    <name>gene-1</name>
+    <sequence><xi:include
+    	href="sequence.txt"
+    	parse="text"
+    	/></sequence>
+  </gene>
+  <xi:include
+  	href="gene2.xml"
+  	parse="xml"/>
+</genes>]]></pre>
+</slide>
+
+
+<slide>
+ <title>XHTML</title>
+</slide>
+
+
+<slide>
+ <title>SVG</title>
+<pre font-size="18"><![CDATA[<svg
+ xmlns="http://www.w3.org/2000/svg" 
+ width='300px' height='300px'>
+
+<circle
+ cx='120' cy='150' r='60' style='fill: gold;'
+ />
+
+<polyline
+ points='120 30, 25 150, 290 150' 
+ stroke-width='4' stroke='brown'
+ style='fill: none;' />
+
+<polygon
+ points='210 100, 210 200, 270 150' 
+ style='fill: lawngreen;' /> 
+
+<text x='60' y='250'
+  fill='blue'>Hello, World!</text>
+
+</svg>]]></pre>
+<image href="tmp3.gif" width="200" height="172"/>
+</slide>
+
+<slide>
+ <title>XSL-FO</title>
+<pre font-size="18"><![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
+
+<fo:layout-master-set>
+  <fo:simple-page-master master-name="A4">
+    <!-- Page template goes here -->
+  </fo:simple-page-master>
+</fo:layout-master-set>
+
+<fo:page-sequence master-reference="A4">
+  <!-- Page content goes here -->
+</fo:page-sequence>
+
+</fo:root>]]></pre>
+</slide>
+
+<slide>
+ <title>SOAP</title>
+<pre><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+    <SOAP-ENV:Envelope (...)>
+    <SOAP-ENV:Body>
+    <r:queryPathwaysForReferenceIdentifiers>
+    <r:referenceIdentifiers>
+    <soapenc:string>Q9Y266</soapenc:string>
+    <soapenc:string>P17480</soapenc:string>
+    <soapenc:string>P2048</soapenc:string>
+    </r:referenceIdentifiers>
+    </r:queryPathwaysForReferenceIdentifiers>
+    </SOAP-ENV:Body>
+    </SOAP-ENV:Envelope>]]></pre>
+</slide>
+
+<slide>
+ <title>WSDL</title>
+  <pre><![CDATA[(...)
+  <wsdl:message name="getEvsData">
+    <wsdl:part element="tns:getEvsData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getEvsDataResponse">
+    <wsdl:part element="tns:getEvsDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DataQuery">
+    <wsdl:operation name="getEvsData">
+      <wsdl:input message="tns:getEvsData" name="getEvsData">
+    </wsdl:input>
+      <wsdl:output message="tns:getEvsDataResponse" name="getEvsDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DataQueryServiceSoapBinding" type="tns:DataQuery">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getEvsData">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="getEvsData">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getEvsDataResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>]]></pre>
+</slide>
+
+<slide>
+<title>WSDL</title>
+<pre>$ wsimport "http://evs.gs.washington.edu/wsEVS/EVSDataQueryService?wsdl"
+
+parsing WSDL...
+Generating code...
+Compiling code...
+</pre>
+</slide>
+
+<slide>
+<title>WSDL</title>
+<pre font-size="18">$ $ more ./edu/washington/gs/evs/webservice/Locus.java
+
+package edu.washington.gs.evs.webservice;
+(...)
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "locus", propOrder = {
+    "geneName",
+    "chromosome",
+    "strand",
+    "mrnaAccession",
+    "geneId",
+    "txStart",
+    "txEnd",
+    "keggPathwayIds"
+})
+public class Locus {
+
+    protected String geneName;
+    protected String chromosome;
+    protected String strand;
+    protected String mrnaAccession;
+    protected int geneId;
+    protected int txStart;
+    protected int txEnd;
+    @XmlElement(nillable = true)
+    (...)
+</pre>
+</slide>
+
+<slide>
+  <title>Well formed..<br/>&lt;a&gt;&lt;b&gt;c&lt;/a&gt;&lt;/b&gt;</title>
+</slide>	
+
+<slide>
+  <title>Validated (DTD)</title>
+  <pre font-size="36">$ cat genes1.dtd
+ 
+<xi:include href="genes1.dtd" parse="text"/>
+
+$  xmllint --dtdvalid genes1.dtd genes1.xml
+</pre>
+</slide>	
+
+<slide>
+  <title>Validated (XSD)</title>
+<pre font-size="20"><xi:include href="genes1.xsd" parse="text"/>
+</pre>
+</slide>
+
+<slide>
+  <title>Validated (XSD)</title>
+<pre>$ xmllint --noout \
+	--schema genes1.xsd \
+	genes1.xml 
+	
+genes1.xml validates
+</pre>
+</slide>
+
+
+
+<slide>
+	<title>XSLT</title>
+	<image href="tmp4.png" width="220" height="417"/>
+</slide>
+
+<slide>
+  <title>XSLT (text)</title>
+	<pre font-size="20"><xi:include href="genes2txt.xsl" parse="text"/></pre>
+	<pre><![CDATA[$ xsltproc  genes2txt.xsl genes1.xml
+
+>id:1|Gene1
+ATAATGCTAGCTAGCTATCGAATG
+>id:2|Gene2
+AATTGCGATTCATCGATGCTATA]]></pre>
+
+</slide>
+
+
+<slide>
+  <title>XSLT (html)</title>
+	<pre font-size="20"><xi:include href="genes2html.xsl" parse="text"/></pre>
+	<pre><![CDATA[$ xsltproc  genes2html.xsl genes1.xml
+
+<html><body>
+<h1>2 genes</h1>
+<h2>&gt;id:1|Gene1</h2>
+<pre>ATAATGCTAGCTAGCTATCGAATG</pre>
+<h2>&gt;id:2|Gene2</h2>
+<pre>AATTGCGATTCATCGATGCTATA</pre>
+</body></html>
+]]></pre>
+
+</slide>
+
+<slide>
+  <title>XSLT Embedded<h:br/><![CDATA[<?xml-stylesheet type="text/xsl" href="genes2html.xsl"?>]]></title>
+
+</slide>
+
+<slide>
+  <title>XSLT (xml)</title>
+	
+	
+	<pre font-size="13"><xi:include href="genes2svg.xsl" parse="text"/></pre>
+</slide>
+
+<slide>
+  <image href="tmp5.png" width="500" height="500"/>
+</slide>
+
+
+</slideshow>

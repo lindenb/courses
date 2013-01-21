@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://raw.github.com/lindenb/xml4ngs/master/src/main/resources/xsd/project.xsd">
+    <properties/>
+    <lanes>
+        <lane>1</lane>
+    </lanes>
+    <sample name="SAMPLE1">
+        <sequences>
+            <pair lane="1" split-index="3" sample-index="AAGGTACA">
+                <fastq index="1" path="./SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R1_003.fastq.gz"/>
+                <fastq index="2" path="./SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R2_003.fastq.gz"/>
+            </pair>
+            <pair lane="1" split-index="1" sample-index="AAGGTACA">
+                <fastq index="1" path="./SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R1_001.fastq.gz"/>
+                <fastq index="2" path="./SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R2_001.fastq.gz"/>
+            </pair>
+            <pair lane="1" split-index="2" sample-index="AAGGTACA">
+                <fastq index="1" path="./SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R1_002.fastq.gz"/>
+                <fastq index="2" path="./SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R2_002.fastq.gz"/>
+            </pair>
+        </sequences>
+    </sample>
+    <sample name="SAMPLE2">
+        <sequences>
+            <pair lane="1" split-index="2" sample-index="AAGGTACA">
+                <fastq index="1" path="./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R1_002.fastq.gz"/>
+                <fastq index="2" path="./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R2_002.fastq.gz"/>
+            </pair>
+            <pair lane="1" split-index="1" sample-index="AAGGTACA">
+                <fastq index="1" path="./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R1_001.fastq.gz"/>
+                <fastq index="2" path="./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R2_001.fastq.gz"/>
+            </pair>
+            <pair lane="1" split-index="3" sample-index="AAGGTACA">
+                <fastq index="1" path="./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R1_003.fastq.gz"/>
+                <fastq index="2" path="./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R2_003.fastq.gz"/>
+            </pair>
+        </sequences>
+    </sample>
+</project>

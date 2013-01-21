@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<slideshow xmlns="https://github.com/lindenb/xslt-sandbox/tree/master/stylesheets/fo/slide/"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	>
+
+<slide>
+	<title>&lt;XML4NGS&gt;<h:br/>Pierre Lindenbaum<h:br/><h:a href="http://plindenbaum.blogspot.com">http://plindenbaum.blogspot.com</h:a></title>
+</slide>
+
+
+
+
+
+<slide>
+
+	<image href="tmp2.jpg" width="643" height="249"/>
+</slide>
+
+
+
+<slide>
+
+	<image href="tmp3.jpg" width="1299" height="357"/>
+</slide>
+
+
+<slide>
+
+	<image href="tmp4.jpg" width="2611" height="456"/>
+</slide>
+
+
+<slide>
+
+	<image href="tmp1.jpg" width="1024" height="1024"/>
+</slide>
+
+
+<slide>
+	<title>https://github.com/lindenb/xml4ngs</title>
+</slide>
+
+
+<slide>
+  <title>bcl2fq ILMN directory</title>
+  <pre>SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R1_003.fastq.gz
+SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R1_001.fastq.gz
+SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R2_002.fastq.gz
+SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R2_003.fastq.gz
+SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R1_002.fastq.gz
+SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R2_001.fastq.gz
+SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R1_002.fastq.gz
+SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R2_002.fastq.gz
+SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R2_003.fastq.gz
+SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R1_001.fastq.gz
+SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R1_003.fastq.gz
+SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R2_001.fastq.gz</pre>
+</slide>
+
+<slide>
+<title>Compile...</title>
+<pre>
+$ ant
+Buildfile: /home/lindenb/src/xml4ngs/build.xml
+
+generate-sources:
+    [mkdir] Created dir: /home/lindenb/src/xml4ngs/src/main/generated-sources/xjc
+     [exec] parsing a schema...
+     [exec] compiling a schema...
+     [exec] com/github/lindenb/xml4ngs/FastqType.java
+     [exec] com/github/lindenb/xml4ngs/LanesType.java
+     [exec] com/github/lindenb/xml4ngs/ObjectFactory.java
+     [exec] com/github/lindenb/xml4ngs/PairType.java
+     [exec] com/github/lindenb/xml4ngs/ProjectType.java
+     [exec] com/github/lindenb/xml4ngs/PropertiesType.java
+     [exec] com/github/lindenb/xml4ngs/PropertyType.java
+     [exec] com/github/lindenb/xml4ngs/SampleType.java
+     [exec] com/github/lindenb/xml4ngs/SequencesType.java
+
+dist/ilmn2project.jar:
+    [mkdir] Created dir: /home/lindenb/src/xml4ngs/tmp
+    [mkdir] Created dir: /home/lindenb/src/xml4ngs/dist
+    [javac] Compiling 1 source file to /home/lindenb/src/xml4ngs/tmp
+      [jar] Building jar: /home/lindenb/src/xml4ngs/dist/ilmn2project.jar
+   [delete] Deleting directory /home/lindenb/src/xml4ngs/tmp
+
+all:
+
+BUILD SUCCESSFUL
+Total time: 4 seconds
+</pre>
+</slide>
+
+<slide>
+<title>Compile...</title>
+<pre>
+$  java -jar ~/src/xml4ngs/dist/ilmn2project.jar .
+
+<xi:include href="project.xml" parse="text"/>
+</pre>
+</slide>
+
+
+<slide>
+<title>https://raw.github.com/lindenb/xml4ngs/master/src/main/resources/xsd/project.xsd</title>
+<pre>
+<![CDATA[<xs:enumeration value="output.directory">
+<xs:annotation>
+  <xs:documentation>Where we should save the data.</xs:documentation>
+</xs:annotation>
+</xs:enumeration>
+
+<xs:enumeration value="genome.reference.path">
+<xs:annotation>
+  <xs:documentation>The path to the genome reference as FASTA.</xs:documentation>
+</xs:annotation>
+</xs:enumeration>
+<xs:enumeration value="is.whole.genome">
+<xs:annotation>
+  <xs:documentation>When set to 'yes', specify a project of whole genome sequencing.</xs:documentation>
+</xs:annotation>
+</xs:enumeration>
+<xs:enumeration value="is.haloplex">
+<xs:annotation>
+  <xs:documentation>When set to 'yes', specify a capture whith haloplex.</xs:documentation>
+</xs:annotation>
+]]></pre>
+</slide>
+
+<slide>
+<title>Properties...</title>
+<pre>
+<![CDATA[<properties>
+	<property key="capture.bed.path">agilent/design.bed</property>
+	<property key="output.directory">..</property>
+	<property key="genome.reference.path">../human_g1k_v37.fasta</property>
+	<property key="known.sites">broadinstitute.org/dbsnp_135.b37.vcf.gz</property>
+</properties>]]></pre>
+</slide>
+
+<slide>
+<title>xsltproc project2make.xsl project.xml &gt; Makefile</title>
+</slide>
+
+<slide>
+<pre>LIST_BAM_UNSORTED+=$(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_unsorted.bam 
+$(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_unsorted.bam  : ./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R1_002.fastq
+.gz ./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R2_002.fastq.gz $(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_1.sai  $
+(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_2.sai 
+	## ALIGN WITH BWA #######################################################################
+	$(call timebegindb,$@,bwasampe)
+	$(BWA) sampe  -a 500  ${REF} \
+		-r "@RG	ID:idp6544	LB:SAMPLE2	SM:SAMPLE2	PL:ILLUMINA	PU:1" \
+		$(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_1.sai  \
+		$(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_2.sai  \
+		./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R1_002.fastq.gz \
+		./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R2_002.fastq.gz |\
+	$(SAMTOOLS) view -S -b -o $@ -T ${REF} -
+	$(DELETEFILE) $(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_1.sai $(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_2.sai  
+	$(call timeenddb,$@,bwasampe)
+	$(call sizedb,$@)
+	$(call notempty,$@)
+	$(call delete_and_touch,$(filter %.sai,$^))
+	touch $@
+</pre>
+</slide>
+
+
+<slide>
+<pre>$(OUTDIR)/SAMPLE1/$(TMPREFIX)SAMPLE1_merged.bam  : \
+		$(OUTDIR)/SAMPLE1/$(TMPREFIX)SAMPLE1_pair1_sorted.bam \
+		$(OUTDIR)/SAMPLE1/$(TMPREFIX)SAMPLE1_pair2_sorted.bam \
+		$(OUTDIR)/SAMPLE1/$(TMPREFIX)SAMPLE1_pair3_sorted.bam 
+	$(call timebegindb,$@,merge)
+	$(JAVA) -jar $(PICARD)/MergeSamFiles.jar O=$@ AS=true \
+		 VALIDATION_STRINGENCY=SILENT \
+		COMMENT="Merged from $^" \
+		$(foreach B,$^, I=$(B) )
+	$(DELETEFILE) $^
+	$(call timeenddb,$@,merge)
+	$(call sizedb,$@)
+	$(call notempty,$@)
+	$(call delete_and_touch,$^)
+	touch $@
+</pre>
+</slide>
+
+
+</slideshow>

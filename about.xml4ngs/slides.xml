@@ -44,7 +44,7 @@
 
 <slide>
   <title>bcl2fq ILMN directory</title>
-  <pre>SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R1_003.fastq.gz
+  <pre font-size="24">SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R1_003.fastq.gz
 SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R1_001.fastq.gz
 SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R2_002.fastq.gz
 SAMPLE_SAMPLE1/Sample_SAMPLE1/SAMPLE1_AAGGTACA_L001_R2_003.fastq.gz
@@ -60,7 +60,7 @@ SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R2_001.fastq.gz</pre>
 
 <slide>
 <title>Compile...</title>
-<pre>
+<pre font-size="24">
 $ ant
 Buildfile: /home/lindenb/src/xml4ngs/build.xml
 
@@ -94,7 +94,7 @@ Total time: 4 seconds
 
 <slide>
 <title>Compile...</title>
-<pre>
+<pre font-size="14">
 $  java -jar ~/src/xml4ngs/dist/ilmn2project.jar .
 
 <xi:include href="project.xml" parse="text"/>
@@ -104,8 +104,7 @@ $  java -jar ~/src/xml4ngs/dist/ilmn2project.jar .
 
 <slide>
 <title>https://raw.github.com/lindenb/xml4ngs/master/src/main/resources/xsd/project.xsd</title>
-<pre>
-<![CDATA[<xs:enumeration value="output.directory">
+<pre  font-size="14"><![CDATA[<xs:enumeration value="output.directory">
 <xs:annotation>
   <xs:documentation>Where we should save the data.</xs:documentation>
 </xs:annotation>
@@ -130,8 +129,7 @@ $  java -jar ~/src/xml4ngs/dist/ilmn2project.jar .
 
 <slide>
 <title>Properties...</title>
-<pre>
-<![CDATA[<properties>
+<pre  font-size="24"><![CDATA[<properties>
 	<property key="capture.bed.path">agilent/design.bed</property>
 	<property key="output.directory">..</property>
 	<property key="genome.reference.path">../human_g1k_v37.fasta</property>
@@ -144,7 +142,7 @@ $  java -jar ~/src/xml4ngs/dist/ilmn2project.jar .
 </slide>
 
 <slide>
-<pre>LIST_BAM_UNSORTED+=$(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_unsorted.bam 
+<pre  font-size="18">LIST_BAM_UNSORTED+=$(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_unsorted.bam 
 $(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_unsorted.bam  : ./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R1_002.fastq
 .gz ./SAMPLE_SAMPLE2/Sample_SAMPLE2/SAMPLE2_AAGGTACA_L001_R2_002.fastq.gz $(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_1.sai  $
 (OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_2.sai 
@@ -168,7 +166,7 @@ $(OUTDIR)/SAMPLE2/$(TMPREFIX)SAMPLE2_pair1_unsorted.bam  : ./SAMPLE_SAMPLE2/Samp
 
 
 <slide>
-<pre>$(OUTDIR)/SAMPLE1/$(TMPREFIX)SAMPLE1_merged.bam  : \
+<pre  font-size="24">$(OUTDIR)/SAMPLE1/$(TMPREFIX)SAMPLE1_merged.bam  : \
 		$(OUTDIR)/SAMPLE1/$(TMPREFIX)SAMPLE1_pair1_sorted.bam \
 		$(OUTDIR)/SAMPLE1/$(TMPREFIX)SAMPLE1_pair2_sorted.bam \
 		$(OUTDIR)/SAMPLE1/$(TMPREFIX)SAMPLE1_pair3_sorted.bam 

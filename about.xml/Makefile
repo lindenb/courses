@@ -24,14 +24,14 @@ show.fo: slides.xml
 	xsltproc --xinclude ${slides2fo} $<
 
 preparexinclude:togo1.txt.tmp togo1.xml.tmp togo1.json.tmp \
-	 tmp1.png tmp2.png tmp3.gif tmp4.png tmp5.png
+	 tmp1.png tmp2.png tmp3.gif tmp4.png tmp5.png tmp6.png
 
 togo1.txt.tmp:
 	curl -o $@ "http://togows.dbcls.jp/entry/pubmed/16381885"
 togo1.xml.tmp:
 	curl -o $@ "http://togows.dbcls.jp/entry/pubmed/16381885.xml"
 togo1.json.tmp:
-	curl "http://togows.dbcls.jp/entry/pubmed/16381885.json" | fold -w 50 > $@
+	curl "https://raw.github.com/Klortho/Eutils-JSON/master/samples/efetch.pubmed.json" | tr "\n" " "| tr -s " \t" | fold -w 50 > $@
 
 tmp1.png:
 	curl -o $@ "http://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/DOM-model.svg/428px-DOM-model.svg.png"
@@ -49,6 +49,9 @@ tmp5.png: tmp5.svg
 	inkscape -z -b white -y 1 -f $< -e $@
 tmp5.svg:
 	 xsltproc genes2svg.xsl genes1.xml > $@
+
+tmp6.png:
+	curl -o $@ "http://www.w3c.it/talks/2009/athena/images/SimpleExample.png"
 
 clean.tmp:
 	

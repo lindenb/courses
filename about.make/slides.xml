@@ -5,7 +5,7 @@
 	>
 
 <slide>
-	<title>Make<h:br/>Pierre Lindenbaum<h:br/><h:a href="http://plindenbaum.blogspot.com">http://plindenbaum.blogspot.com</h:a></title>
+	<title>Make<h:br/>Pierre Lindenbaum<h:br/><h:a href="http://plindenbaum.blogspot.com">http://plindenbaum.blogspot.com</h:a><h:br/><h:a href="http://twitter.com/yokofakun">@yokofakun</h:a><h:br/>INSERM-UMR1087 Nantes<h:br/>January 2013<h:br/>https://github.com/lindenb/courses/tree/master/about.make</title>
 </slide>
 
 
@@ -262,11 +262,12 @@ file1.dna:
 clean:
        rm -f file1.dna
 </pre>
+</slide>
 
 
 <slide>
 	<title>Function Call Syntax</title>
-	<pre font-size="42">$(function arg1,arg2,arg3...)</pre>
+	<pre font-size="60">$(function arg1,arg2,arg3...)</pre>
 </slide>
 
 
@@ -285,7 +286,7 @@ clean:
 
 </slide>
 
-</slide>
+
 
 
  <slide><pre>$(subst ee,EE,feet on the street)
@@ -337,11 +338,9 @@ $(addprefix src/,foo bar)
 
 <slide><pre>(join a b,.c .o)
 ‘a.c b.o’
+
+$(shell cat file1.txt)
 </pre></slide>
-
-
-<slide>
-<pre>$(shell cat file1.txt)</pre></slide>
 
 <slide>
 <title>END</title>

@@ -5,7 +5,7 @@
 	>
 
 <slide>
-	<title>&lt;XML&gt;<h:br/>Pierre Lindenbaum<h:br/><h:a href="http://plindenbaum.blogspot.com">http://plindenbaum.blogspot.com</h:a></title>
+	<title>&lt;XML&gt;<h:br/><h:br/>Pierre Lindenbaum<h:br/><h:a href="http://plindenbaum.blogspot.com">http://plindenbaum.blogspot.com</h:a><h:br/><h:a href="http://twitter.com/yokofakun">@yokofakun</h:a><h:br/>INSERM-UMR1087 Nantes<h:br/>January 2013<h:br/>https://github.com/lindenb/courses/tree/master/about.xml</title>
 </slide>
 
 
@@ -175,7 +175,7 @@ public interface ContentHandler
 	<title>XPath</title>
 	<pre font-size="18"><xi:include href="genes1.xml" parse="text"/></pre>
 	<pre font-size="18"><![CDATA[$ xmllint  -xpath \
-	 '/genes/gene[1]/name[2]' \
+	 '/genes/gene[1]/name[2]/text()' \
 	 genes1.xml
 	 
 gene-1
@@ -337,7 +337,8 @@ Gene2
 
 <slide>
 <title>WSDL</title>
-<pre>$ wsimport "http://evs.gs.washington.edu/wsEVS/EVSDataQueryService?wsdl"
+<pre>$ wsimport \
+ "http://evs.gs.washington.edu/wsEVS/EVSDataQueryService?wsdl"
 
 parsing WSDL...
 Generating code...
@@ -347,7 +348,7 @@ Compiling code...
 
 <slide>
 <title>WSDL</title>
-<pre font-size="18">$ $ more ./edu/washington/gs/evs/webservice/Locus.java
+<pre font-size="18"> $ more ./edu/washington/gs/evs/webservice/Locus.java
 
 package edu.washington.gs.evs.webservice;
 (...)
@@ -391,7 +392,7 @@ $  xmllint --dtdvalid genes1.dtd genes1.xml
 </slide>	
 
 <slide>
-  <title>DTD/JAXB no need to create a parser</title>
+  <title>DTD/JAXB : no need to create a parser</title>
  <pre>$ xjc genes1.xsd 
  
 $ xjc -dtd genes1.dtd 
@@ -423,7 +424,7 @@ genes1.xml validates
 
 
 <slide>
-  <title>XSD/JAXB no need to create a parser</title>
+  <title>XSD/JAXB : no need to create a parser</title>
  <pre>$ xjc genes1.xsd 
  
 parsing a schema...
@@ -456,7 +457,9 @@ AATTGCGATTCATCGATGCTATA]]></pre>
 <slide>
   <title>XSLT (html)</title>
 	<pre font-size="18"><xi:include href="genes2html.xsl" parse="text"/></pre>
-	<pre><![CDATA[$ xsltproc  genes2html.xsl genes1.xml
+	<pre><![CDATA[$ xsltproc  \
+ genes2html.xsl \
+  genes1.xml
 
 <html><body>
 <h1>2 genes</h1>
@@ -487,6 +490,10 @@ AATTGCGATTCATCGATGCTATA]]></pre>
 
 <slide>
   <title>END</title>
+</slide>
+
+<slide>
+  <div>Photos from wikipedia and W3C.</div>
 </slide>
 
 </slideshow>

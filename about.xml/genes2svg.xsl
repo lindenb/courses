@@ -6,7 +6,7 @@ xmlns:math="http://exslt.org/math"
 version="1.0"
 >
 
-<xsl:output method='html'/>
+<xsl:output method='xml'/>
 
 <xsl:template match="/">
 <svg width="500" height="500" version='1.0'>

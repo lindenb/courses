@@ -1,23 +1,32 @@
   \documentclass{beamer}
   \usepackage[utf8]{inputenc}
-  \usetheme{Warsaw}
+  
+\usepackage{listings}
+\lstset{frame=single,backgroundcolor=\color{lightgray}}
+\usetheme{Warsaw}
 
   \title{Introduction to Linux}
-  \author{Pierre Lindenbaum @yokofakun}\institute{Institut du Thorax. Nantes. France}
+  \author{Pierre Lindenbaum\\@yokofakun\\http://plindenbaum.blogspot.com}\institute{Institut du Thorax. Nantes. France}
 
-  \begin{document}
+\begin{document}
 
-  \begin{frame}
-  \titlepage
-  \end{frame}
+\begin{frame}
+\titlepage
+\end{frame}
 
-  \begin{frame}
-  \textsc{Beamer}, c'est vachement tout beau!
-  \end{frame}
 
-  \begin{frame}
-  Et c'est facile.
-  \end{frame}
+\begin{frame}[fragile]
+\frametitle{Navigation}
+\framesubtitle{Where I am ?}
 
-  \end{document}
+\begin{lstlisting}
+#include <stdio.h>
+int main(int argc,char** argv)
+	{
+	return 0;
+	}
+\end{lstlisting}
+\end{frame}
+
+\end{document}
 

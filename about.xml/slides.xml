@@ -5,7 +5,7 @@
 	>
 
 <slide>
-	<title>&lt;XML&gt;<h:br/>Pierre Lindenbaum<h:br/><h:a href="http://plindenbaum.blogspot.com">http://plindenbaum.blogspot.com</h:a></title>
+	<title>&lt;XML&gt;<h:br/><h:br/>Pierre Lindenbaum<h:br/><h:a href="http://plindenbaum.blogspot.com">http://plindenbaum.blogspot.com</h:a><h:br/><h:a href="http://twitter.com/yokofakun">@yokofakun</h:a><h:br/>INSERM-UMR1087 Nantes<h:br/>January 2013<h:br/>https://github.com/lindenb/courses/tree/master/about.xml</title>
 </slide>
 
 
@@ -24,7 +24,7 @@
 
 <slide>
 	<title>DOM</title>
-	<image src="tmp1.png" width="428" height="443"/>
+	<image href="tmp1.png" width="428" height="443"/>
 </slide>
 
 
@@ -62,17 +62,17 @@ on-A</otherName><otherName>non-A,non-BhepatitisvirusET-NANBHV</otherName><otherN
 
 <slide>
 	<title>*.txt</title>
-	<pre font-size="36"><xi:include href="togo1.txt.tmp" parse="text"/></pre>
+	<pre font-size="24"><xi:include href="togo1.txt.tmp" parse="text"/></pre>
 </slide>
 
 <slide>
 	<title>*.xml</title>
-	<pre font-size="36"><xi:include href="togo1.xml.tmp" parse="text"/></pre>
+	<pre font-size="24"><xi:include href="togo1.xml.tmp" parse="text"/></pre>
 </slide>
 
 <slide>
 	<title>*.json</title>
-	<pre font-size="36"><xi:include href="togo1.json.tmp" parse="text"/></pre>
+	<pre font-size="24"><xi:include href="togo1.json.tmp" parse="text"/></pre>
 </slide>
 
 
@@ -114,6 +114,13 @@ on-A</otherName><otherName>non-A,non-BhepatitisvirusET-NANBHV</otherName><otherN
 	]]></pre>
 </slide>
 
+<slide>
+	<title>xmllint</title>
+</slide>
+
+<slide>
+	<title>xsltproc</title>
+</slide>
 
 <slide>
 	<title>Parsing</title>
@@ -121,7 +128,7 @@ on-A</otherName><otherName>non-A,non-BhepatitisvirusET-NANBHV</otherName><otherN
 
 <slide>
 	<title>DOM</title>
-	<pre>Element root = document.getDocumentElement();
+	<pre font-size="36">Element root = document.getDocumentElement();
 for (Node item=root.getFirstChild();
         item!=null;
         item=item.getNextSibling()){
@@ -162,15 +169,13 @@ public interface ContentHandler
     }
 </pre></slide>
 
-<slide>
-	<title>xmllint</title>
-</slide>
+
 
 <slide>
 	<title>XPath</title>
 	<pre font-size="18"><xi:include href="genes1.xml" parse="text"/></pre>
 	<pre font-size="18"><![CDATA[$ xmllint  -xpath \
-	 '/genes/gene[1]/name[2]' \
+	 '/genes/gene[1]/name[2]/text()' \
 	 genes1.xml
 	 
 gene-1
@@ -265,6 +270,23 @@ Gene2
 </slide>
 
 <slide>
+ <title>RDF</title>
+<pre><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF (...)>
+<rdf:Description rdf:about="http://…/isbn/2020386682">
+    <f:titre xml:lang="fr">Le palais des mirroirs</f:titre>
+    <f:original rdf:resource="http://…/isbn/000651409X"/>
+</rdf:Description>
+</rdf:RDF>]]></pre>
+</slide>
+
+<slide>
+ <title>RDF</title>
+<image href="tmp6.png" width="900" height="335"/>
+</slide>
+
+
+<slide>
  <title>SOAP</title>
 <pre><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
     <SOAP-ENV:Envelope (...)>
@@ -315,7 +337,8 @@ Gene2
 
 <slide>
 <title>WSDL</title>
-<pre>$ wsimport "http://evs.gs.washington.edu/wsEVS/EVSDataQueryService?wsdl"
+<pre>$ wsimport \
+ "http://evs.gs.washington.edu/wsEVS/EVSDataQueryService?wsdl"
 
 parsing WSDL...
 Generating code...
@@ -325,7 +348,7 @@ Compiling code...
 
 <slide>
 <title>WSDL</title>
-<pre font-size="18">$ $ more ./edu/washington/gs/evs/webservice/Locus.java
+<pre font-size="18"> $ more ./edu/washington/gs/evs/webservice/Locus.java
 
 package edu.washington.gs.evs.webservice;
 (...)
@@ -369,10 +392,25 @@ $  xmllint --dtdvalid genes1.dtd genes1.xml
 </slide>	
 
 <slide>
+  <title>DTD/JAXB : no need to create a parser</title>
+ <pre>$ xjc genes1.xsd 
+ 
+$ xjc -dtd genes1.dtd 
+parsing a schema...
+compiling a schema...
+generated/Gene.java
+generated/Genes.java
+generated/Name.java
+generated/ObjectFactory.java</pre>
+</slide>
+
+
+<slide>
   <title>Validated (XSD)</title>
 <pre font-size="20"><xi:include href="genes1.xsd" parse="text"/>
 </pre>
 </slide>
+
 
 <slide>
   <title>Validated (XSD)</title>
@@ -384,6 +422,18 @@ genes1.xml validates
 </pre>
 </slide>
 
+
+<slide>
+  <title>XSD/JAXB : no need to create a parser</title>
+ <pre>$ xjc genes1.xsd 
+ 
+parsing a schema...
+compiling a schema...
+generated/Gene.java
+generated/Genes.java
+generated/ObjectFactory.java
+</pre>
+</slide>
 
 
 <slide>
@@ -406,8 +456,10 @@ AATTGCGATTCATCGATGCTATA]]></pre>
 
 <slide>
   <title>XSLT (html)</title>
-	<pre font-size="20"><xi:include href="genes2html.xsl" parse="text"/></pre>
-	<pre><![CDATA[$ xsltproc  genes2html.xsl genes1.xml
+	<pre font-size="18"><xi:include href="genes2html.xsl" parse="text"/></pre>
+	<pre><![CDATA[$ xsltproc  \
+ genes2html.xsl \
+  genes1.xml
 
 <html><body>
 <h1>2 genes</h1>
@@ -429,12 +481,19 @@ AATTGCGATTCATCGATGCTATA]]></pre>
   <title>XSLT (xml)</title>
 	
 	
-	<pre font-size="13"><xi:include href="genes2svg.xsl" parse="text"/></pre>
+	<pre font-size="11"><xi:include href="genes2svg.xsl" parse="text"/></pre>
 </slide>
 
 <slide>
   <image href="tmp5.png" width="500" height="500"/>
 </slide>
 
+<slide>
+  <title>END</title>
+</slide>
+
+<slide>
+  <div>Photos from wikipedia and W3C.</div>
+</slide>
 
 </slideshow>

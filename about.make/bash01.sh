@@ -1,4 +1,5 @@
 #!/bin/bash
+<<<<<<< HEAD
 PEP="file1.pep file2.pep file3.pep"
 TRANSCRIPT=cat
 TRANSLATE=cat
@@ -11,3 +12,16 @@ do
 done
 
 cat ${PEP} > merged.protein
+=======
+TRANSCRIPT=cat
+TRANSLATE=cat
+rm -f merge.protein
+for DNA in file1.dna file2.dna file3.dna
+do
+	echo "ATGCTAGTAGATGC" > ${DNA}
+	${TRANSCRIPT} ${DNA} > ${DNA/%.dna/.rna}
+	${TRANSLATE} ${DNA/%.dna/.rna} > ${DNA/%.dna/.pep}
+	cat ${DNA/%.dna/.pep} >> merge.protein
+done
+
+>>>>>>> 878c5ab1d42247314eb6d8ea32af0da27610fe7f

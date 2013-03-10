@@ -5,7 +5,7 @@
 	>
 
 <slide>
-	<title>Make<h:br/>Pierre Lindenbaum<h:br/><h:a href="http://plindenbaum.blogspot.com">http://plindenbaum.blogspot.com</h:a></title>
+	<title>Make<h:br/>Pierre Lindenbaum<h:br/><h:a href="http://plindenbaum.blogspot.com">http://plindenbaum.blogspot.com</h:a><h:br/><h:a href="http://twitter.com/yokofakun">@yokofakun</h:a><h:br/>INSERM-UMR1087 Nantes<h:br/>January 2013<h:br/>https://github.com/lindenb/courses/tree/master/about.make</title>
 </slide>
 
 
@@ -13,9 +13,15 @@
 	<title font-size="72">Problem</title>
 </slide>
 
+
+<slide>
+	<title>Build a C program</title>
+	<image href="jeter1.png" width="357" height="411"/>
+</slide>
+
 <slide>
 	<title>Make a protein</title>
-	<pre><xi:include href="bash01.sh" parse="text"/></pre>
+	<pre font-size="36"><xi:include href="bash01.sh" parse="text"/></pre>
 </slide>
 
 <slide>
@@ -24,7 +30,7 @@
 
 <slide>
 	<title>Solution: Test if file exists</title>
-	<pre><xi:include href="bash02.sh" parse="text"/></pre>
+	<pre font-size="36"><xi:include href="bash02.sh" parse="text"/></pre>
 </slide>
 
 <slide>
@@ -37,7 +43,7 @@
 
 <slide>
 	<title font-size="72">GNU make</title>
-	 <image href="https://notendur.hi.is/jonasson/software/make-book/lrg.jpg" width="500" height="656"/>
+	 <image href="jeter2.jpg" width="500" height="656"/>
 </slide>
 
 <slide>
@@ -50,7 +56,10 @@
 
 <slide>
 	<pre>TARGET1: DEPENDENCIES
-	           COMMAND-LINES</pre>
+	           COMMAND-LINES1
+	           COMMAND-LINES2
+	           COMMAND-LINES3
+	           </pre>
 </slide>
 
 
@@ -218,40 +227,6 @@ file3.dna:
 	<pre font-size="42"><xi:include href="make02.mk.out" parse="text"/></pre>
 </slide>
 
-<slide>
-	<title>Function Call Syntax</title>
-	<pre font-size="42">$(function arg1,arg2,arg3...)</pre>
-</slide>
-
-
-<slide>
-	<title>Loops: $(foreach var,list,...)</title>
-	<pre font-size="36">merged.protein: \
-			$(foreach INDEX,1 2 3,file${INDEX}.pep )
-	cat $^ &gt; $@</pre>
-
-</slide>
-
-
-<slide>
-	<title>$(eval )</title>
-	<pre font-size="36"><xi:include href="make03.mk.tmp" parse="text"/></pre>
-
-</slide>
-
-<slide>
-	<title>.PHONY targets</title>
-	<pre font-size="42">.PHONY: all clean
-
-all: file1.dna
-
-file1.dna:
-       echo "ATGCTAGTAGATGC" &gt; $@
-clean:
-       rm -f file1.dna
-</pre>
-
-</slide>
 
 <slide>
 	<title>Useful options</title>
@@ -273,6 +248,45 @@ clean:
 <slide>
 	<title>-n "Don't actually run any commands; just print them"</title>
 </slide>
+
+
+
+<slide>
+	<title>.PHONY targets</title>
+	<pre font-size="42">.PHONY: all clean
+
+all: file1.dna
+
+file1.dna:
+       echo "ATGCTAGTAGATGC" &gt; $@
+clean:
+       rm -f file1.dna
+</pre>
+</slide>
+
+
+<slide>
+	<title>Function Call Syntax</title>
+	<pre font-size="60">$(function arg1,arg2,arg3...)</pre>
+</slide>
+
+
+<slide>
+	<title>Loops: $(foreach var,list,...)</title>
+	<pre font-size="36">merged.protein: \
+			$(foreach INDEX,1 2 3,file${INDEX}.pep )
+	cat $^ &gt; $@</pre>
+
+</slide>
+
+
+<slide>
+	<title>$(eval )</title>
+	<pre font-size="36"><xi:include href="make03.mk.tmp" parse="text"/></pre>
+
+</slide>
+
+
 
 
  <slide><pre>$(subst ee,EE,feet on the street)
@@ -324,11 +338,13 @@ $(addprefix src/,foo bar)
 
 <slide><pre>(join a b,.c .o)
 ‘a.c b.o’
+
+$(shell cat file1.txt)
 </pre></slide>
 
-
 <slide>
-<pre>$(shell cat file1.txt)</pre></slide>
+<title>END</title>
+</slide>
 
 
 

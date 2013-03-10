@@ -23,7 +23,7 @@ validate: slides.xml
 show.fo: slides.xml
 	xsltproc --xinclude ${slides2fo} $<
 
-preparexinclude:
+preparexinclude: jeter1.png jeter2.jpg
 	$(MAKE) clean.tmp
 	$(call MAKE2,make01.mk)
 	rm file2.rna
@@ -35,6 +35,16 @@ preparexinclude:
 	$(MAKE) clean.tmp
 	$(call MAKE2,make03.mk)
 	
+jeter1.png:
+	echo 'diGraph G { H1[label="src1.h"];C1[label="src1.c"];O1[label="src1.o"];\
+		H2[label="src2.h"];C2[label="src2.c"];O2[label="src2.o"];\
+		H0[label="config.h"];A[label="app.exe"];\
+		H1 -> C1; H0 -> C1; C1 -> O1; O1 -> A ;\
+		H2 -> C2; H0 -> C2; C2 -> O2; O2 -> A ;}' | dot -Tpng -o $@
+
+jeter2.jpg:
+	curl -o $@ "https://notendur.hi.is/jonasson/software/make-book/lrg.jpg"
+
 clean.tmp:
 	rm -f *.pep *.dna *.protein 
 	

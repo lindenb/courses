@@ -95,6 +95,7 @@ $ cd /
 
 \end{frame}
 
+
 \begin{frame}[fragile]
  \begin{center}
     \huge{CASE matters}\\
@@ -108,6 +109,44 @@ $ cd dir1
 $ cd DIR1
 \end{lstlisting}
 
+\end{frame}
+
+
+\begin{frame}[fragile]
+Regular Expression.\\
+'?' : The question mark indicates there is zero or one of the preceding element. For example, colou?r matches both "color" and "colour".\\
+'*' : The asterisk indicates there is zero or more of the preceding element. For example, ab*c matches "ac", "abc", "abbc", "abbbc", and so on.\\
+'+' : The plus sign indicates there is one or more of the preceding element. For example, ab+c matches "abc", "abbc", "abbbc", and so on, but not "ac".\\
+(a|b)* denotes the set of all strings.\\
+\[ \] : A bracket expression. Matches a single character that is contained within the brackets.\\
+\^ 	Matches the starting position within the string.\\
+\$ 	Matches the ending position of the string or the position just before a string-ending newline.
+\end{frame}
+
+
+\begin{frame}[fragile]
+Escape characters.\\
+Cariage Return.
+\begin{lstlisting}[language=bash]
+\n
+\end{lstlisting}
+Tabulation.
+\begin{lstlisting}[language=bash]
+\t
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+Shell shortcuts.\\
+Arrow-up/down: prev/next in history.\\
+Ctr-R : Search history.\\
+Ctr-A : Begin line.\\
+Ctr-E : End line.\\
+Ctr-K : Cut line.\\
+Ctr-D and tab : insert tabulation.\\
+Ctr-D and tab : insert tabulation.\\
+Ctr-D (in pipeline): EOF (End Of File).\\
 \end{frame}
 
 
@@ -438,6 +477,27 @@ $ gunzip  file1.txt
 \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+\begin{center}
+    \huge{sed}\\
+\end{center}
+Usage:
+\begin{lstlisting}[language=make]
+sed 's/PATTERN/REPLACEBY/MODIFIER'
+\end{lstlisting}
+Examples:
+\begin{lstlisting}[language=make]
+$ echo "chr1 chr2 chr3" | sed 's/chr/CHROM_/'
+CHROM_1 chr2 chr3
+$ echo "chr1 chr2 chr3" | sed 's/chr/CHROM_/g'
+CHROM_1 CHROM_2 CHROM_3
+$ echo "chr1 chr2 chr3" | sed 's/Chr/CHROM_/gi'
+CHROM_1 CHROM_2 CHROM_3
+$ echo "chr1 chr2 chr3" | sed 's/chr/CHROM_/2'
+chr1 CHROM_2 chr3
+\end{lstlisting}
+\end{frame}
+
 
 \begin{frame}[fragile]
  \begin{center}
@@ -526,6 +586,7 @@ clean:
         rm -f hellodworld.txt  hello.txt world.txt
 \end{lstlisting}
 \end{frame}
+
 
 
 \end{document}

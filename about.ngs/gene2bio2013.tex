@@ -1,0 +1,418 @@
+  \documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\lstset{frame=single,backgroundcolor=\color{lightgray}}
+
+
+\newcommand{\remoteimage}[3]{
+\IfFileExists{#1}{}{\immediate\write18{curl -o "#1" "#2"}}
+\begin{center}
+\includegraphics[#3]{#1}
+\end{center}
+}
+
+\newcommand{\graphviz}[3]{
+\IfFileExists{#1}{}{\immediate\write18{echo #2 | dot -o"#1.png" -Tpng}}
+\begin{center}
+\includegraphics[#3]{#1.png}
+\end{center}
+}
+
+\newcommand{\hugeslide}[1]{
+\begin{frame}
+ \begin{center}
+    \Huge{\bf{#1}}
+ \end{center}
+\end{frame}
+}
+
+
+\lstset{frame=single,backgroundcolor=\color{lightgray}}
+\usetheme{Warsaw}
+
+  \title{Exome Sequencing.\\\href{http://www.biogenouest.org/contenu/gen2bio}{Gene2Bio 2013}}
+  \author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\ \url{http://plindenbaum.blogspot.com} }\institute{Institut du Thorax. Nantes. France}
+
+\begin{document}
+
+
+
+\begin{frame} 
+\titlepage
+\end{frame}
+
+\begin{frame}
+\remoteimage{jeter1.jpg}{http://www.seqwright.com/images/IlluminaHighSeq2000.JPG}{}
+\end{frame}
+
+\begin{frame}
+\remoteimage{jeter2.png}{http://www.genoseq.ucla.edu/images/9/92/Miseq-personal-sequencer.png}{scale=0.5}
+\end{frame}
+
+\hugeslide{*.bcl}
+
+
+
+%%\begin{frame}
+%%\graphviz{jeter3}{'digraph G { X -> Y ; Y -> Z; }'}{scale=0.4}
+%%\end{frame}
+
+
+
+\begin{frame}[fragile]
+ \begin{lstlisting}[language=bash]
+
+${CASAVADIR}/bin/configureBclToFastq.pl \
+     --input-dir ${BCLDIR}/Data/Intensities/BaseCalls \
+     --output-dir ${FASTQDIR} \
+     --sample-sheet ${CFGFILE} \
+     --force 
+
+ \end{lstlisting}
+\end{frame}
+
+
+\hugeslide{*.fastq.gz}
+
+
+\begin{frame}
+\remoteimage{jeter4.jpg}{http://www.bioinfo.uh.edu/Slim_Filter/images/FASTQ_pic.jpg}{scale=0.8}
+\end{frame}
+
+\begin{frame}
+\frametitle{A quality score (or Q-score) expresses an error probability}
+\begin{center}\begin{math}\Huge{Q(A) =-10 \log10(P(~A))}\end{math}\end{center}
+\begin{center}\begin{tabular}{ l | c r |  }
+Quality score  Q(A) & Error probability P(~A)\\
+10 & 0.1\\
+20 & 0.01\\
+30 & 0.001 \\
+\end{tabular}\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+ \begin{lstlisting}[language=bash]
+V2528_CAGATC_L001_R1_001.fastq.gz
+V2528_CAGATC_L001_R1_002.fastq.gz
+V2528_CAGATC_L001_R1_003.fastq.gz
+(...)
+V2528_CAGATC_L004_R2_008.fastq.gz
+V2528_CAGATC_L004_R2_009.fastq.gz
+V2528_CAGATC_L004_R2_010.fastq.gz
+V2528_CAGATC_L004_R2_011.fastq.gz
+V2528_CAGATC_L004_R2_012.fastq.gz
+ \end{lstlisting}
+\end{frame}
+
+\hugeslide{FASTQ preprocessing.}
+
+
+\begin{frame}[fragile]
+ \begin{lstlisting}[language=bash]
+cutadapt \
+   -b AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
+   input.fastq.gz \
+   -o input_preproc.fastq
+ \end{lstlisting}
+\end{frame}
+
+\hugeslide{Reference}
+
+\begin{frame}[fragile]
+\em{"The version used by the 1000 genomes project is recommended. The mitochondrial genome in the g1k version is the most widely used rCRS. The chromosomes and contigs are concatenated, so it is less likely to make mistakes."}\\
+
+\url{http://www.biostars.org/p/1796/#4360}
+\end{frame}
+
+
+\begin{frame}[fragile]
+ \begin{lstlisting}[language=bash]
+bwa index -a bwtsw reference.fa
+samtools faidx reference.fa
+ \end{lstlisting}
+\end{frame}
+
+\hugeslide{Align}
+
+\hugeslide{bwa}
+
+
+
+\begin{frame}
+\graphviz{jeter8}{'digraph G{SAMPLE1_FASTQ1_1 -> SAMPLE1_ALIGN1_1;}'}{scale=0.5}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{lstlisting}[language=bash]
+bwa aln -q 15 -t 2 \
+  -f Sample1_pair1_1.sai \
+  human_g1k_v37.fasta \
+  Sample1_CGATGT_L001_R1_001.fastq.gz
+ \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\graphviz{jeter5}{'digraph G{SAMPLE1_FASTQ1_1 -> SAMPLE1_ALIGN1_1;SAMPLE1_FASTQ1_2 -> SAMPLE1_ALIGN1_2;SAMPLE1_ALIGN1_1 -> SAMPLE1_BAM_1;SAMPLE1_ALIGN1_2 -> SAMPLE1_BAM_1;}'}{scale=0.4}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}[language=bash]
+bwa sampe  -a 500  human_g1k_v37.fasta \
+   -r "@RG	ID:idp10752	LB:Sample1	SM:Sample1	PL:ILLUMINA	PU:1" \
+   Sample1_pair1_1.sai  \
+   Sample1_pair1_2.sai  \
+   Sample1_CGATGT_L001_R1_001.fastq.gz \
+   Sample1_CGATGT_L001_R2_001.fastq.gz |\
+samtools  view -S -b \
+   	-o  Sample1_pair1_unsorted.bam \
+   	-T human_g1k_v37.fasta -
+ \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\remoteimage{jeter9.jpg}{http://4closurefraud.org/wp-content/uploads/2010/05/bam.jpg}{}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}[basicstyle=\footnotesize]
+@HD	VN:1.0	SO:coordinate
+@SQ	SN:1	LN:249250621	AS:NCBI37	UR:file:/data/local/ref/GATK/human_g1k_v37.fasta	M5:1b22b98cdeb4a9304cb5d48026a85128
+@SQ	SN:2	LN:243199373	AS:NCBI37	UR:file:/data/local/ref/GATK/human_g1k_v37.fasta	M5:a0d9851da00400dec1098a9255ac712e
+@SQ	SN:3	LN:198022430	AS:NCBI37	UR:file:/data/local/ref/GATK/human_g1k_v37.fasta	M5:fdfd811849cc2fadebc929bb925902e5
+@RG	ID:UM0098:1	PL:ILLUMINA	PU:HWUSI-EAS1707-615LHAAXX-L001	LB:80	DT:2010-05-05T20:00:00-0400	SM:SD37743	CN:UMCORE
+@RG	ID:UM0098:2	PL:ILLUMINA	PU:HWUSI-EAS1707-615LHAAXX-L002	LB:80	DT:2010-05-05T20:00:00-0400	SM:SD37743	CN:UMCORE
+@PG	ID:bwa	VN:0.5.4
+@PG	ID:GATK TableRecalibration	VN:1.0.3471	CL:Covariates=[ReadGroupCovariate, QualityScoreCovariate, CycleCovariate, DinucCovariate, TileCovariate], default_read_group=null, default_platform=null, force_read_group=null, force_platform=null, solid_recal_mode=SET_Q_ZERO, window_size_nqs=5, homopolymer_nback=7, exception_if_no_tile=false, ignore_nocall_colorspace=false, pQ=5, maxQ=40, smoothing=1
+1:497:R:-272+13M17D24M	113	1	497	37	37M	15	100338662	0	CGGGTCTGACCTGAGGAGAACTGTGCTCCGCCTTCAG	0;==-==9;>>>>>=>>>>>>>>>>>=>>>>>>>>>>	XT:A:U	NM:i:0	SM:i:37	AM:i:0	X0:i:1	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:37
+19:20389:F:275+18M2D19M	99	1	17644	0	37M	=	17919	314	TATGACTGCTAATAATACCTACACATGTTAGAACCAT	>>>>>>>>>>>>>>>>>>>><<>>><<>>4::>>:<9	RG:Z:UM0098:1	XT:A:R	NM:i:0	SM:i:0	AM:i:0	X0:i:4	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:37
+19:20389:F:275+18M2D19M	147	1	17919	0	18M2D19M	=	17644	-314	GTAGTACCAACTGTAAGTCCTTATCTTCATACTTTGT	;44999;499<8<8<<<8<<><<<<><7<;<<<>><<	XT:A:R	NM:i:2	SM:i:0	AM:i:0	X0:i:4	X1:i:0	XM:i:0	XO:i:1	XG:i:2	MD:Z:18^CA19
+9:21597+10M2I25M:R:-209	83	1	21678	0	8M2I27M	=	21469	-244	CACCACATCACATATACCAAGCCTGGCTGTGTCTTCT	<;9<<5><<<<><<<>><<><>><9>><>>>9>>><>	XT:A:R	NM:i:2	SM:i:0	AM:i:0	X0:i:5	X1:i:0	XM:i:0	XO:i:1	XG:i:2	MD:Z:35
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{center}\begin{tabular}{ l | c r |  }
+Field & Alignment\\
+QNAME & 1:497:R:-272+13M17D24M\\
+FLAG & 113\\
+RNAME & 1\\
+POS & 497\\
+MAPQ  & 37\\
+CIGAR & 37M\\
+MRNM/RNEXT & 15\\
+MPOS/PNEXT & 100338662\\
+ISIZE/TLEN & 0\\
+SEQ & CGGGTCTGACCTGAGGAGAACTGTGCTCCGCCTTCAG\\
+QUAL & 0;==-==9;>>>>>=>>>>>>>>>>>=>>>>>>>>>>\\
+TAGs & XT:A:U NM:i:0 SM:i:37 AM:i:0 X0:i:1 X1:i:0 XM:i:0 XO:i:0 XG:i:0 MD:Z:37 
+\end{tabular}\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\remoteimage{jeter10.jpg}{https://docs.uabgrid.uab.edu/w/images/f/f1/SamBamFileFormatFlags.jpg}{scale=0.7}
+\end{frame}
+
+
+\begin{frame}
+\graphviz{jeter6}{'digraph G{ SAMPLE1_FASTQ1_1 -> SAMPLE1_ALIGN1_1; SAMPLE1_FASTQ1_2 -> SAMPLE1_ALIGN1_2; SAMPLE1_ALIGN1_1 -> SAMPLE1_BAM_1; SAMPLE1_ALIGN1_2 -> SAMPLE1_BAM_1; SAMPLE1_BAM_1 -> SAMPLE1_BAM;   SAMPLE1_FASTQ2_1 -> SAMPLE1_ALIGN2_1; SAMPLE1_FASTQ2_2 -> SAMPLE1_ALIGN2_2; SAMPLE1_ALIGN2_1 -> SAMPLE1_BAM_2; SAMPLE1_ALIGN2_2 -> SAMPLE1_BAM_2; SAMPLE1_BAM_2 -> SAMPLE1_BAM; }'}{scale=0.25}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+ \begin{lstlisting}[language=bash]
+java -jar MergeSamFiles.jar \
+   O=Sample1_merged.bam AS=true \
+   I=Sample1_pair1_sorted.bam  \
+   I=Sample1_pair2_sorted.bam 
+ \end{lstlisting}
+\end{frame}
+
+
+
+
+\hugeslide{IndelRealigner.\\Performs local realignment of reads based on misalignments due to the presence of indels.}
+
+
+\begin{frame}[fragile]
+ \begin{lstlisting}[language=bash]
+java -jar GenomeAnalysisTK.jar  \
+  -T RealignerTargetCreator \
+  -R human_g1k_v37.fasta \
+  -L capture.bed \
+  -I Sample1_merged.bam \
+  -o intervals \
+  --known:vcfinput,VCF Mills_and_1000G_gold_standard.indels.b37.vcf.gz
+lockfile test.out.dir/_tmp.idp736.lock
+ \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{lstlisting}[language=bash]
+java -jar GenomeAnalysisTK.jar  \
+   -T IndelRealigner \
+   -R human_g1k_v37.fasta \
+   -I Sample1_merged.bam \
+   -o Sample1_realigned.bam \
+   -targetIntervals intervals \
+   --knownAlleles:vcfinput,VCF Mills_and_1000G_gold_standard.indels.b37.vcf.gz
+ \end{lstlisting}
+\end{frame}
+
+\hugeslide{Remove Duplicates}
+
+\begin{frame}[fragile]
+\remoteimage{jeter11.png}{http://www.clcbio.com/wp-content/uploads/2012/09/duplicate1_large.png}{scale=0.5}
+\end{frame}
+
+
+\hugeslide{Base Quality Score Recalibration}
+
+\begin{frame}[fragile]
+\begin{center}
+"The tools in this package recalibrate base quality scores of sequencing-by-synthesis reads in an aligned BAM file. After recalibration, the quality scores in the QUAL field in each read in the output BAM are more accurate in that the reported quality score is closer to its actual probability of mismatching the reference genome."
+\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\remoteimage{jeter12.png}{http://cdn.vanillaforums.com/gatk.vanillaforums.com/FileUpload/d0/d306c3a2d28693598398b8c5443157.png}{scale=0.4}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{lstlisting}[language=bash]
+java -jar GenomeAnalysisTK.jar  \
+   -T BaseRecalibrator \
+   -R human_g1k_v37.fasta \
+   -I Sample1_markdup.bam \
+   -l INFO \
+   -o recal_data.grp \
+   -knownSites dbsnp_135.b37.vcf.gz \
+   -L test.out.dir/capture500.bed \
+   -cov ReadGroupCovariate \
+   -cov QualityScoreCovariate \
+   -cov CycleCovariate \
+   -cov ContextCovariate
+ \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{lstlisting}[language=bash]
+java -jar GenomeAnalysisTK.jar  \
+   -T PrintReads \
+   --disable_bam_indexing \
+   -R human_g1k_v37.fasta \
+   -BQSR recal_data.grp \
+   -I Sample1_markdup.bam \
+   -o Sample1_recal.bam \
+   -l INFO
+ \end{lstlisting}
+\end{frame}
+
+
+\hugeslide{Allele Calling}
+
+
+\begin{frame}
+\graphviz{jeter7}{'digraph G{ SAMPLE1_FASTQ1_1 -> SAMPLE1_ALIGN1_1; SAMPLE1_FASTQ1_2 -> SAMPLE1_ALIGN1_2; SAMPLE1_ALIGN1_1 -> SAMPLE1_BAM_1; SAMPLE1_ALIGN1_2 -> SAMPLE1_BAM_1; SAMPLE1_BAM_1 -> SAMPLE1_BAM;   SAMPLE1_FASTQ2_1 -> SAMPLE1_ALIGN2_1; SAMPLE1_FASTQ2_2 -> SAMPLE1_ALIGN2_2; SAMPLE1_ALIGN2_1 -> SAMPLE1_BAM_2; SAMPLE1_ALIGN2_2 -> SAMPLE1_BAM_2; SAMPLE1_BAM_2 -> SAMPLE1_BAM; SAMPLE1_BAM -> VCF;  SAMPLE2_FASTQ1_1 -> SAMPLE2_ALIGN1_1; SAMPLE2_FASTQ1_2 -> SAMPLE2_ALIGN1_2; SAMPLE2_ALIGN1_1 -> SAMPLE2_BAM_1; SAMPLE2_ALIGN1_2 -> SAMPLE2_BAM_1; SAMPLE2_BAM_1 -> SAMPLE2_BAM;   SAMPLE2_FASTQ2_1 -> SAMPLE2_ALIGN2_1; SAMPLE2_FASTQ2_2 -> SAMPLE2_ALIGN2_2; SAMPLE2_ALIGN2_1 -> SAMPLE2_BAM_2; SAMPLE2_ALIGN2_2 -> SAMPLE2_BAM_2; SAMPLE2_BAM_2 -> SAMPLE2_BAM; SAMPLE2_BAM -> VCF;}'}{scale=0.12}
+\end{frame}
+
+
+
+\hugeslide{Unified Genotyper}
+
+\begin{frame}[fragile]
+\begin{lstlisting}[language=bash]
+java -jar GenomeAnalysisTK.jar  \
+   -R human_g1k_v37.fasta \
+   -T UnifiedGenotyper \
+   -glm BOTH \
+   -L test.out.dir/capture500.bed  \
+   -I Sample1_recal.bam  \
+   --dbsnp:vcfinput,VCF dbsnp_135.b37.vcf.gz \
+   -o Sample1_variations.gatk.vcf
+\end{lstlisting}
+\end{frame}
+
+\hugeslide{SAMTools mpileup}
+
+\begin{frame}[fragile]
+\begin{lstlisting}[language=bash]
+samtools  mpileup  -uD \
+   -q 30 \
+   -l capture500.bed  \
+   -f human_g1k_v37.fasta \
+   Sample1_recal.bam |\
+bcftools view -vcg - |\
+\end{lstlisting}
+\end{frame}
+
+\hugeslide{VCF}
+
+\begin{frame}[fragile]
+\remoteimage{jeter13.png}{http://bioinf.comav.upv.es/_images/vcf_format.png}{scale=0.2}
+\end{frame}
+
+\hugeslide{Annotations}
+
+\hugeslide{SnpEff}
+
+\begin{frame}[fragile]
+\begin{lstlisting}[language=bash]
+gunzip -c variations.vcf.gz |\
+java -jar snpEff.jar eff \
+   -i vcf -o vcf hg19
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+EFF=NON_SYNONYMOUS_CODING(MODERATE|MISSENSE|Gaa/Aaa|E/K|CDC25C|protein_coding|CODING|ENST00000514017|exon_5_137622186_137622319),
+SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000323760|exon_5_137622186_137622319),
+SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000348983|exon_5_137622186_137622319),
+SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000356505|exon_5_137622186_137622319),
+SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000357274|exon_5_137622186_137622319),
+SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000415130|exon_5_137622186_137622319),
+SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000513970|exon_5_137622186_137622319),
+SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000514555|exon_5_137622186_137622319),
+SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000534892|exon_5_137622186_137622319)
+\end{lstlisting}
+\end{frame}
+
+\remoteimage{jeter14.png}{http://www.berndtlab.pitt.edu/media/images/VEP.png}{}
+
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+11_224088_C/A    11:224088   A  ENSG00000142082  ENST00000525319  Transcript         NON_SYNONYMOUS_CODING   742  716  239  T/N  aCc/aAc  -  SIFT=deleterious(0);PolyPhen=unknown(0)
+11_224088_C/A    11:224088   A  ENSG00000142082  ENST00000534381  Transcript         5_PRIME_UTR             -    -    -    -    -        -  -
+11_224088_C/A    11:224088   A  ENSG00000142082  ENST00000529055  Transcript         DOWNSTREAM              -    -    -    -    -        -  -
+11_224585_G/A    11:224585   A  ENSG00000142082  ENST00000529937  Transcript         INTRONIC,NMD_TRANSCRIPT -    -    -    -    -        -  HGVSc=ENST00000529937.1:c.136-346G>A
+22_16084370_G/A  22:16084370 A  -                ENSR00000615113  RegulatoryFeature  REGULATORY_REGION       -    -    -    -    -        -  -
+\end{lstlisting}
+\end{frame}
+
+
+\hugeslide{Custom annotations}
+
+\hugeslide{1000 genomes}
+\hugeslide{dbsnp137}
+\hugeslide{Exome Variant Server}
+\hugeslide{Segmental duplication}
+
+\begin{frame}
+\remoteimage{jeter100.jpg}{https://pbs.twimg.com/media/A9v2MKXCAAA8hmJ.jpg}{scale=0.4}
+\end{frame}
+
+
+\hugeslide{Thank you}
+
+
+
+
+\end{document}
+

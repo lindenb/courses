@@ -33,7 +33,7 @@
 \usetheme{Warsaw}
 
   \title{Exome Sequencing.\\\href{http://www.biogenouest.org/contenu/gen2bio}{Gene2Bio 2013}}
-  \author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\ \url{http://plindenbaum.blogspot.com} }\institute{Institut du Thorax. Nantes. France}
+  \author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\ \href{mailto:plindenbaum@yahoo.fr}{pierre.lindenbaum@univ-nantes.fr}\\ \url{http://plindenbaum.blogspot.com} }\institute{Institut du Thorax. Nantes. France}
 
 \begin{document}
 
@@ -65,9 +65,9 @@
  \begin{lstlisting}[language=bash]
 
 ${CASAVADIR}/bin/configureBclToFastq.pl \
-     --input-dir ${BCLDIR}/Data/Intensities/BaseCalls \
+     --input-dir Intensities/BaseCalls \
      --output-dir ${FASTQDIR} \
-     --sample-sheet ${CFGFILE} \
+     --sample-sheet config.csv \
      --force 
 
  \end{lstlisting}
@@ -194,32 +194,22 @@ samtools  view -S -b \
 \end{frame}
 
 \begin{frame}[fragile]
-\begin{center}\begin{tabular}{ l | c r |  }
-Field & Alignment\\
-QNAME & 1:497:R:-272+13M17D24M\\
-FLAG & 113\\
-RNAME & 1\\
-POS & 497\\
-MAPQ  & 37\\
-CIGAR & 37M\\
-MRNM/RNEXT & 15\\
-MPOS/PNEXT & 100338662\\
-ISIZE/TLEN & 0\\
-SEQ & CGGGTCTGACCTGAGGAGAACTGTGCTCCGCCTTCAG\\
-QUAL & 0;==-==9;>>>>>=>>>>>>>>>>>=>>>>>>>>>>\\
-TAGs & XT:A:U NM:i:0 SM:i:37 AM:i:0 X0:i:1 X1:i:0 XM:i:0 XO:i:0 XG:i:0 MD:Z:37 
-\end{tabular}\end{center}
+\remoteimage{jeter17.jpg}{http://man.cx/___img/man1/samtools1.png}{scale=0.5}
 \end{frame}
+
 
 \begin{frame}[fragile]
 \remoteimage{jeter10.jpg}{https://docs.uabgrid.uab.edu/w/images/f/f1/SamBamFileFormatFlags.jpg}{scale=0.7}
+\end{frame}
+
+\begin{frame}[fragile]
+\remoteimage{jeter15.jpg}{http://ppotato.files.wordpress.com/2010/08/sam_output2.png}{scale=0.3}
 \end{frame}
 
 
 \begin{frame}
 \graphviz{jeter6}{'digraph G{ SAMPLE1_FASTQ1_1 -> SAMPLE1_ALIGN1_1; SAMPLE1_FASTQ1_2 -> SAMPLE1_ALIGN1_2; SAMPLE1_ALIGN1_1 -> SAMPLE1_BAM_1; SAMPLE1_ALIGN1_2 -> SAMPLE1_BAM_1; SAMPLE1_BAM_1 -> SAMPLE1_BAM;   SAMPLE1_FASTQ2_1 -> SAMPLE1_ALIGN2_1; SAMPLE1_FASTQ2_2 -> SAMPLE1_ALIGN2_2; SAMPLE1_ALIGN2_1 -> SAMPLE1_BAM_2; SAMPLE1_ALIGN2_2 -> SAMPLE1_BAM_2; SAMPLE1_BAM_2 -> SAMPLE1_BAM; }'}{scale=0.25}
 \end{frame}
-
 
 
 \begin{frame}[fragile]
@@ -232,13 +222,14 @@ java -jar MergeSamFiles.jar \
 \end{frame}
 
 
-
+\hugeslide{BAM Indexing}
+\hugeslide{BGZF}
 
 \hugeslide{IndelRealigner.\\Performs local realignment of reads based on misalignments due to the presence of indels.}
 
 
 \begin{frame}[fragile]
- \begin{lstlisting}[language=bash]
+ \begin{lstlisting}[language=bash,breaklines=true]
 java -jar GenomeAnalysisTK.jar  \
   -T RealignerTargetCreator \
   -R human_g1k_v37.fasta \
@@ -246,12 +237,11 @@ java -jar GenomeAnalysisTK.jar  \
   -I Sample1_merged.bam \
   -o intervals \
   --known:vcfinput,VCF Mills_and_1000G_gold_standard.indels.b37.vcf.gz
-lockfile test.out.dir/_tmp.idp736.lock
  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
- \begin{lstlisting}[language=bash]
+ \begin{lstlisting}[language=bash,breaklines=true]
 java -jar GenomeAnalysisTK.jar  \
    -T IndelRealigner \
    -R human_g1k_v37.fasta \
@@ -370,7 +360,7 @@ java -jar snpEff.jar eff \
 
 
 \begin{frame}[fragile]
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true]
 EFF=NON_SYNONYMOUS_CODING(MODERATE|MISSENSE|Gaa/Aaa|E/K|CDC25C|protein_coding|CODING|ENST00000514017|exon_5_137622186_137622319),
 SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000323760|exon_5_137622186_137622319),
 SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000348983|exon_5_137622186_137622319),
@@ -387,7 +377,7 @@ SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000534
 
 
 \begin{frame}[fragile]
-\begin{lstlisting}
+\begin{lstlisting}[breaklines=true]
 11_224088_C/A    11:224088   A  ENSG00000142082  ENST00000525319  Transcript         NON_SYNONYMOUS_CODING   742  716  239  T/N  aCc/aAc  -  SIFT=deleterious(0);PolyPhen=unknown(0)
 11_224088_C/A    11:224088   A  ENSG00000142082  ENST00000534381  Transcript         5_PRIME_UTR             -    -    -    -    -        -  -
 11_224088_C/A    11:224088   A  ENSG00000142082  ENST00000529055  Transcript         DOWNSTREAM              -    -    -    -    -        -  -

@@ -20,11 +20,15 @@
 \end{center}
 }
 
+\newcommand{\centeredtitle}[1]{
+\begin{center}
+    \Huge{\bf{#1}}
+\end{center}
+}
+
 \newcommand{\hugeslide}[1]{
 \begin{frame}
- \begin{center}
-    \Huge{\bf{#1}}
- \end{center}
+\centeredtitle{#1}
 \end{frame}
 }
 
@@ -51,6 +55,12 @@
 \remoteimage{jeter2.png}{http://www.genoseq.ucla.edu/images/9/92/Miseq-personal-sequencer.png}{scale=0.5}
 \end{frame}
 
+\begin{frame}
+ \begin{center}
+\includegraphics[scale=0.35,angle=-90]{jeter_tmp1.pdf}
+ \end{center}
+\end{frame}
+
 \hugeslide{*.bcl}
 
 
@@ -62,8 +72,8 @@
 
 
 \begin{frame}[fragile]
- \begin{lstlisting}[language=bash]
-
+\centeredtitle{FastQ Extraction}
+\begin{lstlisting}[language=bash]
 ${CASAVADIR}/bin/configureBclToFastq.pl \
      --input-dir Intensities/BaseCalls \
      --output-dir ${FASTQDIR} \
@@ -94,6 +104,7 @@ Quality score  Q(A) & Error probability P(~A)\\
 
 
 \begin{frame}[fragile]
+\centeredtitle{FastQ filenames}
  \begin{lstlisting}[language=bash]
 V2528_CAGATC_L001_R1_001.fastq.gz
 V2528_CAGATC_L001_R1_002.fastq.gz
@@ -111,6 +122,7 @@ V2528_CAGATC_L004_R2_012.fastq.gz
 
 
 \begin{frame}[fragile]
+\centeredtitle{Remove adapter sequences}
  \begin{lstlisting}[language=bash]
 cutadapt \
    -b AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
@@ -129,6 +141,7 @@ cutadapt \
 
 
 \begin{frame}[fragile]
+\centeredtitle{Indexing the Reference}
  \begin{lstlisting}[language=bash]
 bwa index -a bwtsw reference.fa
 samtools faidx reference.fa
@@ -146,6 +159,7 @@ samtools faidx reference.fa
 \end{frame}
 
 \begin{frame}[fragile]
+\centeredtitle{Align one FASTQ}
  \begin{lstlisting}[language=bash]
 bwa aln -q 15 -t 2 \
   -f Sample1_pair1_1.sai \
@@ -159,6 +173,7 @@ bwa aln -q 15 -t 2 \
 \end{frame}
 
 \begin{frame}[fragile]
+\centeredtitle{compute the Paired-end alignements}
 \begin{lstlisting}[language=bash]
 bwa sampe  -a 500  human_g1k_v37.fasta \
    -r "@RG	ID:idp10752	LB:Sample1	SM:Sample1	PL:ILLUMINA	PU:1" \
@@ -177,6 +192,7 @@ samtools  view -S -b \
 \end{frame}
 
 \begin{frame}[fragile]
+\centeredtitle{Inside a BAM file}
 \begin{lstlisting}[basicstyle=\footnotesize]
 @HD	VN:1.0	SO:coordinate
 @SQ	SN:1	LN:249250621	AS:NCBI37	UR:file:/data/local/ref/GATK/human_g1k_v37.fasta	M5:1b22b98cdeb4a9304cb5d48026a85128
@@ -192,6 +208,11 @@ samtools  view -S -b \
 9:21597+10M2I25M:R:-209	83	1	21678	0	8M2I27M	=	21469	-244	CACCACATCACATATACCAAGCCTGGCTGTGTCTTCT	<;9<<5><<<<><<<>><<><>><9>><>>>9>>><>	XT:A:R	NM:i:2	SM:i:0	AM:i:0	X0:i:5	X1:i:0	XM:i:0	XO:i:1	XG:i:2	MD:Z:35
 \end{lstlisting}
 \end{frame}
+
+\begin{frame}[fragile]
+\remoteimage{jeter18.jpg}{http://upload.wikimedia.org/wikipedia/en/f/f4/The_Scream.jpg}{scale=0.2}
+\end{frame}
+
 
 \begin{frame}[fragile]
 \remoteimage{jeter17.jpg}{http://man.cx/___img/man1/samtools1.png}{scale=0.5}
@@ -213,6 +234,7 @@ samtools  view -S -b \
 
 
 \begin{frame}[fragile]
+\centeredtitle{Merge the BAM files for one individual}
  \begin{lstlisting}[language=bash]
 java -jar MergeSamFiles.jar \
    O=Sample1_merged.bam AS=true \
@@ -229,6 +251,8 @@ java -jar MergeSamFiles.jar \
 
 
 \begin{frame}[fragile]
+\centeredtitle{RealignerTargetCreator}
+Determining (small) suspicious intervals which are likely in need of realignment.
  \begin{lstlisting}[language=bash,breaklines=true]
 java -jar GenomeAnalysisTK.jar  \
   -T RealignerTargetCreator \
@@ -241,6 +265,7 @@ java -jar GenomeAnalysisTK.jar  \
 \end{frame}
 
 \begin{frame}[fragile]
+\centeredtitle{Call IndelRealigner}
  \begin{lstlisting}[language=bash,breaklines=true]
 java -jar GenomeAnalysisTK.jar  \
    -T IndelRealigner \
@@ -273,6 +298,7 @@ java -jar GenomeAnalysisTK.jar  \
 \end{frame}
 
 \begin{frame}[fragile]
+\centeredtitle{First pass of the base quality score recalibration}
  \begin{lstlisting}[language=bash]
 java -jar GenomeAnalysisTK.jar  \
    -T BaseRecalibrator \
@@ -290,6 +316,7 @@ java -jar GenomeAnalysisTK.jar  \
 \end{frame}
 
 \begin{frame}[fragile]
+\centeredtitle{create a recalibrated BAM}
  \begin{lstlisting}[language=bash]
 java -jar GenomeAnalysisTK.jar  \
    -T PrintReads \
@@ -315,6 +342,7 @@ java -jar GenomeAnalysisTK.jar  \
 \hugeslide{Unified Genotyper}
 
 \begin{frame}[fragile]
+\centeredtitle{Run GATK UnifiedGenotyper}
 \begin{lstlisting}[language=bash]
 java -jar GenomeAnalysisTK.jar  \
    -R human_g1k_v37.fasta \
@@ -330,6 +358,7 @@ java -jar GenomeAnalysisTK.jar  \
 \hugeslide{SAMTools mpileup}
 
 \begin{frame}[fragile]
+\centeredtitle{Run Samtools mpileup}
 \begin{lstlisting}[language=bash]
 samtools  mpileup  -uD \
    -q 30 \
@@ -399,10 +428,12 @@ SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000534
 \end{frame}
 
 
-\hugeslide{Thank you}
 
 
-
+\begin{frame}
+\centeredtitle{Thank you}
+{\footnotesize Acknowledgements: Audrey Bihoué, Solena Le Scouarnec, Richard Redon, Ralucan Teusan, Laetitia Duboscq-Bidot, Stéphanie Bonnaud.  }
+\end{frame}
 
 \end{document}
 

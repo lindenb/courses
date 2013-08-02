@@ -1,0 +1,328 @@
+  \documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{framed}
+\usepackage{epstopdf}
+
+% http://tex.stackexchange.com/questions/4979/convert-gif-image-to-png-on-the-fly
+\epstopdfDeclareGraphicsRule{.gif}{png}{.png}{convert  #1 `basename #1 .gif`-gif-converted-to.png}
+\AppendGraphicsExtensions{.gif}
+
+\lstset{frame=single,backgroundcolor=\color{lightgray}}
+\usetheme{Warsaw}
+
+\newcommand{\remoteimage}[3]{
+\IfFileExists{#1}{}{\immediate\write18{curl -o "#1" "#2"}}
+\begin{center}
+\includegraphics[#3]{#1}
+\end{center}
+}
+
+\newcommand{\graphviz}[3]{
+\IfFileExists{#1}{}{\immediate\write18{echo #2 | dot -o"#1.png" -Tpng}}
+\begin{center}
+\includegraphics[#3]{#1.png}
+\end{center}
+}
+
+\newcommand{\centeredtitle}[1]{
+\begin{center}
+    \Huge{\bf{#1}}
+\end{center}
+}
+
+\newcommand{\hugeslide}[1]{
+\begin{frame}
+\centeredtitle{#1}
+\end{frame}
+}
+
+
+
+\title{Next Generation Sequencing\\File Formats.}
+\author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\ \href{mailto:plindenbaum@yahoo.fr}{pierre.lindenbaum@univ-nantes.fr}\\ \url{http://plindenbaum.blogspot.com}\\\href{https://github.com/lindenb/courses}{https://github.com/lindenb/courses}}\institute{Institut du Thorax. Nantes. France}
+
+\begin{document}
+
+
+
+\begin{frame} 
+\titlepage
+\end{frame}
+
+
+
+\hugeslide{FASTQ} 
+
+
+
+\begin{frame}[fragile]
+\frametitle{FASTQ Example}
+\begin{framed}
+\small
+\begin{verbatim}
+@IL31_4368:1:1:996:8507/1
+NTGATAAAGTAATGACAAAATAATGACATTATTGTTACTATGGTTACTGTGGGA
++
+(94**0-)*7=06>>><<<<<<22@>6;;;5;6:;63:4?-622647..-.5.%
+@IL31_4368:1:1:996:21421/1
+NAAGTTAATTCTTCATTGTCCATTCCTCTGAAATGATTCAGAAATACTGGTAGT
++
+(**+*2396,@<+<:@@@;;5)<0)69606>4;5>;>6&<102)0*+8:&137;
+@IL31_4368:1:1:997:10572/1
+NAATGTATGTAGACCCTTCACATTCAAAGGCAAATACAATATCATCATGTCTTC
++
+(/9**-0032>:>>9>4@@=>??@@:-66,;>;<;6+;255,1;7>>>>3676'
+@IL31_4368:1:1:997:15684/1
+NGCAATCAATGCTATGATTGATCCTGATGGAACTTTGGAGGCTCTGAACAACAT
++
+()1,*37766>@@@>?@<?@@:>@0>>><-888>8;>*;966>;;;@8@4,.2.
+@IL31_4368:1:1:997:15249/1
+NCGTTATAATGGAATTATTTTTCTTCCTTTATTTAATGTGTTGACAAAGAGAAC
++
+(916928.82@@<0>54;33222224;@2<?<<22;5=;;858>>><<<*0666
+@IL31_4368:1:1:997:6273/1
+NTACGAAGAAGTATTTCATTGGGAGGAGCTTATCCAAATATTTCCTGTCTATCC
++
+(**4*5-*&329>9+::@>2;;853+39;>0.<3)-)79)..'5<.>988*200
+@IL31_4368:1:1:997:1657/1
+NAGGCCTCTGTATCTAATAACCATGTGACAATTTTAGATCTCTTTAAAAAGGTA
++
+(**.&9/*4-662)98282')/)77988>57922'9?96:%%(1%%2**+-$&7
+@IL31_4368:1:1:997:5609/1
+NGGTGTCTCTTACGGACAGCATTAAGCTAGATTCTTTTTAGACCGATCTGCCAA
++
+(*+*&,1426<;@@??@>?9@@@<@4>>?>666260.)-*9;;;8>:>'0<418
+\end{verbatim}
+\end{framed}
+\end{frame}
+
+\begin{frame}
+\frametitle{FASTQ Quality}
+\remoteimage{jeter01.png}{http://ged.msu.edu/angus/_images/fastqc_perbaseseqqual.png}{scale=0.3}
+\end{frame}
+
+\begin{frame} 
+\frametitle{FASTQ Quality}
+
+A quality value Q is an integer mapping of p (i.e., the probability that the corresponding base call is incorrect).
+
+$Q_\text{sanger} = -10 \, \log_{10} p$
+\end{frame}
+
+
+
+
+
+\begin{frame}[fragile]
+\frametitle{FASTQ name}
+
+
+\begin{center}
+
+\begin{framed}
+@EAS139:136:FC706VJ:2:2104:15343:197393 1:Y:18:ATCACG
+\end{framed}
+
+
+\small
+\begin{tabular}{rll}
+  \hline
+  {\bf Col} & {\bf Brief description} \\
+\hline
+EAS139 	& the unique instrument name\\
+136 	& the run id\\
+FC706VJ & the flowcell id\\
+2 	& flowcell lane\\
+2104 	& tile number within the flowcell lane\\
+15343 	& 'x'-coordinate of the cluster within the tile\\
+197393 	& 'y'-coordinate of the cluster within the tile\\
+1 	& the member of a pair, 1 or 2 (paired-end or mate-pair reads only)\\
+Y 	& Y if the read fails filter (read is bad), N otherwise\\
+18 	& 0 when none of the control bits are on, otherwise it is an even number\\
+ATCACG 	& index sequence\\
+\hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\hugeslide{SAM}
+
+
+\begin{frame}[fragile]
+\frametitle{SAM Example}
+\begin{framed}\small
+\begin{verbatim}
+@HD VN:1.5 SO:coordinate
+@SQ SN:ref LN:45
+r001 163 ref 7 30 8M2I4M1D3M = 37 39 TTAGATAAAGGATACTG *
+r002 0 ref 9 30 3S6M1P1I4M * 0 0 AAAAGATAAGGATA *
+r003 0 ref 9 30 5S6M * 0 0 GCCTAAGCTAA * SA:Z:ref,29,-,6H5M,17,0;
+r004 0 ref 16 30 6M14N5M * 0 0 ATAGCTTCAGC *
+r003 2064 ref 29 17 6H5M * 0 0 TAGGC * SA:Z:ref,9,+,5S6M,30,1;
+r001 83 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
+\end{verbatim}
+\end{framed}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{SAM Record Columns}
+\begin{center}
+\small
+\begin{tabular}{rlll}
+  \hline
+  {\bf Col} & {\bf Field} & {\bf Type} & {\bf Brief description} \\
+  \hline
+  1 & {\sf QNAME} & String & Query template NAME\\
+  2 & {\sf FLAG} & Int & bitwise FLAG \\
+  3 & {\sf RNAME} & String & Reference sequence NAME\\
+  4 & {\sf POS} & Int & 1-based leftmost mapping POSition \\
+  5 & {\sf MAPQ} & Int & MAPping Quality \\
+  6 & {\sf CIGAR} & String & CIGAR string \\
+  7 & {\sf RNEXT} & String & Ref. name of the mate/next read\\
+  8 & {\sf PNEXT} & Int & Position of the mate/next read \\
+  9 & {\sf TLEN} & Int & observed Template LENgth \\
+  10 & {\sf SEQ} & String & segment SEQuence\\
+  11 & {\sf QUAL} & String & ASCII of Phred-scaled base QUALity+33 \\
+  \hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+
+
+\begin{frame} 
+\frametitle{SAM File Structure}
+
+\end{frame}
+
+\begin{frame} 
+\frametitle{SAM Header Section}
+\end{frame}
+
+\begin{frame} 
+\frametitle{SAM Alignment Section}
+\end{frame}
+
+
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+$\square$ read paired.\\
+$\square$ read mapped in proper pair.\\
+$\square$ read unmapped.\\
+$\square$ mate unmapped.\\
+$\square$ read reverse strand.\\
+$\square$ mate reverse strand.\\
+$\square$ first in pair.\\
+$\square$ second in pair.\\
+$\square$ not primary alignment.\\
+$\square$ read fails platform/vendor quality checks.\\
+$\square$ read is PCR or optical duplicate
+\end{frame}
+
+
+
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{Read Paired}
+\end{frame}
+
+
+\hugeslide{BAM}
+
+\begin{frame} 
+\frametitle{BGZF Format}
+
+\end{frame}
+
+
+\hugeslide{VCF\\Variant Call Format}
+
+
+
+\begin{frame} 
+\frametitle{Binning}
+\remoteimage{jeter02.gif}{http://genome.cshlp.org/content/12/6/996/F7.medium.gif}{scale=0.7}
+\end{frame}
+
+
+\hugeslide{Tabix}
+
+
+\begin{frame}[fragile]
+\frametitle{Building the TABIX index}
+\begin{lstlisting}[language=bash]*
+$ bgzip -f  file.vcf
+$ tabix -p vcf file.vcf.gz
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Querying the TABIX index}
+\begin{lstlisting}[language=bash]*
+$ tabix  file.vcf.gz chr3:1235-456778
+\end{lstlisting}
+\end{frame}
+
+\hugeslide{API}
+
+\begin{frame}[fragile]
+\frametitle{Reading SAM with the samtools C library}
+
+\begin{lstlisting}[language=C]
+#include <stdlib.h>
+#include <stdio.h>
+#include "bam.h"
+#include "sam.h"
+int main(int argc, char *argv[]) {
+  samfile_t* sam=samopen(argv[1], "rb", 0);
+  bam1_t *b= bam_init1();
+  long n=0L;
+  while(samread(sam, b) > 0)
+   {
+   if(!(b->core.flag&BAM_FUNMAP)) ++n;
+   }
+  bam_destroy1(b);
+  samclose(sam);
+  printf("%lu\n",n);
+  return 0;
+  }
+\end{lstlisting}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+\frametitle{Reading SAM with the java picard library}
+
+\begin{lstlisting}[language=java]
+import java.io.File;
+import net.sf.samtools.*;
+public class CountMapped {
+  public static void main(String[] args) {
+    long n=0L;
+    File f=new File(args[0]);
+    SAMFileReader sam = new SAMFileReader(f);
+    for(SAMRecord rec : sam)
+      {
+      if(!rec.getReadUnmapped())
+      	{
+      	++n;
+      	}
+      }
+    sam.close();
+    System.out.println(n);
+    }
+}
+\end{lstlisting}
+\end{frame}
+
+
+\end{document}
+

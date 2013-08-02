@@ -1,0 +1,100 @@
+  \documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\lstset{frame=single,backgroundcolor=\color{lightgray}}
+\usetheme{Warsaw}
+
+\newcommand{\remoteimage}[3]{
+\IfFileExists{#1}{}{\immediate\write18{curl -o "#1" "#2"}}
+\begin{center}
+\includegraphics[#3]{#1}
+\end{center}
+}
+
+\newcommand{\graphviz}[3]{
+\IfFileExists{#1}{}{\immediate\write18{echo #2 | dot -o"#1.png" -Tpng}}
+\begin{center}
+\includegraphics[#3]{#1.png}
+\end{center}
+}
+
+\newcommand{\centeredtitle}[1]{
+\begin{center}
+    \Huge{\bf{#1}}
+\end{center}
+}
+
+\newcommand{\hugeslide}[1]{
+\begin{frame}
+\centeredtitle{#1}
+\end{frame}
+}
+
+
+
+\title{Advanced NCBI.\\\href{https://github.com/lindenb/courses}{https://github.com/lindenb/courses}}
+\author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\ \href{mailto:plindenbaum@yahoo.fr}{pierre.lindenbaum@univ-nantes.fr}\\ \url{http://plindenbaum.blogspot.com} }\institute{Institut du Thorax. Nantes. France}
+
+\begin{document}
+
+
+
+\begin{frame} 
+\titlepage
+\end{frame}
+
+\begin{frame}
+x
+\end{frame}
+
+\begin{frame}
+\remoteimage{jeter01.png}{http://www.ncbi.nlm.nih.gov/corehtml/pmc/pmcgifs/bookshelf/thumbs/th-helpeutils-lrg.png}{}
+\end{frame}
+
+
+
+\begin{frame} 
+ The E-Utilities are a set of seven server-side programs that provide a stable interface to the search, retrieval, and linking functions of the Entrez system, using a fixed URL syntax. The output provided by the E-Utilities is in XML format, with the notable exception of the EFetch utility, which returns data in a variety of formats. The E-Utilities are designed to be called from within a computer program that can process their output. Calling an E-Utility from any of the common programming languages— including Perl, Python, and Java—is a simple matter of posting a URL.
+ \end{frame}
+ 
+
+\hugeslide{EInfo}
+
+
+\begin{frame} 
+http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+\begin{lstlisting}[language=xml]
+<!DOCTYPE eInfoResult PUBLIC "-//NLM//DTD eInfoResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd">
+<eInfoResult>
+  <DbList>
+    <DbName>pubmed</DbName>
+    <DbName>protein</DbName>
+    <DbName>nuccore</DbName>
+    <DbName>nucleotide</DbName>
+    <DbName>nucgss</DbName>
+    <DbName>nucest</DbName>
+    <DbName>structure</DbName>
+    <DbName>genome</DbName>
+    <DbName>assembly</DbName>
+    <DbName>gcassembly</DbName>
+    <DbName>genomeprj</DbName>
+    <DbName>bioproject</DbName>
+    <DbName>biosample</DbName>
+    <DbName>biosystems</DbName>
+    <DbName>blastdbinfo</DbName>
+    <DbName>books</DbName>
+    <DbName>cdd</DbName>
+    <DbName>clinvar</DbName>
+ (...)
+\end{lstlisting}
+\end{frame}
+ 
+\end{document}
+

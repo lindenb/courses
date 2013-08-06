@@ -46,7 +46,7 @@
 \end{frame}
 
 \begin{frame}
-x
+What we will cover:
 \end{frame}
 
 \begin{frame}
@@ -60,16 +60,34 @@ x
  \end{frame}
  
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% EINFO
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \hugeslide{EInfo}
 
+\begin{frame}[fragile]
+\frametitle{EInfo}
+Provides a list of the names of all valid Entrez databases.\\
+Provides statistics for a single database, including lists of indexing fields and available link names.
+\end{frame}
 
-\begin{frame} 
-http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi
+
+\begin{frame}[fragile]
+\frametitle{EInfo}
+\small
+\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi}
 \end{frame}
 
 
 
 \begin{frame}[fragile]
+\frametitle{EInfo}
+\framesubtitle{XML Ouput}
+
+\small
 \begin{lstlisting}[language=xml]
 <!DOCTYPE eInfoResult PUBLIC "-//NLM//DTD eInfoResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd">
 <eInfoResult>
@@ -95,6 +113,104 @@ http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi
  (...)
 \end{lstlisting}
 \end{frame}
- 
+
+
+\begin{frame}[fragile]
+\frametitle{EInfo}
+Return statistics for Entrez database:\\
+\small
+\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?db=DbName}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{EInfo}
+\framesubtitle{Statistics for Pubmed}
+\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?db=pubmed}
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+<?xml version="1.0"?>
+<!DOCTYPE eInfoResult PUBLIC "-//NLM//DTD eInfoResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd">
+<eInfoResult>
+  <DbInfo>
+    <DbName>pubmed</DbName>
+    <MenuName>PubMed</MenuName>
+    <Description>PubMed bibliographic record</Description>
+    <DbBuild>Build130805-2117m.4</DbBuild>
+    <Count>22974581</Count>
+    <LastUpdate>2013/08/06 08:33</LastUpdate>
+    <FieldList>
+      (...)
+      <Field>
+        <Name>UID</Name>
+        <FullName>UID</FullName>
+        <Description>Unique number assigned to publication</Description>
+        <TermCount>0</TermCount>
+        <IsDate>N</IsDate>
+        <IsNumerical>Y</IsNumerical>
+        <SingleToken>Y</SingleToken>
+        <Hierarchy>N</Hierarchy>
+        <IsHidden>Y</IsHidden>
+      </Field>
+      <Field>
+(...)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EInfo}
+\framesubtitle{Statistics for Pubmed}
+\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?db=pubmed}
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+(...)
+      <Link>
+        <Name>pubmed_taxonomy_entrez</Name>
+        <Menu>Taxonomy via GenBank</Menu>
+        <Description>Taxonomy records associated with the current articles through taxonomic information on related molecular database records (Nucleotide, Protein, Gene, SNP, Structu
+re).</Description>
+        <DbTo>taxonomy</DbTo>
+      </Link>
+      <Link>
+        <Name>pubmed_unigene</Name>
+        <Menu>UniGene Links</Menu>
+        <Description>UniGene clusters of expressed sequences that are associated with the current articles through references on the clustered sequence records and related Gene record
+s.</Description>
+        <DbTo>unigene</DbTo>
+      </Link>
+      <Link>
+        <Name>pubmed_unists</Name>
+        <Menu>UniSTS Links</Menu>
+        <Description>Genetic, physical, and sequence mapping reagents in the UniSTS database associated with the current articles through references on sequence tagged site (STS) subm
+issions as well as automated searching of PubMed abstracts and full-text PubMed Central articles for marker names.</Description>
+        <DbTo>unists</DbTo>
+      </Link>
+    </LinkList>
+  </DbInfo>
+</eInfoResult>
+\end{lstlisting}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% ESearch
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\hugeslide{ESearch}
+
+\begin{frame}[fragile]
+\frametitle{ESearch}
+\begin{itemize}
+\item Provides a list of UIDs matching a text query
+\item Posts the results of a search on the History server
+\item Downloads all UIDs from a dataset stored on the History server
+\item Combines or limits UID datasets stored on the History server
+\item Sorts sets of UIDs
+\end{itemize}
+\end{frame}
+
+
+
 \end{document}
 

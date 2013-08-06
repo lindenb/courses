@@ -54,6 +54,22 @@
 \end{frame}
 
 
+\begin{frame} 
+\begin{center}
+You don't need to have a deep knowledge of those formats.\\
+\small{(Unless you're doing NGS)}
+\end{center}
+\end{frame}
+
+\begin{frame} 
+\begin{center}
+Understand how people have solved their BIG data problems.
+\end{center}
+\end{frame}
+
+\begin{frame} 
+\graphviz{jeterdot01}{'digraph G{SEQUENCER -> FASTQ -> SAM -> BAM -> VCF ;}'}{scale=0.5}
+\end{frame}
 
 \hugeslide{FASTQ} 
 
@@ -113,7 +129,13 @@ A quality value Q is an integer mapping of p (i.e., the probability that the cor
 $Q_\text{sanger} = -10 \, \log_{10} p$
 \end{frame}
 
+\begin{frame} 
+\frametitle{FASTQ Quality}
 
+Since a human readable format is desired for SAM, 33 is added to the calculated quality in order to make it a printable character ranging from ! - ~. 
+
+$Q_\text{sanger} = -10 \, \log_{10} p + 33 $
+\end{frame}
 
 
 
@@ -167,6 +189,24 @@ r001 83 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
 \end{verbatim}
 \end{framed}
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{SAM Example}
+\begin{framed}\small
+\begin{verbatim}
+@HD	VN:1.0	SO:coordinate
+@SQ	SN:1	LN:249250621	AS:NCBI37	UR:file:/data/local/ref/GATK/human_g1k_v37.fasta	M5:1b22b98cdeb4a9304cb5d48026a85128
+@SQ	SN:2	LN:243199373	AS:NCBI37	UR:file:/data/local/ref/GATK/human_g1k_v37.fasta	M5:a0d9851da00400dec1098a9255ac712e
+@SQ	SN:3	LN:198022430	AS:NCBI37	UR:file:/data/local/ref/GATK/human_g1k_v37.fasta	M5:fdfd811849cc2fadebc929bb925902e5
+@RG	ID:UM0098:1	PL:ILLUMINA	PU:HWUSI-EAS1707-615LHAAXX-L001	LB:80	DT:2010-05-05T20:00:00-0400	SM:SD37743	CN:UMCORE
+@RG	ID:UM0098:2	PL:ILLUMINA	PU:HWUSI-EAS1707-615LHAAXX-L002	LB:80	DT:2010-05-05T20:00:00-0400	SM:SD37743	CN:UMCORE
+@PG	ID:bwa	VN:0.5.4
+@PG	ID:GATK TableRecalibration	VN:1.0.3471	CL:Covariates=[ReadGroupCovariate, QualityScoreCovariate, CycleCovariate, DinucCovariate, TileCovariate], default_read_group=null, default_platform=null, force_read_group=null, force_platform=null, solid_recal_mode=SET_Q_ZERO, window_size_nqs=5, homopolymer_nback=7, exception_if_no_tile=false, ignore_nocall_colorspace=false, pQ=5, maxQ=40, smoothing=1
+\end{verbatim}
+\end{framed}
+\end{frame}
+
+
 
 \begin{frame}[fragile]
 \frametitle{SAM Record Columns}
@@ -231,6 +271,87 @@ $\square$ read is PCR or optical duplicate
 \frametitle{SAM FLAGS}
 \framesubtitle{Read Paired}
 \end{frame}
+
+
+\begin{frame} 
+\frametitle{SAM CIGAR}
+The CIGAR string is a sequence of of base lengths and the associated operation. They are used to indicate things like which bases align (either a match/mismatch) with the reference, are deleted from the reference, and are insertions that are not in the reference. 
+\end{frame}
+
+\begin{frame} 
+\frametitle{SAM Cigar}
+\begin{center}\small
+  \begin{tabular}{ccl}
+  \hline
+  Op & BAM & Description\\
+  \hline
+  {\tt M} & 0 & alignment match (can be a sequence match or mismatch)\\
+  {\tt I} & 1 & insertion to the reference \\
+  {\tt D} & 2 & deletion from the reference \\
+  {\tt N} & 3 & skipped region from the reference \\
+  {\tt S} & 4 & soft clipping (clipped sequences present in {\sf SEQ})\\
+  {\tt H} & 5 & hard clipping (clipped sequences NOT present in {\sf SEQ})\\
+  {\tt P} & 6 & padding (silent deletion from padded reference)\\
+  {\tt =} & 7 & sequence match \\
+  {\tt X} & 8 & sequence mismatch \\
+  \hline
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame} 
+\frametitle{SAM Cigar}
+RefPos:     1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19
+Reference:  C  C  A  T  A  C  T  G  A  A  C  T  G  A  C  T  A  A  C
+Read: ACTAGAATGGCT
+
+Aligning these two:
+
+RefPos:     1  2  3  4  5  6  7     8  9 10 11 12 13 14 15 16 17 18 19
+Reference:  C  C  A  T  A  C  T     G  A  A  C  T  G  A  C  T  A  A  C
+Read:                   A  C  T  A  G  A  A     T  G  G  C  T
+
+With the alignment above, you get:
+
+POS: 5
+CIGAR: 3M1I3M1D5M
+
+
+http://genome.sph.umich.edu/wiki/SAM
+\end{frame}
+
+
+\begin{frame} 
+\frametitle{SAM Cigar}
+TAGs are optional fields on a SAM/BAM Alignment. A TAG is comprised of a two character TAG key, they type of the value, and the value:
+
+[A-Za-z][A-za-z]:[AifZH]:.*
+
+The types, A, i, f, Z, H are used to indicate the type of value stored in the tag.
+Type 	Description
+A 	character
+i 	signed 32-bit integer
+f 	single-precision float
+Z 	string
+H 	hex string
+
+
+There are a set of predefined tags that are general used in Alignments. They are documented in the SAM Specification. Predefined tags have been specified for storing information about the read or alignment. Examples of things stored in predefined tags:
+
+    Previous settings for various fields if they have been updated due to additional processing
+    Mappings from the alignment to Header values, used to match to a read group or program.
+    Additional information which may already be in the header like library and platform. 
+
+A user can also use any additional tags to store any information they want. TAGs starting with X, Y, or Z are reserved to be user defined.
+
+Examples:
+
+XT:A:U  - user defined tag called XT.  It holds a character.  The value associated with this tag is 'U'.
+NM:i:2  - predefined tag NM means: Edit distance to the reference (number of changes necessary to make this equal the reference, excluding clipping)
+http://genome.sph.umich.edu/wiki/SAM
+\end{frame}
+
+
 
 
 \hugeslide{BAM}

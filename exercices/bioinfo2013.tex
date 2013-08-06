@@ -1,0 +1,201 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{frame=single,backgroundcolor=\color{lightgray},numbers=left,breaklines=true,basicstyle=\ttfamily}
+
+
+\title{TD Bioinfo}
+\author{Pierre Lindenbaum - Institut du Thorax. Nantes. France}
+\date{\today}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Here are few questions to prepare the courses 	\textbf{"Advanced NCBI"} and \textbf{"Next-Generation-Sequencing"}.\\
+The aim of those exercices is to assure that you have a basic knowledge of the tools and vocabulary that will be used during the courses.\\
+Only basic linux commands are required here, no external program should be installed.
+\end{abstract}
+
+\section{Linux}
+Briefly describe the usage of the following linux commands :
+\begin{itemize}
+\item cd
+\item ls
+\item pwd
+\item ls
+\item cp
+\item rm
+\item mv
+\item cat
+\item more
+\item grep
+\item sort
+\item uniq
+\item paste
+\item join
+\item tr
+\item head
+\item tail
+\item mkdir
+\item awk
+\end{itemize}
+\noindent
+What is 	\textbf{stdout} ? \\
+What is 	\textbf{stderr} ?\\
+What is 	\textbf{stdin} ?\\
+How to you 	\textbf{redirect} the ouput of a program to a file ?\\
+How to you 	\textbf{append} the ouput of a program to a file ?\\
+
+\section{General Bioinformatics}
+\begin{itemize}
+\item What is a 'SNP' ? 
+\item What is a 'Genome build' ?
+\item What's the approximate size of the human genome ?
+\item How many chromosomes is there in the human genome ?
+\item What the approximate size of the longest human chromosome ?
+\item What's the difference between a binary file and flat file ?
+\item How many bytes do you need to store the *length* of the human genome ?
+\item In a sequence containing only 'A', 'T', 'G' and 'C' , how many bases can you store in one byte ?
+\item Cite some advantages/inconvenients of storing data in a tab delimited format vs using a structured format (e.g: XML, JSON, ASN.1)
+\item Cite some advantages/inconvenients of storing data of using a graphical interface (like Miscrosoft Excel) vs using the command line 
+\end{itemize}
+
+\section{Bash}
+\noindent
+What's the purpose of the following bash command line ? ( \url{https://gist.github.com/lindenb/65e98e5752ea26eb9868} )
+
+\begin{lstlisting}[language=bash]
+$ curl  "http://hgdownload.cse.ucsc.edu/goldenPath/hg19/chromosomes/chrM.fa.gz" |\
+gunzip -c |\
+tail -n +2 |\
+tr "[:lower:]" "[:upper:]" |\
+tr -d '\n' |\
+tr "AC" "TG" |\
+sed 's/\(.\)/\1#/g' |\
+tr "#" "\n" |\
+LC_ALL=C sort |\
+uniq -c |\
+sed 's/^[ ]*//' |\
+cut -d ' ' -f1 |\
+tr "\n" " " |\
+awk '{printf("%f %%\n",$1/($1+$2));}' > result.txt
+\end{lstlisting}
+
+\section{Makefile}
+\noindent
+(wikipedia:) \emph{"In software development, Make is a utility that automatically builds executable programs and libraries from source code by reading files called makefiles which specify how to derive the target program"}. You'll find many simple tutorials for \textbf{make} on the web.\\
+The following \textbf{Makefile} creates a tab-delimited file 'gene\_ontology\_map.txt' containing the following column: gene-name(hgnc\_symbol), chromosome, start\_position, end\_position and gene-ontology term.\\
+Complete the \textbf{Makefile} by replacing the ???????????? with the correct pipeline ( \url{https://gist.github.com/lindenb/65e98e5752ea26eb9868} ).
+
+\begin{lstlisting}[language=make]
+.PHONY: all clean
+
+#
+# this is the top default target
+#
+all: gene_ontology_map.txt
+
+# using the 'join' command
+# join gene_and_position.bed and gene_and_go.txt to create 
+# a file with the following columns:  
+# hgnc_symbol, chromosome, start_position, end_position and GO-ID
+gene_ontology_map.txt: gene_and_position.tsv gene_and_go.txt
+	join ??????????????????????????????????
+
+# using a web browser: go on biomart http://www.ensembl.org/biomart/martview/
+# select 'ensembl Gene'
+# select 'dataset: homo sapiens'
+# select the following attributes : 
+#	Chromosome Name
+#	HGNC symbol 
+#	Gene Start (bp)
+#	Gene End (bp)
+# 'show query in XML format' and use it in the curl command below
+# keep the lines having a HGNC symbol
+# sort on HGNC symbol 
+gene_and_position.tsv : 
+	curl --form-string query='<?xml version="1.0" ??????????????????????????????????
+#
+# remove the headers from gene_association.goa_human
+# keep the columns DB_Object_Symbol (3) and GO_ID (5)
+# and sort on DB_Object_Symbol (=HGNC symbol )
+# and remove the duplicated lines
+gene_and_go.txt : gene_association.goa_human
+	grep -v '^!' $<  | ??????????????????????????????????
+
+
+#download GO-association for human
+#format described in http://www.geneontology.org/GO.format.gaf-1_0.shtml
+gene_association.goa_human:
+	curl -s "http://cvsweb.geneontology.org/cgi-bin/cvsweb.cgi/go/gene-associations/$@.gz?rev=HEAD" |\
+		gunzip -c > $@
+
+#
+# cleanup everything
+#
+clean:
+	rm -f gene_association.goa_human gene_and_go.txt  \
+		gene_and_position.tsv \
+		gene_ontology_map.txt
+\end{lstlisting}
+
+
+\section{The Human Genome}
+
+The chromosome for the latest build are available at: \url{http://hgdownload.cse.ucsc.edu/goldenPath/hg19/chromosomes/}.
+\begin{itemize}
+\item What's the length of the chr22 ?
+\item Look at the 100000 first lines of the chr22. Explain what you see.
+\item Get a count of each base in the chr22
+\item Using the linux commands 'curl', 'gunzip', 'tr' and 'rev', get the reverse complement of the chromosome chrM.
+\end{itemize}
+
+
+\section{Using XSLT}
+The following URL is a XML-based list to the databases available from the  \textbf{NCBI}: \url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi}.\\
+\begin{lstlisting}[language=xml]
+<!DOCTYPE eInfoResult PUBLIC "-//NLM//DTD eInfoResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd">
+<eInfoResult>
+  <DbList>
+    <DbName>pubmed</DbName>
+    <DbName>protein</DbName>
+    <DbName>nuccore</DbName>
+    <DbName>nucleotide</DbName>
+    <DbName>nucgss</DbName>
+    <DbName>nucest</DbName>
+    <DbName>structure</DbName>
+    (...)
+\end{lstlisting}  
+\textbf{XSLT} is a XML specification used to transform a XML to another type of document (XML, HTML or text).
+As an example, the XSLT stylesheet \textbf{einfo2html.xsl} available at \url{https://gist.github.com/lindenb/65e98e5752ea26eb9868} transforms  \url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi} to a HTML document. The ouput would start with:\\
+\begin{lstlisting}[language=html]
+<html><body><ul>
+<li><a>pubmed</a></li>
+<li><a>protein</a></li>
+<li><a>nuccore</a></li>
+<li><a>nucleotide</a></li>
+<li><a>nucgss</a></li>
+<li><a>nucest</a></li>
+<li><a>structure</a></li>
+<li><a>genome</a></li>
+<li><a>assembly</a></li>
+    (...)
+\end{lstlisting} 
+\noindent
+Using the command line XSLT processor \textbf{xsltproc}, generate this HTML and visualize it in a web browser.\\
+The \textbf{href} attribute is missing in the \textless{}a/\textgreater anchors. For example, the href for 'pubmed' would be :
+
+\begin{lstlisting}[language=html]
+<html><body><ul>
+<li><a href="http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?db=pubmed">pubmed</a></li>
+    (...)
+\end{lstlisting} 
+\noindent
+Modify the XSLT stylesheet: using the XSLT element \textless{}xsl:attribute/\textgreater add the missing XML attributes. For example see: \url{http://stackoverflow.com/questions/3321119}.
+
+
+\end{document}
+

@@ -1,1 +1,12 @@
 *~
+tmp*
+jeter*
+*.pdf
+*.out
+*.aux
+*.nav
+*.vrb
+*.toc
+*.dvi
+*.log
+*.tmp

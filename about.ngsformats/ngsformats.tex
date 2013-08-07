@@ -41,6 +41,12 @@
 }
 
 
+\newcommand{\inkscape}[2]{
+\IfFileExists{jeter_svg_#1.png}{}{\immediate\write18{inkscape -z --export-png=jeter_svg_#1.png #1.svg}}
+\begin{center}
+\includegraphics[#2]{jeter_svg_#1.png}
+\end{center}
+}
 
 \title{Next Generation Sequencing\\File Formats.}
 \author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\ \href{mailto:plindenbaum@yahoo.fr}{pierre.lindenbaum@univ-nantes.fr}\\ \url{http://plindenbaum.blogspot.com}\\\href{https://github.com/lindenb/courses}{https://github.com/lindenb/courses}}\institute{Institut du Thorax. Nantes. France}
@@ -270,7 +276,73 @@ $\square$ read is PCR or optical duplicate
 \begin{frame} 
 \frametitle{SAM FLAGS}
 \framesubtitle{Read Paired}
+\inkscape{samflags0x1}{scale=0.35}
 \end{frame}
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{Read mapped in proper pair}
+\inkscape{samflags0x2}{scale=0.35}
+\end{frame}
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{Read unmapped}
+\inkscape{samflags0x4}{scale=0.35}
+\end{frame}
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{Mate unmapped}
+\inkscape{samflags0x8}{scale=0.35}
+\end{frame}
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{Read reverse strand}
+\inkscape{samflags0x10}{scale=0.35}
+\end{frame}
+
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{Mate reverse strand}
+\inkscape{samflags0x20}{scale=0.35}
+\end{frame}
+
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{First in pair}
+\inkscape{samflags0x40}{scale=0.35}
+\end{frame}
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{Second in pair}
+\inkscape{samflags0x80}{scale=0.35}
+\end{frame}
+
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{not primary alignment}
+\inkscape{samflags0x100}{scale=0.35}
+\end{frame}
+
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{read fails platform/vendor quality checks}
+\inkscape{samflags0x200}{scale=0.35}
+\end{frame}
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{read is PCR or optical duplicate}
+\inkscape{samflags0x400}{scale=0.35}
+\end{frame}
+
 
 
 \begin{frame} 

@@ -54,11 +54,233 @@ What we will cover:
 \end{frame}
 
 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% FORMAT
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hugeslide{Formats}
+
+\begin{frame}[fragile]
+\frametitle{Format}
+\framesubtitle{Genbank}
+\begin{lstlisting}[basicstyle=\tiny,breaklines=false]
+LOCUS       X53813                   422 bp    DNA     linear   MAM 22-JUN-1992
+DEFINITION  Blue Whale heavy satellite DNA.
+ACCESSION   X53813 X17460
+VERSION     X53813.1  GI:25
+KEYWORDS    satellite DNA.
+SOURCE      Balaenoptera musculus (Blue whale)
+  ORGANISM  Balaenoptera musculus
+            Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi;
+            Mammalia; Eutheria; Laurasiatheria; Cetartiodactyla; Cetacea;
+            Mysticeti; Balaenopteridae; Balaenoptera.
+REFERENCE   1  (bases 1 to 422)
+  AUTHORS   Arnason,U. and Widegren,B.
+  TITLE     Composition and chromosomal localization of cetacean highly
+            repetitive DNA with special reference to the blue whale,
+            Balaenoptera musculus
+  JOURNAL   Chromosoma 98 (5), 323-329 (1989)
+   PUBMED   2612291
+COMMENT     See also <X52700-2> for 1,760 bp common cetacean component clones
+            and <X52703-6>,<X53811-4> for the 422 bp heavy satellite clones.
+FEATURES             Location/Qualifiers
+     source          1..422
+                     /organism="Balaenoptera musculus"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:9771"
+                     /clone="7"
+     misc_feature    1..422
+                     /note="heavy satellite DNA"
+ORIGIN      
+        1 tagttattca acctatccca ctctctagat accccttagc acgtaaagga atattatttg
+       61 ggggtccagc catggagaat agtttagaca ctaggatgag ataaggaaca cacccattct
+      121 aaagaaatca cattaggatt ctctttttaa gctgttcctt aaaacactag agtcttagaa
+      181 atctattgga ggcagaagca gtcaagggta gcctagggtt agggttaggc ttagggttag
+      241 ggttagggta cggcttaggg tactgtttcg gggaggggtt caggtacggc gtagggtatg
+      301 ggttagggtt agggttaggg ttagtgttag ggttagggct cggtttaggg tacgggttag
+      361 gattagggta cgtgttaggg ttagggtagg gcttagggtt agggtacgtg ttagggttag
+      421 gg
+//
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\url{"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=25}
+\frametitle{Format}
+\framesubtitle{ASN.1}
+\begin{lstlisting}[basicstyle=\tiny,breaklines=false]
+Seq-entry ::= seq {
+  id {
+    embl {
+      accession "X53813" ,
+      version 1 } ,
+    gi 25 } ,
+  descr {
+    title "Blue Whale heavy satellite DNA" ,
+    source {
+      org {
+        taxname "Balaenoptera musculus" ,
+        common "Blue whale" ,
+        db {
+          {
+            db "taxon" ,
+            tag
+              id 9771 } } ,
+        orgname {
+          name
+            binomial {
+              genus "Balaenoptera" ,
+              species "musculus" } ,
+          lineage "Eukaryota; Metazoa; Chordata; Craniata; Vertebrata;
+ Euteleostomi; Mammalia; Eutheria; Laurasiatheria; Cetartiodactyla; Cetacea;
+ Mysticeti; Balaenopteridae; Balaenoptera" ,
+          gcode 1 ,
+          mgcode 2 ,
+          div "MAM" } } ,
+      subtype {
+        {
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Format}
+\framesubtitle{ASN.1 (schema)}
+\url{http://www.ncbi.nlm.nih.gov/data_specs/asn/insdseq.asn}
+\begin{lstlisting}[basicstyle=\tiny,breaklines=false]
+INSDSeq ::= SEQUENCE {
+    locus VisibleString ,
+    length INTEGER ,
+    strandedness VisibleString OPTIONAL ,
+    moltype VisibleString ,
+    topology VisibleString OPTIONAL ,
+    division VisibleString ,
+    update-date VisibleString ,
+    create-date VisibleString OPTIONAL ,
+    update-release VisibleString OPTIONAL ,
+    create-release VisibleString OPTIONAL ,
+    definition VisibleString ,
+    primary-accession VisibleString OPTIONAL ,
+    entry-version VisibleString OPTIONAL ,
+    accession-version VisibleString OPTIONAL ,
+    other-seqids SEQUENCE OF INSDSeqid OPTIONAL ,
+    secondary-accessions SEQUENCE OF INSDSecondary-accn OPTIONAL,
+    project VisibleString OPTIONAL ,
+    keywords SEQUENCE OF INSDKeyword OPTIONAL ,
+    segment VisibleString OPTIONAL ,
+    source VisibleString OPTIONAL ,
+    organism VisibleString OPTIONAL ,
+    taxonomy VisibleString OPTIONAL ,
+    references SEQUENCE OF INSDReference OPTIONAL ,
+    comment VisibleString OPTIONAL ,
+    comment-set SEQUENCE OF INSDComment OPTIONAL ,
+    struc-comments SEQUENCE OF INSDStrucComment OPTIONAL ,
+    primary VisibleString OPTIONAL ,
+    source-db VisibleString OPTIONAL ,
+    database-reference VisibleString OPTIONAL ,
+    feature-table SEQUENCE OF INSDFeature OPTIONAL ,
+    feature-set SEQUENCE OF INSDFeatureSet OPTIONAL ,
+    sequence VisibleString OPTIONAL ,  -- Optional for contig, wgs, etc.
+    contig VisibleString OPTIONAL ,
+    alt-seq SEQUENCE OF INSDAltSeqData OPTIONAL
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Formats}
+\framesubtitle{ASN.1 (tools)}
+\begin{center}
+DATATOOL
+\end{center}
+Generate C++ data storage classes based on ASN.1, DTD or XML Schema specification to be used with NCBI data serialization streams.\\
+Convert ASN.1 specification into a DTD or XML Schema specification and vice versa.\\
+Convert data between ASN.1, XML and JSON formats.\\
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Formats}
+\framesubtitle{XML}
+\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=25&retmode=xml}
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+<?xml version="1.0"?>
+ <!DOCTYPE GBSet PUBLIC "-//NCBI//NCBI GBSeq/EN" "http://www.ncbi.nlm.nih.gov/dtd/NCBI_GBSeq.dtd">
+ <GBSet>
+<GBSeq>
+  <GBSeq_locus>X53813</GBSeq_locus>
+  <GBSeq_length>422</GBSeq_length>
+  <GBSeq_strandedness>double</GBSeq_strandedness>
+  <GBSeq_moltype>DNA</GBSeq_moltype>
+  <GBSeq_topology>linear</GBSeq_topology>
+  <GBSeq_division>MAM</GBSeq_division>
+  <GBSeq_update-date>22-JUN-1992</GBSeq_update-date>
+  <GBSeq_create-date>13-JUL-1990</GBSeq_create-date>
+  <GBSeq_definition>Blue Whale heavy satellite DNA</GBSeq_definition>
+  <GBSeq_primary-accession>X53813</GBSeq_primary-accession>
+  <GBSeq_accession-version>X53813.1</GBSeq_accession-version>
+  <GBSeq_other-seqids>
+    <GBSeqid>emb|X53813.1|</GBSeqid>
+    <GBSeqid>gi|25</GBSeqid>
+  </GBSeq_other-seqids>
+  <GBSeq_secondary-accessions>
+    <GBSecondary-accn>X17460</GBSecondary-accn>
+  </GBSeq_secondary-accessions>
+  <GBSeq_keywords>
+    <GBKeyword>satellite DNA</GBKeyword>
+  </GBSeq_keywords>
+  <GBSeq_source>Balaenoptera musculus (Blue whale)</GBSeq_source>
+  <GBSeq_organism>Balaenoptera musculus</GBSeq_organism>
+  <GBSeq_taxonomy>Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; Eutheria; Laurasiatheria; Cetartiod
+actyla; Cetacea; Mysticeti; Balaenopteridae; Balaenoptera</GBSeq_taxonomy>
+  <GBSeq_references>
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Formats}
+\framesubtitle{XML (DTD)}
+\url{http://www.ncbi.nlm.nih.gov/dtd/NCBI_GBSeq.mod.dtd}
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+<!ELEMENT GBSeq (
+        GBSeq_locus, 
+        GBSeq_length, 
+        GBSeq_strandedness?, 
+        GBSeq_moltype, 
+        GBSeq_topology?, 
+        GBSeq_division, 
+        GBSeq_update-date, 
+        GBSeq_create-date?, 
+        GBSeq_update-release?, 
+        GBSeq_create-release?, 
+        GBSeq_definition, 
+        GBSeq_primary-accession?, 
+        GBSeq_entry-version?, 
+        GBSeq_accession-version?, 
+        GBSeq_other-seqids?, 
+        GBSeq_secondary-accessions?, 
+        GBSeq_project?, 
+        GBSeq_keywords?, 
+        GBSeq_segment?, 
+        GBSeq_source?, 
+        GBSeq_organism?, 
+        GBSeq_taxonomy?, 
+        GBSeq_references?, 
+        GBSeq_comment?, 
+        GBSeq_comment-set?, 
+        GBSeq_struc-comments?, 
+        (...)
+\end{lstlisting}
+\end{frame}
+
+
+
 
 \begin{frame} 
  The E-Utilities are a set of seven server-side programs that provide a stable interface to the search, retrieval, and linking functions of the Entrez system, using a fixed URL syntax. The output provided by the E-Utilities is in XML format, with the notable exception of the EFetch utility, which returns data in a variety of formats. The E-Utilities are designed to be called from within a computer program that can process their output. Calling an E-Utility from any of the common programming languages— including Perl, Python, and Java—is a simple matter of posting a URL.
- \end{frame}
- 
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -73,7 +295,6 @@ What we will cover:
 Provides a list of the names of all valid Entrez databases.\\
 Provides statistics for a single database, including lists of indexing fields and available link names.
 \end{frame}
-
 
 \begin{frame}[fragile]
 \frametitle{EInfo}
@@ -210,6 +431,153 @@ issions as well as automated searching of PubMed abstracts and full-text PubMed 
 \end{itemize}
 \end{frame}
 
+
+\begin{frame}[fragile]
+\frametitle{ESearch}
+\framesubtitle{Searching }
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D" |\
+xmllint --format -
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+<eSearchResult>
+  <Count>684</Count>
+  <RetMax>20</RetMax>
+  <RetStart>0</RetStart>
+  <IdList>
+    <Id>507866428</Id>
+    <Id>124056416</Id>
+    <Id>383843869</Id>
+    <Id>383843867</Id>
+    <Id>383843865</Id>
+    <Id>383843863</Id>
+    <Id>383843861</Id>
+    <Id>383843859</Id>
+    <Id>383843857</Id>
+    <Id>383843855</Id>
+    <Id>383843853</Id>
+    <Id>383843851</Id>
+    <Id>383843849</Id>
+    <Id>383843847</Id>
+    <Id>383843845</Id>
+    <Id>157367690</Id>
+    <Id>157367676</Id>
+    <Id>157367662</Id>
+    <Id>157367648</Id>
+    <Id>157367634</Id>
+  </IdList>
+  <TranslationSet>
+    <Translation>
+      <From>"Mammuthus primigenius"[ORGN]</From>
+      <To>"Mammuthus primigenius"[Organism]</To>
+    </Translation>
+  </TranslationSet>
+  <TranslationStack>
+    <TermSet>
+      <Term>"Mammuthus primigenius"[Organism]</Term>
+      <Field>Organism</Field>
+      <Count>684</Count>
+      <Explode>Y</Explode>
+    </TermSet>
+    <OP>GROUP</OP>
+  </TranslationStack>
+  <QueryTranslation>"Mammuthus primigenius"[Organism]</QueryTranslation>
+</eSearchResult>
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{ESearch}
+\framesubtitle{retmax  }
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&retmax=2" |\
+xmllint --format -
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+<eSearchResult>
+  <Count>684</Count>
+  <RetMax>2</RetMax>
+  <RetStart>0</RetStart>
+  <IdList>
+    <Id>507866428</Id>
+    <Id>124056416</Id>
+  </IdList>
+  <TranslationSet>
+    <Translation>
+      <From>"Mammuthus primigenius"[ORGN]</From>
+      <To>"Mammuthus primigenius"[Organism]</To>
+    </Translation>
+  </TranslationSet>
+  <TranslationStack>
+    <TermSet>
+      <Term>"Mammuthus primigenius"[Organism]</Term>
+      <Field>Organism</Field>
+      <Count>684</Count>
+      <Explode>Y</Explode>
+    </TermSet>
+    <OP>GROUP</OP>
+  </TranslationStack>
+  <QueryTranslation>"Mammuthus primigenius"[Organism]</QueryTranslation>
+</eSearchResult>
+
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{ESearch}
+\framesubtitle{retstart  }
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&retmax=2&retstart=100" |\
+xmllint --format -
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+<eSearchResult>
+  <Count>684</Count>
+  <RetMax>3</RetMax>
+  <RetStart>100</RetStart>
+  <IdList>
+    <Id>300810656</Id>
+    <Id>300810655</Id>
+    <Id>300810654</Id>
+  </IdList>
+  <TranslationSet>
+    <Translation>
+      <From>"Mammuthus primigenius"[ORGN]</From>
+      <To>"Mammuthus primigenius"[Organism]</To>
+    </Translation>
+  </TranslationSet>
+  <TranslationStack>
+    <TermSet>
+      <Term>"Mammuthus primigenius"[Organism]</Term>
+      <Field>Organism</Field>
+      <Count>684</Count>
+      <Explode>Y</Explode>
+    </TermSet>
+    <OP>GROUP</OP>
+  </TranslationStack>
+  <QueryTranslation>"Mammuthus primigenius"[Organism]</QueryTranslation>
+</eSearchResult>
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{ESearch}
+\framesubtitle{retcount  }
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&rettype=count" |\
+xmllint --format -
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,breaklines=false]
+<eSearchResult>
+  <Count>684</Count>
+</eSearchResult>
+\end{lstlisting}
+\end{frame}
 
 
 \end{document}

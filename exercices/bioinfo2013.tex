@@ -14,7 +14,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Here are few questions to prepare the courses 	\textbf{"Advanced NCBI"} and \textbf{"Next-Generation-Sequencing"}.\\
+Here are few questions to prepare the courses \textbf{"Advanced NCBI"} and \textbf{"Next-Generation-Sequencing"}.\\
 The aim of those exercices is to assure that you have a basic knowledge of the tools and vocabulary that will be used during the courses.\\
 Only basic linux commands are required here, no external program should be installed.
 \end{abstract}
@@ -46,8 +46,19 @@ Briefly describe the usage of the following linux commands :
 What is 	\textbf{stdout} ? \\
 What is 	\textbf{stderr} ?\\
 What is 	\textbf{stdin} ?\\
-How to you 	\textbf{redirect} the ouput of a program to a file ?\\
-How to you 	\textbf{append} the ouput of a program to a file ?\\
+How do you 	\textbf{redirect} the ouput of a program to a file ?\\
+How do you 	\textbf{append} the ouput of a program to a file ?\\
+\\
+In the HTTP protocol, what are the POST and GET methods ?\\
+What is the JSON format ?\\
+What is a XML well-formed document ?\\
+What is a XML DTD ?\\
+What is a XML Schema ?\\
+What is a XML valid document ?\\
+
+%
+% "Nicotiana tabacum"[ORGN] 100:150[SLEN] trnH[GENE] variation[FKEY]
+% (Science[JOUR] AND COL1A1[GENE] AND Asara[AUTH]) NOT ("Mammut americanum" [ORGN] OR "Brachylophosaurus canadensis"[ORGN])
 
 \section{General Bioinformatics}
 \begin{itemize}
@@ -57,10 +68,12 @@ How to you 	\textbf{append} the ouput of a program to a file ?\\
 \item How many chromosomes is there in the human genome ?
 \item What the approximate size of the longest human chromosome ?
 \item What's the difference between a binary file and flat file ?
-\item How many bytes do you need to store the *length* of the human genome ?
+\item How many bytes do you need to store the \textbf{length} of the human genome ?
 \item In a sequence containing only 'A', 'T', 'G' and 'C' , how many bases can you store in one byte ?
 \item Cite some advantages/inconvenients of storing data in a tab delimited format vs using a structured format (e.g: XML, JSON, ASN.1)
-\item Cite some advantages/inconvenients of storing data of using a graphical interface (like Miscrosoft Excel) vs using the command line 
+\item Cite some advantages/inconvenients of storing data of using a graphical interface (like Miscrosoft Excel) vs using the command line.
+\item Find the following nucleotide entry in the NCBI:\emph{ a Sequence of "Nicotiana tabacum" for the gene 'trnH' with a length comprised between 100 and 150 nucleotides and having a feature "variation"}.
+\item Find the following protein entry in the NCBI:\emph{ a sequence for the gene COL1A1 published by Dr. Asara in the "Science" journal,  that is not a sequence of "Mammut americanum" nor "Brachylophosaurus canadensis"}.
 \end{itemize}
 
 \section{Bash}
@@ -86,8 +99,15 @@ awk '{printf("%f %%\n",$1/($1+$2));}' > result.txt
 
 \section{Makefile}
 \noindent
-(wikipedia:) \emph{"In software development, Make is a utility that automatically builds executable programs and libraries from source code by reading files called makefiles which specify how to derive the target program"}. You'll find many simple tutorials for \textbf{make} on the web.\\
-The following \textbf{Makefile} creates a tab-delimited file 'gene\_ontology\_map.txt' containing the following column: gene-name(hgnc\_symbol), chromosome, start\_position, end\_position and gene-ontology term.\\
+(wikipedia:) \emph{"In software development, Make is a utility that automatically builds executable programs and libraries from source code by reading files called makefiles which specify how to derive the target program"}.\\You'll find many simple tutorials for \textbf{make} on the web.\\
+The following \textbf{Makefile} creates a tab-delimited file 'gene\_ontology\_map.txt' containing the following columns:
+\begin{itemize}
+\item gene-name(hgnc\_symbol)
+\item chromosome
+\item start\_position
+\item end\_position
+\item gene-ontology term.
+\end{itemize}
 Complete the \textbf{Makefile} by replacing the ???????????? with the correct pipeline ( \url{https://gist.github.com/lindenb/65e98e5752ea26eb9868} ).
 
 \begin{lstlisting}[language=make]
@@ -145,7 +165,7 @@ clean:
 
 \section{The Human Genome}
 
-The chromosome for the latest build are available at: \url{http://hgdownload.cse.ucsc.edu/goldenPath/hg19/chromosomes/}.
+The chromosomes for the latest Human build are available at: \url{http://hgdownload.cse.ucsc.edu/goldenPath/hg19/chromosomes/}. Answer the following question using a linux command line:
 \begin{itemize}
 \item What's the length of the chr22 ?
 \item Look at the 100000 first lines of the chr22. Explain what you see.
@@ -155,7 +175,7 @@ The chromosome for the latest build are available at: \url{http://hgdownload.cse
 
 
 \section{Using XSLT}
-The following URL is a XML-based list to the databases available from the  \textbf{NCBI}: \url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi}.\\
+Many NCBI web-services produce a XML document. For example, the following URL is a XML-based list to the databases available from the  \textbf{NCBI}: \url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi}.\\
 \begin{lstlisting}[language=xml]
 <!DOCTYPE eInfoResult PUBLIC "-//NLM//DTD eInfoResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd">
 <eInfoResult>
@@ -168,7 +188,7 @@ The following URL is a XML-based list to the databases available from the  \text
     <DbName>nucest</DbName>
     <DbName>structure</DbName>
     (...)
-\end{lstlisting}  
+\end{lstlisting}
 \textbf{XSLT} is a XML specification used to transform a XML to another type of document (XML, HTML or text).
 As an example, the XSLT stylesheet \textbf{einfo2html.xsl} available at \url{https://gist.github.com/lindenb/65e98e5752ea26eb9868} transforms  \url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi} to a HTML document. The ouput would start with:\\
 \begin{lstlisting}[language=html]

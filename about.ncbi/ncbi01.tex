@@ -434,6 +434,14 @@ issions as well as automated searching of PubMed abstracts and full-text PubMed 
 
 \begin{frame}[fragile]
 \frametitle{ESearch}
+\framesubtitle{Syntax}
+\begin{lstlisting}
+http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{ESearch}
 \framesubtitle{Searching }
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
 curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D" |\
@@ -521,7 +529,6 @@ xmllint --format -
   </TranslationStack>
   <QueryTranslation>"Mammuthus primigenius"[Organism]</QueryTranslation>
 </eSearchResult>
-
 \end{lstlisting}
 \end{frame}
 
@@ -576,6 +583,327 @@ xmllint --format -
 <eSearchResult>
   <Count>684</Count>
 </eSearchResult>
+\end{lstlisting}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% ESummary
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\hugeslide{ESummary}
+
+
+\begin{frame}[fragile]
+\frametitle{ESummary}
+\framesubtitle{Syntax}
+\begin{lstlisting}
+http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=(DB)&id=(TERM)
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{ESummary}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+$ curl -s  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nucleotide&id=507866428"
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+<eSummaryResult>
+<DocSum>
+	<Id>507866428</Id>
+	<Item Name="Caption" Type="String">KC524742</Item>
+	<Item Name="Title" Type="String">Mammuthus primigenius isolate CME2005/915 myoglobin (Mb) gene, partial cds</Item>
+	<Item Name="Extra" Type="String">gi|507866428|gb|KC524742.1|[507866428]</Item>
+	<Item Name="Gi" Type="Integer">507866428</Item>
+	<Item Name="CreateDate" Type="String">2013/06/15</Item>
+	<Item Name="UpdateDate" Type="String">2013/06/21</Item>
+	<Item Name="Flags" Type="Integer">0</Item>
+	<Item Name="TaxId" Type="Integer">37349</Item>
+	<Item Name="Length" Type="Integer">9042</Item>
+	<Item Name="Status" Type="String">live</Item>
+	<Item Name="ReplacedBy" Type="String"></Item>
+	<Item Name="Comment" Type="String"><![CDATA[  ]]></Item>
+</DocSum>
+</eSummaryResult>
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{ESummary}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+$ curl -s  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=snp&id=25"
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+<eSummaryResult>
+<DocSum>
+	<Id>25</Id>
+	<Item Name="SNP_ID" Type="Integer">25</Item>
+	<Item Name="Organism" Type="String"></Item>
+	<Item Name="ALLELE_ORIGIN" Type="String"></Item>
+	<Item Name="GLOBAL_MAF" Type="String">0.4913</Item>
+	<Item Name="GLOBAL_POPULATION" Type="String"></Item>
+	<Item Name="GLOBAL_SAMPLESIZE" Type="Integer">0</Item>
+	<Item Name="SUSPECTED" Type="String"></Item>
+	<Item Name="CLINICAL_SIGNIFICANCE" Type="String"></Item>
+	<Item Name="GENE" Type="String">THSD7A</Item>
+	<Item Name="LOCUS_ID" Type="Integer">221981</Item>
+	<Item Name="ACC" Type="String">NM_015204.2,NT_007819.17</Item>
+	<Item Name="CHR" Type="String">7</Item>
+	<Item Name="WEIGHT" Type="Integer">1</Item>
+	<Item Name="HANDLE" Type="String">1000GENOMES,BGI,BL,BUSHMAN,COMPLETE_GENOMICS,CSHL-HAPMAP,GMI,ILLUMINA-UK,KWOK,PERLEGEN,SSMP,TISHKOFF</Item>
+	<Item Name="FXN_CLASS" Type="String">intron-variant</Item>
+	<Item Name="VALIDATED" Type="String">by-1000G,by-cluster,by-frequency,by-hapmap</Item>
+	<Item Name="GTYPE" Type="String">true</Item>
+	<Item Name="NONREF" Type="String">false</Item>
+	<Item Name="DOCSUM" Type="String">HGVS=NC_000007.13:g.11584142T&gt;C,NG_027670.1:g.292683A&gt;G,NM_015204.2:c.1454-1398A&gt;G,NT_007819.17:g.11574142T&gt;C|SEQ=TCTGTGAGCTTCTGCATGCAATCCT[A/G]TGCAATTGGAATTTGATAGTCCTTT|GENE=THSD7A:221981</Item>
+	<Item Name="HET" Type="Integer">50</Item>
+	<Item Name="SRATE" Type="Integer">0</Item>
+	<Item Name="TAX_ID" Type="Integer">9606</Item>
+	<Item Name="CHRRPT" Type="String">25|2|0|1|1|1|7|NT_007819.17|11574141|11584142|THSD7A|0.499848|0.00872267| |51|1|1|36|138|0| | |T:2178:0.4913</Item>
+	<Item Name="ORIG_BUILD" Type="Integer">36</Item>
+	<Item Name="UPD_BUILD" Type="Integer">138</Item>
+	<Item Name="CREATEDATE" Type="String">2000-09-19 17:02</Item>
+	<Item Name="UPDATEDATE" Type="String">2013-06-21 14:17</Item>
+	<Item Name="POP_CLASS" Type="String"></Item>
+	<Item Name="METHOD_CLASS" Type="String">computed,hybridize,sequence,unknown</Item>
+	<Item Name="SNP3D" Type="String"></Item>
+	<Item Name="LINKOUT" Type="String">ILLUMINA-UK|http://www.illumina.com/HumanGenomeNA18507_000019106_NCBI36.1_chr7_11550667</Item>
+	<Item Name="SS" Type="Integer">654151077</Item>
+	<Item Name="LOCSNPID" Type="String">7_11584142</Item>
+	<Item Name="ALLELE" Type="String">R</Item>
+	<Item Name="SNP_CLASS" Type="String">snp</Item>
+	<Item Name="CHRPOS" Type="String">7:11584142</Item>
+	<Item Name="CONTIGPOS" Type="String">NT_007819.17:11574142</Item>
+	<Item Name="TEXT" Type="String"></Item>
+	<Item Name="LOOKUP" Type="String">325952</Item>
+</DocSum>
+</eSummaryResult>
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{ESummary}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+$ curl -s  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=7939126"
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+<eSummaryResult>
+<DocSum>
+	<Id>7939126</Id>
+	<Item Name="PubDate" Type="Date">1994 Apr</Item>
+	<Item Name="EPubDate" Type="Date"></Item>
+	<Item Name="Source" Type="String">Sleep</Item>
+	<Item Name="AuthorList" Type="List">
+		<Item Name="Author" Type="String">Broughton R</Item>
+		<Item Name="Author" Type="String">Billings R</Item>
+		<Item Name="Author" Type="String">Cartwright R</Item>
+		<Item Name="Author" Type="String">Doucette D</Item>
+		<Item Name="Author" Type="String">Edmeads J</Item>
+		<Item Name="Author" Type="String">Edwardh M</Item>
+		<Item Name="Author" Type="String">Ervin F</Item>
+		<Item Name="Author" Type="String">Orchard B</Item>
+		<Item Name="Author" Type="String">Hill R</Item>
+		<Item Name="Author" Type="String">Turrell G</Item>
+	</Item>
+	<Item Name="LastAuthor" Type="String">Turrell G</Item>
+	<Item Name="Title" Type="String">Homicidal somnambulism: a case report.</Item>
+	<Item Name="Volume" Type="String">17</Item>
+	<Item Name="Issue" Type="String">3</Item>
+	<Item Name="Pages" Type="String">253-64</Item>
+	<Item Name="LangList" Type="List">
+		<Item Name="Lang" Type="String">English</Item>
+	</Item>
+	<Item Name="NlmUniqueID" Type="String">7809084</Item>
+	<Item Name="ISSN" Type="String">0161-8105</Item>
+	<Item Name="ESSN" Type="String">1550-9109</Item>
+	<Item Name="PubTypeList" Type="List">
+		<Item Name="PubType" Type="String">Journal Article</Item>
+	</Item>
+	<Item Name="RecordStatus" Type="String">PubMed - indexed for MEDLINE</Item>
+	<Item Name="PubStatus" Type="String">ppublish</Item>
+	<Item Name="ArticleIds" Type="List">
+		<Item Name="pubmed" Type="String">7939126</Item>
+		<Item Name="eid" Type="String">7939126</Item>
+		<Item Name="rid" Type="String">7939126</Item>
+	</Item>
+	<Item Name="History" Type="List">
+		<Item Name="pubmed" Type="Date">1994/04/01 00:00</Item>
+		<Item Name="medline" Type="Date">1994/04/01 00:01</Item>
+		<Item Name="entrez" Type="Date">1994/04/01 00:00</Item>
+	</Item>
+	<Item Name="References" Type="List"></Item>
+	<Item Name="HasAbstract" Type="Integer">1</Item>
+	<Item Name="PmcRefCount" Type="Integer">4</Item>
+	<Item Name="FullJournalName" Type="String">Sleep</Item>
+	<Item Name="ELocationID" Type="String"></Item>
+	<Item Name="SO" Type="String">1994 Apr;17(3):253-64</Item>
+</DocSum>
+</eSummaryResult>
+\end{lstlisting}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% EFetch
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\hugeslide{EFetch}
+
+
+\begin{frame}[fragile]
+\frametitle{EFetch}
+\framesubtitle{Syntax}
+\begin{lstlisting}
+$ curl -s  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=(db)&id=(ID)" 
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EFetch}
+Default 
+\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+Seq-entry ::= set {
+  class nuc-prot ,
+  descr {
+    source {
+      genome genomic ,
+      org {
+        taxname "Mammuthus primigenius" ,
+        common "woolly mammoth" ,
+        db {
+          {
+            db "taxon" ,
+            tag
+              id 37349 } } ,
+        orgname {
+          name
+            binomial {
+              genus "Mammuthus" ,
+              species "primigenius" } ,
+          mod {
+            {
+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EFetch}
+\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&rettype=fasta}
+\begin{lstlisting}[basicstyle=\tiny,breaklines=true]
+>gi|507866428|gb|KC524742.1| Mammuthus primigenius isolate CME2005/915 myoglobin (Mb) gene, partial cds
+GCACTTGCTTTTTTTGTCTTCTTCAGACCACGACATGGGACTCAGCGACGGGGAATGGGAGTTGGTGTTG
+AAAACCTGGGGGAAAGTGGAGGCTGACATCCCGGGCCATGGGCTGGAAGTCTTCGTCAGGTAAAGGAAGA
+AATCCTGTGGCCCCCATCACCCACCCCNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EFetch}
+\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&rettype=fasta&retmode=xml}
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+<?xml version="1.0"?>
+ <!DOCTYPE TSeqSet PUBLIC "-//NCBI//NCBI TSeq/EN" 
+ <TSeqSet>
+<TSeq>
+  <TSeq_seqtype value="nucleotide"/>
+  <TSeq_gi>507866428</TSeq_gi>
+  <TSeq_accver>KC524742.1</TSeq_accver>
+  <TSeq_taxid>37349</TSeq_taxid>
+  <TSeq_orgname>Mammuthus primigenius</TSeq_orgnam
+  <TSeq_defline>Mammuthus primigenius isolate CME2
+  <TSeq_length>9042</TSeq_length>
+  <TSeq_sequence>GCACTTGCTTTTTTTGTCTTCTTCAGACCACGA
+</TSeq>
+</TSeqSet>
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{EFetch}
+\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&retmode=xml}
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+<GBSeq>
+  <GBSeq_locus>KC524742</GBSeq_locus>
+  <GBSeq_length>9042</GBSeq_length>
+  <GBSeq_strandedness>double</GBSeq_strandedness>
+  <GBSeq_moltype>DNA</GBSeq_moltype>
+  <GBSeq_topology>linear</GBSeq_topology>
+  <GBSeq_division>MAM</GBSeq_division>
+  <GBSeq_update-date>21-JUN-2013</GBSeq_update-date>
+  <GBSeq_create-date>15-JUN-2013</GBSeq_create-date>
+  <GBSeq_definition>Mammuthus primigenius isolate CME2005/915 myoglobin (Mb) gene, partial cds</GBSeq_definition>
+  <GBSeq_primary-accession>KC524742</GBSeq_primary-accession>
+  <GBSeq_accession-version>KC524742.1</GBSeq_accession-version>
+  <GBSeq_other-seqids>
+    <GBSeqid>gb|KC524742.1|</GBSeqid>
+    <GBSeqid>gi|507866428</GBSeqid>
+  </GBSeq_other-seqids>
+  <GBSeq_source>Mammuthus primigenius (woolly mammoth)</GBSeq_source>
+  <GBSeq_organism>Mammuthus primigenius</GBSeq_organism>
+(...)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EFetch}
+\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&rettype=gb}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=false]
+LOCUS       KC524742                9042 bp    DNA     linear   MAM 21-JUN-2013
+DEFINITION  Mammuthus primigenius isolate CME2005/915 myoglobin (Mb) gene,
+            partial cds.
+ACCESSION   KC524742
+VERSION     KC524742.1  GI:507866428
+KEYWORDS    .
+SOURCE      Mammuthus primigenius (woolly mammoth)
+  ORGANISM  Mammuthus primigenius
+            Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi;
+            Mammalia; Eutheria; Afrotheria; Proboscidea; Elephantidae;
+            Mammuthus.
+REFERENCE   1  (bases 1 to 9042)
+  AUTHORS   Mirceta,S., Signore,A.V., Burns,J.M., Cossins,A.R., Campbell,K.L.
+            and Berenbrink,M.
+  TITLE     Evolution of mammalian diving capacity traced by myoglobin net
+            surface charge
+  JOURNAL   Science 340 (6138), 1234192 (2013)
+   PUBMED   23766330
+REFERENCE   2  (bases 1 to 9042)
+  AUTHORS   Signore,A.V., Campbell,K.L. and Poinar,H.N.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (09-JAN-2013) Biological Sciences, University of
+            Manitoba, 50 Sifton Road, Winnipeg, Manitoba R3T2N2, Canada
+COMMENT     ##Assembly-Data-START##
+            Sequencing Technology :: Sanger dideoxy sequencing
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..9042
+                     /organism="Mammuthus primigenius"
+                     /mol_type="genomic DNA"
+                     /isolate="CME2005/915"
+                     /db_xref="taxon:37349"
+                     /tissue_type="bone"
+     gene            <35..>9042
+                     /gene="Mb"
+     mRNA            join(<35..129,5627..5849,8979..>9042)
+                     /gene="Mb"
+                     /product="myoglobin"
+     CDS             join(35..129,5627..5849,8979..>9042)
+
 \end{lstlisting}
 \end{frame}
 

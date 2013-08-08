@@ -414,6 +414,93 @@ issions as well as automated searching of PubMed abstracts and full-text PubMed 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
+%% GQuery
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hugeslide{GQuery}
+
+
+\begin{frame}[fragile]
+\frametitle{GQuery}
+Provides the number of records retrieved in all Entrez databases by a single text query.
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+\frametitle{GQuery}
+\framesubtitle{Example}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+$ curl  "http://eutils.ncbi.nlm.nih.gov/gquery?term=tyrannosaurus%20rex&retmode=xml"
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=true,escapechar=\%]
+<Result>
+    <Term>tyrannosaurus rex</Term>
+    <eGQueryResult>
+        <ResultItem><DbName>pubmed</DbName><MenuName/><Count>41</Count><Status>Ok</Status></ResultItem>
+        <ResultItem><DbName>pmc</DbName><MenuName/><Count>160</Count><Status>Ok</Status></ResultItem>
+        <ResultItem><DbName>mesh</DbName><MenuName/><Count>15</Count><Status>Ok</Status></ResultItem>
+        <ResultItem><DbName>books</DbName><MenuName/><Count>179</Count><Status>Ok</Status></ResultItem>
+        <ResultItem><DbName>pubmedhealth</DbName><MenuName/><Count>21</Count><Status>Ok</Status></ResultItem>
+        <ResultItem><DbName>omim</DbName><MenuName/><Count>10</Count><Status>Ok</Status></ResultItem>
+        <ResultItem><DbName>omia</DbName><MenuName/><Count>0</Count><Status>Term or Database is not found</Status></ResultItem>
+        <ResultItem><DbName>ncbisearch</DbName><MenuName/><Count>1</Count><Status>Ok</Status></ResultItem>
+        <ResultItem><DbName>nuccore</DbName><MenuName/><Count>0</Count><Status>Term or Database is not found</Status></ResultItem>
+        (...)
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{GQuery}
+\framesubtitle{Transforming to HTML}
+\lstinputlisting[language=xml,basicstyle=\tiny,breaklines=true,numbers=left]{gquery2html.xsl}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{GQuery}
+\framesubtitle{Transforming to HTML}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+ $ curl "http://eutils.ncbi.nlm.nih.gov/gquery?term=tyrannosaurus%20rex&retmode=xml" |\
+ xsltproc gquery2html.xsl  -
+\end{lstlisting}
+
+\begin{lstlisting}[language=html,basicstyle=\tiny,breaklines=false]
+<html>
+  <body>
+    <table>
+      <caption>tyrannosaurus rex</caption>
+      <tr>
+        <th>Database</th>
+        <th>Count</th>
+        <th>Status</th>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://www.ncbi.nlm.nih.gov/pubmed?cmd=search&amp;term=tyrannosaurus+rex">pubmed</a>
+        </td>
+        <td>41</td>
+        <td>Ok</td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://www.ncbi.nlm.nih.gov/pubmed?cmd=search&amp;term=tyrannosaurus+rex">pmc</a>
+        </td>
+        <td>160</td>
+        <td>Ok</td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://www.ncbi.nlm.nih.gov/pubmed?cmd=search&amp;term=tyrannosaurus+rex">mesh</a>
+        </td>
+        <td>15</td>
+\end{lstlisting}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
 %% ESearch
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -905,6 +992,295 @@ FEATURES             Location/Qualifiers
      CDS             join(35..129,5627..5849,8979..>9042)
 
 \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{EFetch}
+\framesubtitle{Using the WebEnv parameter.}
+Web environment string returned from a previous ESearch, EPost or ELink call. When provided, ESearch will post the results of the search operation to this pre-existing WebEnv.
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EFetch}
+\framesubtitle{Using the WebEnv parameter.}
+Searching extinct species in the NCBI taxonomy ('extinct[PROP]') 
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?!\color{red}{usehistory=y}!&db=taxonomy&term=extinct%5BPROP%5D"
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false,escapechar=\%]
+<eSearchResult>
+  <Count>145</Count>
+  <RetMax>20</RetMax>
+  <RetStart>0</RetStart>
+  <QueryKey>%\color{red}{1}%</QueryKey>
+  <WebEnv>%\color{red}{NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538}%</WebEnv>
+  <IdList>
+    <Id>1225531</Id>
+    <Id>1225530</Id>
+    <Id>1211276</Id>
+    <Id>1211275</Id>
+    <Id>1027716</Id>
+    <Id>948961</Id>
+    <Id>943952</Id>
+    <Id>867394</Id>
+    <Id>867393</Id>
+    <Id>748142</Id>
+    <Id>748141</Id>
+    <Id>741158</Id>
+    <Id>703576</Id>
+    <Id>703571</Id>
+    <Id>703559</Id>
+    <Id>693865</Id>
+    <Id>686441</Id>
+    <Id>665113</Id>
+    <Id>659069</Id>
+    <Id>656807</Id>
+  </IdList>
+  <TranslationSet/>
+  <TranslationStack>
+    <TermSet>
+      <Term>extinct[PROP]</Term>
+      <Field>PROP</Field>
+      <Count>145</Count>
+      <Explode>N</Explode>
+    </TermSet>
+    <OP>GROUP</OP>
+  </TranslationStack>
+  <QueryTranslation>extinct[PROP]</QueryTranslation>
+</eSearchResult>
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EFetch}
+\framesubtitle{Using the WebEnv parameter.}
+
+Fetch the extinct species in the NCBI taxonomy ('extinct[PROP]') using the WebEnv parameter.
+
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&!\color{red}{query\_key=1\&WebEnv=NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538}!&retmode=xml" 
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false,escapechar=\%]
+<TaxaSet><Taxon>
+    <TaxId>1225531</TaxId>
+    <ScientificName>Equus ovodovi</ScientificName>
+    <OtherNames>
+        <Synonym>Equus (Sussemionus) ovodovi</Synonym>
+        <Name>
+            <ClassCDE>authority</ClassCDE>
+            <DispName>Equus ovodovi Eisenmann &amp; Sergej, 2011</DispName>
+        </Name>
+    </OtherNames>
+    <ParentTaxId>1225530</ParentTaxId>
+    <Rank>species</Rank>
+    <Division>Mammals</Division>
+    <GeneticCode>
+        <GCId>1</GCId>
+        <GCName>Standard</GCName>
+    </GeneticCode>
+    <MitoGeneticCode>
+    (....)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EPost}
+\lstinputlisting[language=xml,basicstyle=\tiny,breaklines=true,numbers=left]{ncbi2epost.xsl}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EPost}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&!\color{red}{query\_key=1\&WebEnv=NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538}!&retmode=xml" |\
+!\color{red}{xsltproc --stringparam WebEnv NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538 ncbi2epost.xsl}! -
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=true,escapechar=\%]
+curl -d @-  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/epost.fcgi" <<EOF
+db=taxonomy&WebEnv=NCID_1_75550312_130.14.18.34_9001_1375948145_325582538&id=1225531,1225530,1211276,1211275,1027716,948961,943952,867394,867393,748142,748141,741158,703576,703571,703559,693865,686441,665113,659069,656807,647691,647690,643746,643745,643744,643742,577682,572106,572105,572104,572099,572098,570943,570942,570941,551196,544298,523825,523824,523822,523821,523820,518692,518691,518689,475185,436495,436494,436493,436488,402889,399386,399178,386524,379504,363580,363579,363578,363571,339614,339612,339609,328612,314500,307641,304335,272462,268291,251263,251094,251093,239970,239969,237965,230980,230979,227166,227165,223567,222863,222862,216182,216181,201717,201716,192211,188536,187135,187134,187133,187132,187131,187118,184920,180214,173935,148923,147494,147466,147464,136416,136415,126594,126429,115942,107030,103864,94623,92649,92648,89252,89250,63631,63221,54568,54500,54497,54366,54365,48784,46906,39097,39053,39051,37349,37348,37185,27445,27444,20678,13266,13140,9619,9275,9274,9273,8818,8817,8815,8813,8812,8811,8810,8367,3409,
+EOF
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{EPost}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&!\color{red}{query\_key=1\&WebEnv=NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538}!&retmode=xml" |\
+!\color{red}{xsltproc --stringparam WebEnv NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538 ncbi2epost.xsl}! - |\
+!\color{red}{bash}
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=true,escapechar=\%]
+<?xml version="1.0"?>
+<!DOCTYPE ePostResult PUBLIC "-//NLM//DTD ePostResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/ePost_020511.dtd">
+<ePostResult>
+	<QueryKey>2</QueryKey>
+	<WebEnv>NCID_1_75550312_130.14.18.34_9001_1375948145_325582538</WebEnv>
+</ePostResult>
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EPost}
+Search Homo Sapiens in the POST
+
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&term=!\color{red}{Homo\%20Sapiens}!&usehistory=y&WebEnv=NCID_1_75550312_130.14.18.34_9001_1375948145_325582538&query_key=2"
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=true,escapechar=\%]
+<eSearchResult>
+  <Count>0</Count>
+  <RetMax>0</RetMax>
+  <RetStart>0</RetStart>
+  <QueryKey>8</QueryKey>
+  <WebEnv>NCID_1_75550312_130.14.18.34_9001_1375948145_325582538</WebEnv>
+  <IdList/>
+  <TranslationSet/>
+  <TranslationStack>
+    <OP>GROUP</OP>
+    <TermSet>
+      <Term>homo sapiens[All Names]</Term>
+      <Field>All Names</Field>
+      <Count>1</Count>
+      <Explode>N</Explode>
+    </TermSet>
+    <OP>AND</OP>
+  </TranslationStack>
+  <QueryTranslation>(#2) AND homo sapiens[All Names]</QueryTranslation>
+</eSearchResult>
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EPost}
+is there Tyranosaurus in the POST
+
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+$ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&term=!\color{red}{Tyrannosaurus}!&usehistory=y&WebEnv=NCID_1_75550312_130.14.18.34_9001_1375948145_325582538&query_key=2"
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=true,escapechar=\%]
+<eSearchResult>
+  <Count>1</Count>
+  <RetMax>1</RetMax>
+  <RetStart>0</RetStart>
+  <QueryKey>9</QueryKey>
+  <WebEnv>NCID_1_75550312_130.14.18.34_9001_1375948145_325582538</WebEnv>
+  <IdList>
+    <Id>436494</Id>
+  </IdList>
+  <TranslationSet/>
+  <TranslationStack>
+    <OP>GROUP</OP>
+    <TermSet>
+      <Term>Tyrannosaurus[All Names]</Term>
+      <Field>All Names</Field>
+      <Count>1</Count>
+      <Explode>N</Explode>
+    </TermSet>
+    <OP>AND</OP>
+  </TranslationStack>
+  <QueryTranslation>(#2) AND Tyrannosaurus[All Names]</QueryTranslation>
+</eSearchResult>
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Efetch}
+\framesubtitle{Transforming to SVG}
+
+Using the stylesheet \url{https://github.com/lindenb/xslt-sandbox/blob/master/stylesheets/bio/ncbi/gb2svg.xsl}
+
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+xsltproc <(curl  "https://raw.github.com/lindenb/xslt-sandbox/master/stylesheets/bio/ncbi/gb2svg.xsl") \
+	"http://www.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=14971102&retmode=xml&rettype=gbc"
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Efetch}
+\framesubtitle{Transforming to SVG}
+\lstinputlisting[language=xml,basicstyle=\tiny,breaklines=true,numbers=left]{jeter01.svg}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Efetch}
+\framesubtitle{Transforming to SVG}
+\begin{center}
+\includegraphics[scale=0.4]{jeter01svg.png}
+\end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Efetch}
+\framesubtitle{Transforming to R}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+$ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Tyrannosaurus&usehistory=true" | xmllint --format -
+$ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&usehistory=true&WebEnv=NCID_1_52434791_130.14.22.215_9001_1375957034_1619786167&query_key=1&retmode=xml"
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Efetch}
+\framesubtitle{Transforming to R}
+\lstinputlisting[language=xml,basicstyle=\tiny,breaklines=true,numbers=left]{pubmed2rstats.xsl}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Efetch}
+\framesubtitle{Transforming to R}
+
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&usehistory=true&WebEnv=NCID_1_52434791_130.14.22.215_9001_1375957034_1619786167&query_key=1&retmode=xml" |\
+xsltproc pubmed2rstats.xsl -
+\end{lstlisting}
+
+\begin{lstlisting}[language=R,basicstyle=\tiny,breaklines=true,escapechar=\!]
+date2count <- list()
+
+date2count[["2013"]] <- ifelse(is.null(date2count[["2013"]]),1,1+date2count[["2013"]])
+date2count[["2012"]] <- ifelse(is.null(date2count[["2012"]]),1,1+date2count[["2012"]])
+date2count[["2012"]] <- ifelse(is.null(date2count[["2012"]]),1,1+date2count[["2012"]])
+date2count[["2011"]] <- ifelse(is.null(date2count[["2011"]]),1,1+date2count[["2011"]])
+date2count[["2011"]] <- ifelse(is.null(date2count[["2011"]]),1,1+date2count[["2011"]])
+(..)
+df <- data.frame(
+	Year=as.integer(names(date2count)),
+	Count=unlist(date2count)
+	)
+png('jeterpubmed.png')
+plot(df)
+title('pubmed: count(articles)=f(year)')
+dev.off()
+\end{lstlisting}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+\frametitle{Efetch}
+\framesubtitle{Transforming to R}
+
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&usehistory=true&WebEnv=NCID_1_52434791_130.14.22.215_9001_1375957034_1619786167&query_key=1&retmode=xml" |\
+xsltproc pubmed2rstats.xsl - |\
+R --no-save
+\end{lstlisting}
+
+\begin{center}
+\includegraphics[scale=0.3]{jeterpubmed.png}
+\end{center}
 \end{frame}
 
 

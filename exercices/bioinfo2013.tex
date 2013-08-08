@@ -133,11 +133,11 @@ gene_ontology_map.txt: gene_and_position.tsv gene_and_go.txt
 #	HGNC symbol 
 #	Gene Start (bp)
 #	Gene End (bp)
-# 'show query in XML format' and use it in the curl command below
+# 'show query in XML format' and use it in the curl command below . Service URL is "http://www.biomart.org/biomart/martservice/result"
 # keep the lines having a HGNC symbol
 # sort on HGNC symbol 
 gene_and_position.tsv : 
-	curl --form-string query='<?xml version="1.0" ??????????????????????????????????
+	curl -L --form-string query='<?xml version="1.0" ?????????????????????????????????? 
 #
 # remove the headers from gene_association.goa_human
 # keep the columns DB_Object_Symbol (3) and GO_ID (5)

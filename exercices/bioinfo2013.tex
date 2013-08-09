@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{xcolor}
+\newcommand{\code}[1]{`\texttt{#1}`}
 \lstset{frame=single,backgroundcolor=\color{lightgray},numbers=left,breaklines=true,basicstyle=\ttfamily}
 
 
@@ -22,6 +23,7 @@ Only basic linux commands are required here, no external program should be insta
 \section{Linux}
 Briefly describe the usage of the following linux commands :
 \begin{itemize}
+\item man
 \item cd
 \item ls
 \item pwd
@@ -40,7 +42,9 @@ Briefly describe the usage of the following linux commands :
 \item head
 \item tail
 \item mkdir
+\item curl
 \item awk
+\item make
 \end{itemize}
 \noindent
 What is 	\textbf{stdout} ? \\
@@ -55,6 +59,7 @@ What is a XML well-formed document ?\\
 What is a XML DTD ?\\
 What is a XML Schema ?\\
 What is a XML valid document ?\\
+What is Xpath ?\\
 
 %
 % "Nicotiana tabacum"[ORGN] 100:150[SLEN] trnH[GENE] variation[FKEY]
@@ -71,7 +76,7 @@ What is a XML valid document ?\\
 \item How many bytes do you need to store the \textbf{length} of the human genome ?
 \item In a sequence containing only 'A', 'T', 'G' and 'C' , how many bases can you store in one byte ?
 \item Cite some advantages/inconvenients of storing data in a tab delimited format vs using a structured format (e.g: XML, JSON, ASN.1)
-\item Cite some advantages/inconvenients of storing data of using a graphical interface (like Miscrosoft Excel) vs using the command line.
+\item Cite some advantages/inconvenients of handling data using a graphical interface (like Miscrosoft Excel) vs using the command line.
 \item Find the following nucleotide entry in the NCBI:\emph{ a Sequence of "Nicotiana tabacum" for the gene 'trnH' with a length comprised between 100 and 150 nucleotides and having a feature "variation"}.
 \item Find the following protein entry in the NCBI:\emph{ a sequence for the gene COL1A1 published by Dr. Asara in the "Science" journal,  that is not a sequence of "Mammut americanum" nor "Brachylophosaurus canadensis"}.
 \end{itemize}
@@ -100,68 +105,39 @@ awk '{printf("%f %%\n",$1/($1+$2));}' > result.txt
 \section{Makefile}
 \noindent
 (wikipedia:) \emph{"In software development, Make is a utility that automatically builds executable programs and libraries from source code by reading files called makefiles which specify how to derive the target program"}.\\You'll find many simple tutorials for \textbf{make} on the web.\\
-The following \textbf{Makefile} creates a tab-delimited file 'gene\_ontology\_map.txt' containing the following columns:
+
+Here is a file named \textbf{Makefile} ( \url{https://gist.github.com/lindenb/65e98e5752ea26eb9868} ).
+
+\lstinputlisting[language=make,breaklines=true,numbers=left]{bioinfo2013.makefile}
+Answer the following questions (shell should be \code{bash})
 \begin{itemize}
-\item gene-name(hgnc\_symbol)
-\item chromosome
-\item start\_position
-\item end\_position
-\item gene-ontology term.
-\end{itemize}
-Complete the \textbf{Makefile} by replacing the ???????????? with the correct pipeline ( \url{https://gist.github.com/lindenb/65e98e5752ea26eb9868} ).
-
+\item type \code{make clean \&\& make}. What happens ?
+\item what is a target ?
+\item what is a dependency ?
+\item what is the symbol  \code{\$@} ?
+\item what is the symbol  \code{\$\textless} ?
+\item what is the symbol  \code{\$\^} ?
+\item where are the \code{tab (\textbackslash{}t)}  characters in the Makefile ?
+\item what is the meaning of the line
 \begin{lstlisting}[language=make]
-.PHONY: all clean
-
-#
-# this is the top default target
-#
-all: gene_ontology_map.txt
-
-# using the 'join' command
-# join gene_and_position.bed and gene_and_go.txt to create 
-# a file with the following columns:  
-# hgnc_symbol, chromosome, start_position, end_position and GO-ID
-gene_ontology_map.txt: gene_and_position.tsv gene_and_go.txt
-	join ??????????????????????????????????
-
-# using a web browser: go on biomart http://www.ensembl.org/biomart/martview/
-# select 'ensembl Gene'
-# select 'dataset: homo sapiens'
-# select the following attributes : 
-#	Chromosome Name
-#	HGNC symbol 
-#	Gene Start (bp)
-#	Gene End (bp)
-# 'show query in XML format' and use it in the curl command below . Service URL is "http://www.biomart.org/biomart/martservice/result"
-# keep the lines having a HGNC symbol
-# sort on HGNC symbol 
-gene_and_position.tsv : 
-	curl -L --form-string query='<?xml version="1.0" ?????????????????????????????????? 
-#
-# remove the headers from gene_association.goa_human
-# keep the columns DB_Object_Symbol (3) and GO_ID (5)
-# and sort on DB_Object_Symbol (=HGNC symbol )
-# and remove the duplicated lines
-gene_and_go.txt : gene_association.goa_human
-	grep -v '^!' $<  | ??????????????????????????????????
-
-
-#download GO-association for human
-#format described in http://www.geneontology.org/GO.format.gaf-1_0.shtml
-gene_association.goa_human:
-	curl -s "http://cvsweb.geneontology.org/cgi-bin/cvsweb.cgi/go/gene-associations/$@.gz?rev=HEAD" |\
-		gunzip -c > $@
-
-#
-# cleanup everything
-#
-clean:
-	rm -f gene_association.goa_human gene_and_go.txt  \
-		gene_and_position.tsv \
-		gene_ontology_map.txt
-\end{lstlisting}
-
+%.rna:%.dna
+	tr "Tt" "Uu" < $< > $@
+\end{lstlisting}	
+\item type \code{make clean \&\& make all}. What happens ?
+\item why \code{all} was placed at the top ?
+\item what is the default target ?
+\item type \code{make clean \&\& make \&\& make \&\& make \&\& make \&\& make}. What happens ?
+\item type \code{make clean \&\& make gamma.fa}. What happens ?
+\item type \code{make clean \&\& make delta.fa}. What happens ?
+\item type \code{make clean \&\& make \&\& make -B gamma.fa}. What happens ?
+\item type \code{make clean \&\& make -n}. What happens ?
+\item type \code{make clean \&\& make \&\& touch alpha.fa \&\& make }. What happens ?
+\item type \code{make clean \&\& make \&\& rm alpha.fa \&\& make }. What happens ?
+\item why \code{clean} and \code{all} were declared as \code{.PHONY}.
+\item type \code{make clean \&\& make -j 3 all}. What happens ?
+\item remove the line \code{.SECONDARY=} and type \code{make clean \&\& make all}. What happens ?
+\item what is the benefit of using a makefile rather than a shell script ?
+\end{itemize}
 
 \section{The Human Genome}
 
@@ -206,7 +182,7 @@ As an example, the XSLT stylesheet \textbf{einfo2html.xsl} available at \url{htt
 \end{lstlisting} 
 \noindent
 Using the command line XSLT processor \textbf{xsltproc}, generate this HTML and visualize it in a web browser.\\
-The \textbf{href} attribute is missing in the \textless{}a/\textgreater anchors. For example, the href for 'pubmed' would be :
+The \textbf{href} attribute is missing in the \textless{}a/\textgreater  anchors. For example, the href for 'pubmed' would be :
 
 \begin{lstlisting}[language=html]
 <html><body><ul>
@@ -214,7 +190,7 @@ The \textbf{href} attribute is missing in the \textless{}a/\textgreater anchors.
     (...)
 \end{lstlisting} 
 \noindent
-Modify the XSLT stylesheet: using the XSLT element \textless{}xsl:attribute/\textgreater add the missing XML attributes. For example see: \url{http://stackoverflow.com/questions/3321119}.
+Modify the XSLT stylesheet: using the XSLT element \textless{}xsl:attribute/\textgreater  add the missing XML attributes. For example see: \url{http://stackoverflow.com/questions/3321119}.
 
 
 \end{document}

@@ -57,6 +57,8 @@ What will be covered today? :
 \item EInfo, GQuery, ESearch , Esummary, EFetch..
 \item processing XML answer with XSLT: HTML, SVG, R...
 \item generating a java parser for dbSNP.
+\item NCBI EBot
+\item using standalone BLAST
 \end{itemize}
 \end{frame}
 
@@ -1547,6 +1549,201 @@ rs886 cDNA
 rs913 cDNA
 rs945 cDNA
 rs946 cDNA
+(...)
+\end{lstlisting}
+\end{frame}
+
+
+\hugeslide{NCBI EBot}
+
+\begin{frame}[fragile]
+\frametitle{NCBI EBot}
+\framesubtitle{URL}
+\url{http://www.ncbi.nlm.nih.gov/Class/PowerTools/eutils/ebot/ebot.cgi}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{NCBI EBot}
+\framesubtitle{Sample output}
+\begin{lstlisting}[language=perl,basicstyle=\tiny,breaklines=true]
+#!/usr/bin/perl 
+(...)
+#                            PUBLIC DOMAIN NOTICE
+#               National Center for Biotechnology Information
+use LWP::Simple;
+use LWP::UserAgent;
+use Net::FTP;
+
+
+my $delay = 0;
+my $maxdelay = 3;
+my $base = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
+
+
+$params{email} = "nobody@nowhere.com";
+$params{db} = "nuccore";
+$params{tool} = "ebot";
+$params{term} = "Mammuthus+primigenius[ORGN]";
+%params = esearch(%params);
+
+$params{retmode} = "xml";
+$params{outfile} = "result.xml";
+$params{rettype} = "native";
+efetch_batch(%params);
+\end{lstlisting}
+\end{frame}
+
+\hugeslide{BLAST}
+
+\begin{frame}[fragile]
+\frametitle{Standalone Blast}
+\framesubtitle{Downloading}
+Standalone tools are available at \url{ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/}
+\begin{lstlisting}[language=bash]
+#add BLAST to your path
+export PATH=${PATH}:/path/to/ncbi-blast-2.2.28+/bin
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Standalone Blast}
+\framesubtitle{Download a sample}
+apis mellifera proteins
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+curl -o protein.fa.gz \
+   "ftp://ftp.ncbi.nih.gov/genomes/Apis_mellifera/protein/protein.fa.gz"
+gunzip protein.fa.gz
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Standalone Blast}
+\framesubtitle{Create a Blast database with makeblastdb}
+Getting help...
+\begin{lstlisting}[language=bash]
+$ makeblastdb -help
+(...)
+ -dbtype <String, `nucl', `prot'>
+   Molecule type of target db
+ -in <File_In>
+   Input file/database name
+   Default = `-'
+ -input_type <String, `asn1_bin', `asn1_txt', `blastdb', `fasta'>
+   Type of the data specified in input_file
+   Default = `fasta'
+(..)
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Standalone Blast}
+\framesubtitle{Create a Blast database with makeblastdb}
+Create the BLAST database:
+\begin{lstlisting}[language=bash]
+$ makeblastdb -in protein.fa -dbtype prot
+
+Building a new DB, current time: 09/02/2013 18:29:38
+New DB name:   protein.fa
+New DB title:  protein.fa
+Sequence type: Protein
+Keep Linkouts: T
+Keep MBits: T
+Maximum file size: 1000000000B
+Adding sequences from FASTA; added 10570 sequences in 1.84458 seconds.
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Standalone Blast}
+\framesubtitle{Query a Blast database with blastp}
+Get help:
+\begin{lstlisting}[language=bash]
+$ blastp -help
+(...)
+ -query <File_In>
+   Input file name
+   Default = `-'
+ -db <String>
+   BLAST database name
+(...)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Standalone Blast}
+\framesubtitle{Blast human EIF4G1 gi:187956781 }
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&rettype=fasta&id=187956781" |\
+ blastp -db protein.fa
+\end{lstlisting}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=false]
+Query= gi|187956781|gb|AAI40897.1| EIF4G1 protein [Homo sapiens]
+(...)
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+  gi|328782175|ref|XP_394628.4| PREDICTED: eukaryotic translation...   189    4e-49
+  gi|328779480|ref|XP_003249661.1| PREDICTED: hypothetical protei...  38.1    0.017
+  gi|110762568|ref|XP_001121713.1| PREDICTED: hypothetical protei...  38.1    0.018
+
+(...)
+> gi|328782175|ref|XP_394628.4| PREDICTED: eukaryotic translation 
+initiation factor 4 gamma 2-like [Apis mellifera]
+Length=899
+
+ Score =  189 bits (479),  Expect = 4e-49, Method: Compositional matrix adjust.
+ Identities = 115/319 (36%), Positives = 175/319 (55%), Gaps = 39/319 (12%)
+
+Query  717   KEPRKIIATVLMTEDIKLNKAEKAWKPSS--KRTAADKDRGEEDADGSKTQDLFRRVRSI  774
+             ++P +    +++ +DI+    E+ W P S  +R A   +        S+   +FR+VR I
+Sbjct  22    RKPSETTVGLVIKDDIRSLSTEQRWIPPSTLRRDALTPE--------SRNNFIFRKVRGI  73
+
+Query  775   LNKLTPQMFQQLMKQVTQLAIDTEERLKGVIDLIFEKAISEPNFSVAYANMCRCL-----  829
+             LNKLTP+ F +L   +  + ++++  LKGVI LIFEKA+ EP +S  YA +C+ L     
+Sbjct  74    LNKLTPEKFAKLSNDLLNVELNSDVILKGVIFLIFEKALDEPKYSSMYAQLCKRLSDEAA  133
+
+Query  830   -MALKVPTTEKPTVTVNFRKLLLNRCQKEFEKDKDDDEVFEKKQKEMDEAATAEERGRLK  888
+                 K    E       F  LLL++C+ EFE      E FE +    DE    EE     
+Sbjct  134   NFEPKKALIESQKGQSTFTFLLLSKCRDEFENRSKASEAFENQ----DELGPEEE-----  184
+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Standalone Blast}
+\framesubtitle{Blast human EIF4G1 gi:187956781 , ouput XML}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&rettype=fasta&id=187956781" |\
+ blastp -db protein.fa  -outfmt  5
+\end{lstlisting}
+\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+(...)
+ <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>189.119</Hsp_bit-score>
+      <Hsp_score>479</Hsp_score>
+      <Hsp_evalue>3.78314e-49</Hsp_evalue>
+      <Hsp_query-from>717</Hsp_query-from>
+      <Hsp_query-to>1017</Hsp_query-to>
+      <Hsp_hit-from>22</Hsp_hit-from>
+      <Hsp_hit-to>319</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>115</Hsp_identity>
+      <Hsp_positive>175</Hsp_positive>
+      <Hsp_gaps>39</Hsp_gaps>
+      <Hsp_align-len>319</Hsp_align-len>
+      <Hsp_qseq>KEPRKIIATVLMTEDIKLNKAEKAWKPSS--KRTAADKDRGEEDADGSKTQDLFRRVRSILNKLTPQMFQQLMKQVTQLAIDTEERLKGVIDLIFEKAISEPNFSVAYANMCRCL------MALKVPTTEKPTVTVNFRKLLLNRCQKEFEKDKDDDEVFEKKQKEMDEAATAEERGRLKEELEEARD
+IARRRSLGNIKFIGELFKLKMLTEAIMHDCVVKLL--------KNHDEESLECLCRLLTTIGKDLDFEKAKPRMDQYFNQMEKIIKEKKTSSRIRFMLQDVLDLRGSNWVPRRG--DQGPKTIDQIHKEAE</Hsp_qseq>
+      <Hsp_hseq>RKPSETTVGLVIKDDIRSLSTEQRWIPPSTLRRDALTPE--------SRNNFIFRKVRGILNKLTPEKFAKLSNDLLNVELNSDVILKGVIFLIFEKALDEPKYSSMYAQLCKRLSDEAANFEPKKALIESQKGQSTFTFLLLSKCRDEFENRSKASEAFENQ----DELGPEEE---------ERRQ
+VAKRKMLGNIKFIGELGKLGIVSETILHRCILQLLEKKRRRRSRGDTAEDIECLCQIMRTCGRILDSDKGRGLMDQYFKRMNSLAESRDLPLRIKFMLRDVIELRRDGWVPRKATSTEGPMPINQIRNDNE</Hsp_hseq>
+      <Hsp_midline>++P +    +++ +DI+    E+ W P S  +R A   +        S+   +FR+VR ILNKLTP+ F +L   +  + ++++  LKGVI LIFEKA+ EP +S  YA +C+ L         K    E       F  LLL++C+ EFE      E FE +    DE    EE         E
+ R +A+R+ LGNIKFIGEL KL +++E I+H C+++LL        +    E +ECLC+++ T G+ LD +K +  MDQYF +M  + + +    RI+FML+DV++LR   WVPR+    +GP  I+QI  + E</Hsp_midline>
+    </Hsp>
 (...)
 \end{lstlisting}
 \end{frame}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="Lims"
+    nsURI="http://univ-nantes.fr/lims/" nsPrefix="lims">
+  <eClassifiers xsi:type="ecore:EEnum" name="Gender" instanceTypeName="Gender">
+    <eLiterals name="UNKNOWN" literal="UNKNOWN"/>
+    <eLiterals name="MALE" value="1" literal="MALE"/>
+    <eLiterals name="FEMALE" value="2" literal="FEMALE"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Family">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="individuals" unique="false"
+        upperBound="-1" eType="#//Individual" containment="true" eOpposite="#//Individual/family"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Laboratory">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="families" upperBound="-1"
+        eType="#//Family"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Individual">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="gender" ordered="false"
+        unique="false" lowerBound="1" eType="#//Gender" unsettable="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="family" unique="false"
+        lowerBound="1" eType="#//Family" eOpposite="#//Family/individuals"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Father" eType="#//Individual"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Mother" eType="#//Individual"/>
+  </eClassifiers>
+</ecore:EPackage>

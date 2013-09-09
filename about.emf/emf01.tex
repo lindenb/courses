@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{color}
+\newcommand{\menu}[1]{\colorbox{yellow}{\texttt{#1}}}
+
+\def\emf{\textbf{EMF} }
+\date{\today}
+\title{EMF Notebook}
+\author{Pierre Lindenbaum PhD\\\texttt{plindenbaum@yahoo.fr}}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\emf (The Eclipse Modeling Framework) is a Java framework and \textbf{code generation facility} for building tools and other applications based on a structured model.  Once you specify an EMF model, the \textbf{EMF generator} can create a corresponding set of Java implementation classes. 
+\end{abstract}
+
+\section{Generating the Model}
+A model is created and defined in the \textbf{Ecore} format, which is basically a sub-set of UML Class diagrams.\\
+\subsection{Create the Project}
+\begin{itemize}
+\item Open Eclipse
+\item Menu \menu{File $\rightarrow$  New  $\rightarrow$ New Project... $\rightarrow$ Empty EMF Project}
+\item Name the project \textbf{EMF03-Model}
+\end{itemize}
+\subsection{Create the ECore model}
+create a new 'ECore' file in the model folder in your new modeling project.
+\begin{itemize}
+\item Menu \menu{File $\rightarrow$  New  $\rightarrow$ Other.. $\rightarrow$ ECore Model}
+\item Wizard: select the folder \textbf{EMF03-Model/model}.
+\item Wizard: set the filename as \textbf{laboratory.ecore}.
+\item Wizard: set Model Object as  \textbf{EPackage}.
+\item Menu \menu{Window  $\rightarrow$ Show View $\rightarrow$ Other $\rightarrow$ Properties}
+\end{itemize}
+
+\section{References}
+\begin{itemize}
+\item The Eclipse Modeling Framework Overview : \url{http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.emf.doc%2Freferences%2Foverview%2FEMF.html}
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lims:Laboratory xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:lims="http://univ-nantes.fr/lims/">
+  <families name="Family1">
+    <individuals name="indi1"/>
+    <individuals Father="//@families.0/@individuals.0" name="indi2">
+      <samples id="CD00001"/>
+    </individuals>
+  </families>
+  <sequencers name="HiSeq">
+    <runs name="CD1786CXX">
+      <sequenced sample="//@families.0/@individuals.1/@samples.0"/>
+    </runs>
+  </sequencers>
+  <sequencers name="miseq">
+    <runs name="CXX01">
+      <sequenced sample="//@families.0/@individuals.1/@samples.0"/>
+    </runs>
+  </sequencers>
+</lims:Laboratory>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Pierre Lindenbaum PhD 2013"
+    modelDirectory="/EMF03/src" modelPluginID="EMF03" modelName="Lims" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false" language="en" classNamePattern=""
+    runtimePlatform="RCP">
+  <foreignModel>lims.ecore</foreignModel>
+  <genPackages prefix="Lims" basePackage="com.github.lindenb.lims" disposableProviderFactory="true"
+      ecorePackage="lims.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="lims.ecore#//Gender">
+      <genEnumLiterals ecoreEnumLiteral="lims.ecore#//Gender/UNKNOWN"/>
+      <genEnumLiterals ecoreEnumLiteral="lims.ecore#//Gender/MALE"/>
+      <genEnumLiterals ecoreEnumLiteral="lims.ecore#//Gender/FEMALE"/>
+    </genEnums>
+    <genClasses ecoreClass="lims.ecore#//Family">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute lims.ecore#//Family/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference lims.ecore#//Family/individuals"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference lims.ecore#//Family/laboratory"/>
+    </genClasses>
+    <genClasses ecoreClass="lims.ecore#//Laboratory">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference lims.ecore#//Laboratory/families"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference lims.ecore#//Laboratory/sequencers"/>
+    </genClasses>
+    <genClasses ecoreClass="lims.ecore#//Individual">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute lims.ecore#//Individual/gender"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference lims.ecore#//Individual/family"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference lims.ecore#//Individual/Father"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute lims.ecore#//Individual/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference lims.ecore#//Individual/Mother"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference lims.ecore#//Individual/samples"/>
+    </genClasses>
+    <genClasses ecoreClass="lims.ecore#//Sequencer">
+      <genFeatures notify="false" createChild="false" propertyDescription="" ecoreFeature="ecore:EAttribute lims.ecore#//Sequencer/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference lims.ecore#//Sequencer/runs"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference lims.ecore#//Sequencer/laboratory"/>
+    </genClasses>
+    <genClasses ecoreClass="lims.ecore#//Run">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute lims.ecore#//Run/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute lims.ecore#//Run/date"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference lims.ecore#//Run/sequenced"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference lims.ecore#//Run/sequencer"/>
+    </genClasses>
+    <genClasses ecoreClass="lims.ecore#//Sample">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute lims.ecore#//Sample/id"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference lims.ecore#//Sample/individual"/>
+    </genClasses>
+    <genClasses ecoreClass="lims.ecore#//Sequenced">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference lims.ecore#//Sequenced/run"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference lims.ecore#//Sequenced/sample"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

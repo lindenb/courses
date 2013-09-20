@@ -1,4 +1,4 @@
-  \documentclass{beamer}
+\documentclass{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{graphicx}
@@ -7,6 +7,7 @@
 \usepackage{framed}
 \usepackage{epstopdf}
 
+ 
 % http://tex.stackexchange.com/questions/4979/convert-gif-image-to-png-on-the-fly
 \epstopdfDeclareGraphicsRule{.gif}{png}{.png}{convert  #1 `basename #1 .gif`-gif-converted-to.png}
 \AppendGraphicsExtensions{.gif}
@@ -20,6 +21,7 @@
 \includegraphics[#3]{#1}
 \end{center}
 }
+
 
 \newcommand{\graphviz}[3]{
 \IfFileExists{#1}{}{\immediate\write18{echo #2 | dot -o"#1.png" -Tpng}}
@@ -73,12 +75,47 @@ Understand how people have solved their BIG data problems.
 \end{center}
 \end{frame}
 
+
+\begin{frame}[fragile]
+\frametitle{Why sequencing ?}
+\remoteimage{jeter04.jpg}{http://i.imgur.com/oB8O2lC.jpg}{scale=0.25}
+\end{frame}
+
+\begin{frame} 
+\graphviz{jeterdot02}{'digraph G{Individual -> Variations ;}'}{scale=0.5}
+\end{frame}
+
 \begin{frame} 
 \graphviz{jeterdot01}{'digraph G{SEQUENCER -> FASTQ -> SAM -> BAM -> VCF ;}'}{scale=0.5}
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Well, that's a little more complicated ...}
+\remoteimage{jeter05.jpg}{https://pbs.twimg.com/media/A9v2MKXCAAA8hmJ.jpg}{scale=0.3}
+\end{frame}
+
+
 \hugeslide{FASTQ} 
 
+\begin{frame} 
+\frametitle{FASTQ}
+\begin{center}
+FASTQ:  text-based format for storing both a DNA sequence and its corresponding quality scores
+\end{center}
+\end{frame}
+
+\begin{frame} 
+\frametitle{FASTQ}
+\framesubtitle{FASTQ for single end}
+\graphviz{jeterdot03}{'digraph G{ fastq1[label="fastq.fastq.gz"];Sequencer -> fastq1;}'}{scale=0.5}
+\end{frame}
+
+
+\begin{frame} 
+\frametitle{FASTQ}
+\framesubtitle{FASTQ for paired end}
+\graphviz{jeterdot04}{'digraph G{fastq1[label="fastq_forward.fastq.gz"]; fastq2[label="fastq_reverse.fastq.gz"]; Sequencer -> fastq1;Sequencer -> fastq2;}'}{scale=0.5}
+\end{frame}
 
 
 \begin{frame}[fragile]
@@ -155,10 +192,13 @@ ATCACG 	& index sequence\\
 \end{center}
 \end{frame}
 
-\begin{frame}
-\frametitle{FASTQ Quality}[fragile]
+\begin{frame}[fragile]
+\frametitle{FASTQ Quality}
 \remoteimage{jeter01.png}{http://ged.msu.edu/angus/_images/fastqc_perbaseseqqual.png}{scale=0.3}
 \end{frame}
+
+
+
 
 \begin{frame}[fragile]
 \frametitle{FASTQ Quality}
@@ -176,6 +216,35 @@ Since a human readable format is desired for SAM, 33 is added to the calculated 
 $Q_\text{sanger} = -10 \, \log_{10} p + 33 $
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Aligned Reads}
+\begin{tiny}
+\begin{verbatim}
+44187101  44187111  44187121  44187131  44187141  44187151  44187161  44187171
+aaatgagccaggtgtggtggtgcacacctatagtcccagctacgcaggaggctgaggtgggaggatcgcttaaacccggc REFERENCE
+............................................Y................................... CONSENSUS
+aaa gagccaggtgtggtggtgcacaccgataggcccagctacgtaggaggctgaggtgggaggatcgcttaaa  cggc 
+AAA GAGCCAGGTGTGGTGGTGCACACCTATAGTCCCAGCTACGTAGGAGGCTGAGGTGGGAGGATCGCTTAAA  CGGC
+aaatga CCAGGTGTGGTGGTGCACACCTATAGTCCCAGCTACGTAGGAGGCTGAGGTGGGAGGATCGCTTAAACCC  c
+aaatgagcc GGTGTGGTGGTGCACACCTATAGTCCCAGCTACGTAGGAGGCTGAGGTGGGAGGATCGCTTAAACCCGGC
+AAATGAGCCAGG gtggtggtgcacacctatagtcccagcgacgtaggaggctgaggtgggaggatcgcttaaacccggc
+AAATGAGCCAGGTG ggtggtgcacacctatagtcccagctaagtaggaggctgaggtgggaggatcgctttaacccggc
+AAATGAGCCAGGTGT GTGGTGCACACCTATAGTCCCAGCTACGTAGGAGGCTGAGGTGGGAGGATCGCTTAAACCGGGC
+ACATGAGCCAGGTGTG tggtgcacacctatagtcccagctacgtaggaggctgaggtgggaggatcgcttaaacccggc
+aaatgagccaggtgtgg    GCACACGTAAAGTCCCAGCTACGCAGGAGGCTGAGGTGGGAGGATCGCTTAAACCCGGC
+CAATGAGCCAGTTGTGG     cacacctatagtcccagctacgcacgaggctgaggtgggaggatcgctttaacccggc
+AAATGAGCCAGGTGAGGT    cacacctatagtcccagctacgcaggaggctgaggtgggaggatcgcttaaacccggc
+AAATGAGCCAGGTGTGGT     acacctatagtcccagctacgcaggaggctgaggtgggaggatcgctttaacccggc
+aaatgagccaggtgtggtgg      cctatagtcccagctacgtaggaggctgaggtgggaggatcgcttaaacccggc
+AAATGAGCCAGGTGTGGTGG        TATAGTCCCAGCTACGCAGGAGGCTGAGGTGGTAGGATCGCATAAACCCGGC
+AAATGAGCCAGGTGTGGTGGT         TAGTCCCAGCTACGTAGGAGGCTGAGTTGGGAGGATCTCTTAAACCCGGC
+aaatgagccaggtgtggtggtg        TCGTCCCAGCTACGCAGGAGGCTTAGGTGGGAGGATCGCTTAAACCCGGC
+aaatgagccaggtgtggtggtgca       AGTCCCAGCTACGTAGGAGGCTGAGGTGGGAGGATCGGTTAAACCCGGC
+aaatgagccaggtgtggtggtgcac         cccagctacgcaggaggctgaggtgggaccatcgcttaaaccccgc
+aaatgagccaggtgtggtggtgcac          CCAGCTACGTAGTAGGCTGAGGTGGGAGGATCGCTTAAACCCGGC
+\end{verbatim}
+\end{tiny}
+\end{frame}
 
 
 
@@ -198,6 +267,9 @@ $Q_\text{sanger} = -10 \, \log_{10} p + 33 $
 \item Allows the file to be indexed by genomic position to efficiently retrieve all reads aligning to a locus. 
 \end{itemize}
 \end{frame}
+
+
+
 
 
 \begin{frame}[fragile]
@@ -263,7 +335,57 @@ r001 83 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
 
 \hugeslide{SAM Alignment Section}
 
+\begin{frame}[fragile]
+\frametitle{SAM Example}
+\framesubtitle{Simple example}
+\begin{framed}\tiny
+\begin{verbatim}
+IL31_4368:1:1:996:8507	77	*	0	0	*	*	0	0	NTGATAAAGTAATGACAAAATAATGACATTATTGTTACTATGGTTACTGTGGGA	(94**0-)*7=06>>><<<<<<22@>6;;;5;6:;63:4?-622647..-.5.%
+IL31_4368:1:1:996:8507	141	*	0	0	*	*	0	0	TCCCTTACCCCCAAGCTCCATACCCTCCTAATGCCCACACCTCTTACCTTAGGA	FFCEFFFEEFFFFFFFEFFEFFFEFCFC<EEFEFFFCEFF<;EEFF=FEE?FCE
+IL31_4368:1:1:996:21421	77	*	0	0	*	*	0	0	NAAGTTAATTCTTCATTGTCCATTCCTCTGAAATGATTCAGAAATACTGGTAGT	(**+*2396,@<+<:@@@;;5)<0)69606>4;5>;>6&<102)0*+8:&137;
+IL31_4368:1:1:996:21421	141	*	0	0	*	*	0	0	CAAAAACTTTCACTTTACCTGCCGGGTTTCCCAGTTTACATTCCACTGTTTGAC	>DBDDB,B9BAA4AAB7BB?7BBB=91;+*@;5<87+*=/*@@?9=73=.7)7*
+IL31_4368:1:1:997:10572	77	*	0	0	*	*	0	0	NAATGTATGTAGACCCTTCACATTCAAAGGCAAATACAATATCATCATGTCTTC	(/9**-0032>:>>9>4@@=>??@@:-66,;>;<;6+;255,1;7>>>>3676'
+IL31_4368:1:1:997:10572	141	*	0	0	*	*	0	0	GATCTTCTGTGACTGGAAGAAAATGTGTTACATATTACATTTCTGTCCCCATTG	E?=EECE<EEEE98EEEEAEEBD??BE@AEAB><EEABCEEDEC<<EBDA=DEE
+IL31_4368:1:1:997:15684	83	chr1	241356612	60	54M	=	241356442	-224	ATGTTGTTCAGAGCCTCCAAAGTTCCATCAGGATCAATCATAGCATTGATTGCN	.2.,4@8@;;;>669;*>;8>888-<>>>0@>:@@?<@?>@@@>66773*,1)(	XT:A:U	NM:i:1	SM:i:37	AM:i:37	X0:i:1	X1:i:0	XM:i:1	XO:i:0	XG:i:0	MD:Z:53T0
+IL31_4368:1:1:997:15684	163	chr1	241356442	60	54M	=	241356612	224	CAGCCTCAGATTCAGCATTCTCAAATTCAGCTGCGGCTGAAACAGCAGCAGGAC	EEEEDEEE9EAEEDEEEEEEEEEECEEAAEEDEE<CD=D=*BCAC?;CB,<D@,	XT:A:U	NM:i:1	SM:i:37	AM:i:37	X0:i:1	X1:i:0	XM:i:1	XO:i:0	XG:i:0	MD:Z:53T0
+IL31_4368:1:1:997:15249	77	*	0	0	*	*	0	0	NCGTTATAATGGAATTATTTTTCTTCCTTTATTTAATGTGTTGACAAAGAGAAC	(916928.82@@<0>54;33222224;@2<?<<22;5=;;858>>><<<*0666
+IL31_4368:1:1:997:15249	141	*	0	0	*	*	0	0	AATGTTCTGAAACCTCTGAGAAAGCAAATATTTATTTTAATGAAAAATCCTTAT	EDEEC;EEE;EEE?EECE;7AEEEEEE07EECEA;D6D>+EE4E7EEE4;E=EA
+IL31_4368:1:1:997:6273	77	*	0	0	*	*	0	0	NTACGAAGAAGTATTTCATTGGGAGGAGCTTATCCAAATATTTCCTGTCTATCC	(**4*5-*&329>9+::@>2;;853+39;>0.<3)-)79)..'5<.>988*200
+IL31_4368:1:1:997:6273	141	*	0	0	*	*	0	0	ACATTTACCAAGACCAAAGGAAACTTACCTTGCAAGAATTAGACAGTTCATTTG	EEAAFFFEEFEFCFAFFAFCCFFEFEF>EFFFFB?ABA@ECEE=<F@DE@DDF;
+IL31_4368:1:1:997:1657	83	chr1	143630364	60	54M	=	143630066	-352	TACCTTTTTAAAGAGATCTAAAATTGTCACATGGTTATTAGATACAGAGGCCTN	7&$-+**2%%1(%%:69?9'22975>88977)/)'28289)266-4*/9&.**(	XT:A:U	NM:i:1	SM:i:37	AM:i:37	X0:i:1	X1:i:0	XM:i:1	XO:i:0	XG:i:0	MD:Z:53T0
+IL31_4368:1:1:997:1657	163	chr1	143630066	60	54M	=	143630364	352	CCCACCTCTCTCAATGTTTTCCATATGGCAGGGACTCAGCACAGGTGGATTAAT	A;0A?AA+@A<7A7019/<65,3A;'''07<A=<=>?7=?6&)'9('*%,>/(<	XT:A:U	NM:i:0	SM:i:37	AM:i:37	X0:i:1	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:54
+IL31_4368:1:1:997:5609	77	*	0	0	*	*	0	0	NGGTGTCTCTTACGGACAGCATTAAGCTAGATTCTTTTTAGACCGATCTGCCAA	(*+*&,1426<;@@??@>?9@@@<@4>>?>666260.)-*9;;;8>:>'0<418
+IL31_4368:1:1:997:5609	141	*	0	0	*	*	0	0	TCACTATCAGAAACAGAATGTATAACTTCCAAATCAGTAGGAAACACAAGGAAA	AEECECBEC@A;AC=<AEEEEAEEEE>AC,CE?ECCE9EAEC4E:<C>AC@EE)
+IL31_4368:1:1:997:14262	77	*	0	0	*	*	0	0	NGAGAACCAATGGGAAGCAGCCTGAGCTGCTGGAACCTATTCCCCATGACTTCA	(9136242-2@@@;96.>>>@@@@>0$<><>>2623.':**+3*03137..--.
+IL31_4368:1:1:997:14262	141	*	0	0	*	*	0	0	TGTTTTTTCTTTTTCTTTTTTTTTTGACAGTGCAGAGATTTTTTATCTTTTTAA	97'<2<.64.?7/3(891?=(6??6+<6<++/*..3(:'/'9::''&(1<>.(,
+IL31_4368:1:1:998:19914	77	*	0	0	*	*	0	0	NAGAGCATTGACACACATAAAAAATTAAAACAACCCTTTGTACTTACGGTAGAA	(/892<<>55@>>?<><<<7..())@@@;<<<22>65267<<@@<8>>..3;/$
+IL31_4368:1:1:998:19914	141	*	0	0	*	*	0	0	GAATGAAAGCAGAGACCCTGATCGAGCCCCAGAAAGATACACCTCCAGATTTTA	C?=CECE4CD<?8@==;EBE<=0@:@@92@???6<991>.<?A=@5?@99;971
+\end{verbatim}
+\end{framed}
+\end{frame}
 
+
+
+\begin{frame}[fragile]
+\frametitle{SAM Example}
+\framesubtitle{Sorted SAM}
+One row is one read, NOT one fragment.
+\begin{framed}\tiny
+\begin{verbatim}
+
+
+IL31_4368:1:107:15207:19097	163	chr1	17	0	54M	=	21	58	CCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAAC	EEECECA<?BE@?<B?DBBD=EBEEA=D<E=::;;@@D@;DD@A4>;8?=6>@C	XT:A:R	NM:i:0	SM:i:0	AM:i:0	X0:i:10	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:54
+IL31_4368:1:107:15207:19097	83	chr1	21	0	54M	=	17	-58	ACCCTACCCCTAGCCCTAACCCTACCCCTAACCCTAACCCTAACCCTAACCCTA	-9;7170<<6;1(@><==*<?:7:*@@<<B8@@>??5CC<:<4<C@>C9B@B1B	XT:A:R	NM:i:3	SM:i:0	AM:i:0	X0:i:9	X1:i:0	XM:i:3	XO:i:0	XG:i:0	MD:Z:6A5A11A29
+
+IL31_4368:1:10:17817:9758	137	chr1	23	0	54M	=	23	0	CCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCAGATC	C@CCABCFFAEFDDFFEEFFFFFFFFE?FFEFCFEFEFFFAEEFEAECFACBCE	XT:A:R	NM:i:3	SM:i:0	AM:i:0	X0:i:11	X1:i:0	XM:i:3	XO:i:0	XG:i:0	MD:Z:49C0T1A1
+
+IL31_4368:1:54:13142:21400	163	chr1	37	0	54M	=	44	61	TAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCC	FFEEFFFFFFFEFFFCFEFCFBBDFFFBBDF@FBB@AC@@B@ABCBB>?B@@=>	XT:A:R	NM:i:0	SM:i:0	AM:i:0	X0:i:11	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:54
+IL31_4368:1:54:13142:21400	83	chr1	44	0	54M	=	37	-61	AACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCT	;5@GD>@0FGBB>@EEF6EAGGDCGGEDBDGGF@?CDFAA@GGFA=<ABF><@H	XT:A:R	NM:i:0	SM:i:0	AM:i:0	X0:i:9	X1:i:2	XM:i:0	XO:i:0	XG:i:0	MD:Z:54
+
+
+\end{verbatim}
+\end{framed}
+\end{frame}
 
 \begin{frame}[fragile]
 \frametitle{SAM Specifications}
@@ -335,6 +457,12 @@ $\square$ read fails platform/vendor quality checks.\\
 $\square$ read is PCR or optical duplicate
 \end{frame}
 
+
+
+\begin{frame}[fragile]
+\frametitle{SAM FLAGS}
+\remoteimage{jeter03.png}{https://upload.wikimedia.org/wikibooks/en/f/f5/Byte45.png}{scale=0.7}
+\end{frame}
 
 
 
@@ -496,6 +624,27 @@ H &	hex string\\
 \end{frame}
 
 
+
+
+\begin{frame}[fragile]
+\frametitle{SAM Example}
+\framesubtitle{Sorted SAM}
+\begin{framed}\tiny
+\begin{verbatim}
+
+
+IL31_4368:1:107:15207:19097	163	chr1	17	0	54M	=	21	58	CCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAAC	EEECECA<?BE@?<B?DBBD=EBEEA=D<E=::;;@@D@;DD@A4>;8?=6>@C	XT:A:R	NM:i:0	SM:i:0	AM:i:0	X0:i:10	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:54
+IL31_4368:1:107:15207:19097	83	chr1	21	0	54M	=	17	-58	ACCCTACCCCTAGCCCTAACCCTACCCCTAACCCTAACCCTAACCCTAACCCTA	-9;7170<<6;1(@><==*<?:7:*@@<<B8@@>??5CC<:<4<C@>C9B@B1B	XT:A:R	NM:i:3	SM:i:0	AM:i:0	X0:i:9	X1:i:0	XM:i:3	XO:i:0	XG:i:0	MD:Z:6A5A11A29
+
+IL31_4368:1:10:17817:9758	137	chr1	23	0	54M	=	23	0	CCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCAGATC	C@CCABCFFAEFDDFFEEFFFFFFFFE?FFEFCFEFEFFFAEEFEAECFACBCE	XT:A:R	NM:i:3	SM:i:0	AM:i:0	X0:i:11	X1:i:0	XM:i:3	XO:i:0	XG:i:0	MD:Z:49C0T1A1
+
+IL31_4368:1:54:13142:21400	163	chr1	37	0	54M	=	44	61	TAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCC	FFEEFFFFFFFEFFFCFEFCFBBDFFFBBDF@FBB@AC@@B@ABCBB>?B@@=>	XT:A:R	NM:i:0	SM:i:0	AM:i:0	X0:i:11	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:54
+IL31_4368:1:54:13142:21400	83	chr1	44	0	54M	=	37	-61	AACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCT	;5@GD>@0FGBB>@EEF6EAGGDCGGEDBDGGF@?CDFAA@GGFA=<ABF><@H	XT:A:R	NM:i:0	SM:i:0	AM:i:0	X0:i:9	X1:i:2	XM:i:0	XO:i:0	XG:i:0	MD:Z:54
+
+
+\end{verbatim}
+\end{framed}
+\end{frame}
 
 
 \hugeslide{BAM}
@@ -703,6 +852,20 @@ public class CountMapped {
     }
 }
 \end{lstlisting}
+\end{frame}
+
+
+\hugeslide{End}
+
+
+\begin{frame}[fragile]
+\frametitle{Credits}
+\begin{itemize}
+\item Angus: \url{http://ged.msu.edu/angus/}
+\item Wikipedia: \url{https://en.wikibooks.org/wiki/C%2B%2B_Programming/Programming_Languages/C%2B%2B/Code/Statements/Variables}
+\item Abecasis Group Wiki: \url{http://genome.sph.umich.edu/wiki/SAM}
+\item Genome Research \url{http://genome.cshlp.org/content/12/6/996}
+\end{itemize}
 \end{frame}
 
 

@@ -45,6 +45,11 @@
 \titlepage
 \end{frame}
 
+
+\begin{frame}[fragile]
+NCBI ? What about EBI, ENSEMBL, ...
+\end{frame}
+
 \begin{frame}
 \remoteimage{jeter01.png}{http://www.ncbi.nlm.nih.gov/corehtml/pmc/pmcgifs/bookshelf/thumbs/th-helpeutils-lrg.png}{}
 \end{frame}
@@ -62,7 +67,39 @@ What will be covered today? :
 \end{itemize}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% TOOLS
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
+\begin{frame}[fragile]
+\frametitle{CURL}
+\begin{lstlisting}[language=bash]
+curl "http://en.wikipedia.org/wiki/Main_page"
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{XML}
+\remoteimage{jeter02.png}{https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/XML.svg/500px-XML.svg.png}{scale=0.3}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{XSLT}
+\remoteimage{jeter03.png}{https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/XSLT_en.svg/231px-XSLT_en.svg.png}{scale=0.4}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{XSLTPROC}
+\begin{lstlisting}[language=bash]
+xsltptoc stylesheet.xsl file.xml > result.xml
+\end{lstlisting}
+\end{frame}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% FORMAT
@@ -73,6 +110,7 @@ What will be covered today? :
 \begin{frame}[fragile]
 \frametitle{Formats}
 \framesubtitle{Genbank}
+\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=25&rettype=gb}
 \begin{lstlisting}[basicstyle=\tiny,breaklines=false]
 LOCUS       X53813                   422 bp    DNA     linear   MAM 22-JUN-1992
 DEFINITION  Blue Whale heavy satellite DNA.

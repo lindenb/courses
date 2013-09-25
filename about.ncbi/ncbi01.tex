@@ -95,7 +95,7 @@ curl "http://en.wikipedia.org/wiki/Main_page"
 \begin{frame}[fragile]
 \frametitle{XSLTPROC}
 \begin{lstlisting}[language=bash]
-xsltptoc stylesheet.xsl file.xml > result.xml
+xsltproc stylesheet.xsl file.xml > result.xml
 \end{lstlisting}
 \end{frame}
 
@@ -682,7 +682,7 @@ xmllint --format -
 \frametitle{ESearch}
 \framesubtitle{the retstart parameter }
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
-curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&retmax=2&retstart=100" |\
+curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&retmax=3&retstart=100" |\
 xmllint --format -
 \end{lstlisting}
 
@@ -1380,13 +1380,16 @@ http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nucleotide&db=pub
 \end{lstlisting}
 
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-$ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=23766330&rettype=medline&remode=text"
+$ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=23766330&rettype=medline&retmode=text"
 PMID- 23766330
 TI  - Evolution of mammalian diving capacity traced by myoglobin net surface charge.
 PG  - 1234192
 LID - 10.1126/science.1234192 [doi]
 \end{lstlisting}
 \end{frame}
+
+
+\hugeslide{Transformations}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -1483,6 +1486,7 @@ R --no-save
 \end{center}
 \end{frame}
 
+\hugeslide{Generating a JAVA parser}
 
 
 \begin{frame}[fragile]

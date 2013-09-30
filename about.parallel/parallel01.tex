@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{indentfirst}
+
+\lstset{language=bash,frame=single,backgroundcolor=\color{lightgray},numbers=left,breaklines=true,breakautoindent=true,basicstyle=\small}
+\date{\today}
+\title{GNU Parallel for Bioinformatics}
+\author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\\url{http://plindenbaum.blogspot.com} }
+
+
+\def\prl{\textbf{parallel}}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+This document follows the \prl{} tutorial \url{http://www.gnu.org/software/parallel/parallel_tutorial.html}.
+\end{abstract}
+
+\section{Input Source}
+\section{A single input source}
+Input can be read from the command line.
+\begin{lstlisting}
+$ parallel file ::: samtools-0.1.18/examples/*.bam
+
+samtools-0.1.18/examples/ex1a.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1b.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1f.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1f-rmduppe.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1f-rmdupse.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1_sorted.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/toy.bam: gzip compressed data, extra field
+\end{lstlisting}
+
+
+
+\section{References}
+\begin{itemize}
+\item{}
+\end{itemize}
+
+\end{document}

@@ -87,91 +87,147 @@ samtools-0.1.18/examples/toy.bam: gzip compressed data, extra field
 %%
 
 \begin{lstlisting}
-$ parallel echo ::: list_genes_01.txt list_genes_02.txt  ::: list_genes_03.txt list_genes_04.txt  
+$  parallel echo ::: A T G C ::: A T G C
 \end{lstlisting}
 output:
 \begin{lstlisting}
-list_genes_01.txt list_genes_03.txt
-list_genes_01.txt list_genes_04.txt
-list_genes_02.txt list_genes_03.txt
-list_genes_02.txt list_genes_04.txt
+A A
+A T
+A G
+A C
+T A
+T T
+T G
+T C
+G A
+G T
+G G
+G C
+C A
+C T
+C G
+C C
 \end{lstlisting}
 
 \subsubsection{If one of the input sources is too short, its values will wrap}
 \begin{lstlisting}
-$ parallel echo ::: list_genes_01.txt list_genes_02.txt   ::: list_genes_03.txt list_genes_04.txt  list_genes_05.txt
+$  parallel echo ::: A T G C N ::: A T G C
 \end{lstlisting}
 
 output:
 \begin{lstlisting}
-list_genes_01.txt list_genes_03.txt
-list_genes_01.txt list_genes_04.txt
-list_genes_01.txt list_genes_05.txt
-list_genes_02.txt list_genes_03.txt
-list_genes_02.txt list_genes_04.txt
-list_genes_02.txt list_genes_05.txt
+A A
+A T
+A G
+A C
+T A
+T T
+T G
+T C
+G A
+G T
+G G
+G C
+C A
+C T
+C G
+C C
+N A
+N T
+N G
+N C
 \end{lstlisting}
 
 \subsubsection{The input sources can be files}
 \begin{lstlisting}
-$  parallel -a <(ls list_genes_0[123].txt) -a <(ls list_genes_0[456].txt) echo
+$  parallel  -a <(echo -e "A\nT\nG\nC") -a   <(echo -e "a\nt\ng\nc") echo
 \end{lstlisting}
 output:
 \begin{lstlisting}
-list_genes_01.txt list_genes_04.txt
-list_genes_01.txt list_genes_05.txt
-list_genes_01.txt list_genes_06.txt
-list_genes_02.txt list_genes_04.txt
-list_genes_02.txt list_genes_05.txt
-list_genes_02.txt list_genes_06.txt
-list_genes_03.txt list_genes_04.txt
-list_genes_03.txt list_genes_05.txt
-list_genes_03.txt list_genes_06.txt
+A a
+A t
+A g
+A c
+T a
+T t
+T g
+T c
+G a
+G t
+G g
+G c
+C a
+C t
+C g
+C c
 \end{lstlisting}
 
 
 \subsubsection{STDIN can be one of the input sources using '-'}
 \begin{lstlisting}
-$ ls  list_genes_0[12].txt |\
-  parallel -a - -a <(ls list_genes_0[45].txt) echo
+$  echo -e "A\nT\nG\nC" |\
+	parallel  -a - -a   <(echo -e "a\nt\ng\nc") echo
 \end{lstlisting}
 output:
 \begin{lstlisting}
-list_genes_01.txt list_genes_04.txt
-list_genes_01.txt list_genes_05.txt
-list_genes_02.txt list_genes_04.txt
-list_genes_02.txt list_genes_05.txt
+A a
+A t
+A g
+A c
+T a
+T t
+T g
+T c
+G a
+G t
+G g
+G c
+C a
+C t
+C g
+C c
 \end{lstlisting}
 
 \subsubsection{Instead of -a files can be given after '\texttt{::::}'}
 \begin{lstlisting}
-$ ls  list_genes_0[12].txt |\
-/parallel echo :::: - :::: <(ls list_genes_0[45].txt)
+parallel  echo :::: <(echo -e "A\nT\nG\nC") ::::   <(echo -e "a\nt\ng\nc")
 \end{lstlisting}
 output:
 \begin{lstlisting}
-list_genes_01.txt list_genes_04.txt
-list_genes_01.txt list_genes_05.txt
-list_genes_02.txt list_genes_04.txt
-list_genes_02.txt list_genes_05.txt
+A a
+A t
+A g
+A c
+T a
+T t
+T g
+T c
+G a
+G g
+G t
+G c
+C a
+C t
+C g
+C c
 \end{lstlisting}
 
 \subsubsection{'\texttt{:::}' and '\texttt{::::}' can be mixed:}
 \begin{lstlisting}
-$ parallel grep ::: B7ZGX9 I7FC33 :::: <(ls list_genes_*.txt)
+$ parallel 'grep -Hn ' ::: B7ZGX9 I7FC33 :::: <(ls list_genes_*.txt)
 \end{lstlisting}
 output:
 \begin{lstlisting}
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
+list_genes_01.txt:1:B7ZGX9_HUMAN
+list_genes_02.txt:1:B7ZGX9_HUMAN
+list_genes_04.txt:1:B7ZGX9_HUMAN
+list_genes_07.txt:1:B7ZGX9_HUMAN
+list_genes_08.txt:1:B7ZGX9_HUMAN
+list_genes_09.txt:1:B7ZGX9_HUMAN
+list_genes_02.txt:3:I7FC33_HUMAN
+list_genes_06.txt:3:I7FC33_HUMAN
+list_genes_07.txt:4:I7FC33_HUMAN
+list_genes_08.txt:3:I7FC33_HUMAN
 \end{lstlisting}
 
 \subsection{Matching arguments from all input sources}
@@ -179,36 +235,54 @@ I7FC33_HUMAN
 
 with \texttt{--xapply}
 \begin{lstlisting}
-$ parallel --xapply echo ::: list_genes_01.txt list_genes_02.txt   ::: list_genes_03.txt list_genes_04.txt
+parallel --xapply echo ::: A T G C ::: a t g c n
 \end{lstlisting}
 output:
 \begin{lstlisting}
-list_genes_01.txt list_genes_03.txt
-list_genes_02.txt list_genes_04.txt
+A a
+T t
+G g
+C c
+A n
 \end{lstlisting}
 
 without \texttt{--xapply}:
 \begin{lstlisting}
-$ parallel echo ::: list_genes_01.txt list_genes_02.txt   ::: list_genes_03.txt list_genes_04.txt 
+$ parallel echo ::: A T G C ::: a t g c n
 \end{lstlisting}
 output:
 \begin{lstlisting}
-list_genes_01.txt list_genes_03.txt
-list_genes_01.txt list_genes_04.txt
-list_genes_02.txt list_genes_03.txt
-list_genes_02.txt list_genes_04.txt
+A a
+A t
+A g
+A c
+A n
+T a
+T t
+T g
+T c
+T n
+G a
+G t
+G g
+G c
+G n
+C a
+C t
+C g
+C c
+C n
 \end{lstlisting}
 
 \subsubsection{If one of the input sources is too short, its values will wrap}
 \begin{lstlisting}
-$ parallel --xapply echo ::: list_genes_01.txt list_genes_02.txt list_genes_03.txt  list_genes_04.txt :::  list_genes_05.txt list_genes_06.txt
+$ parallel --xapply echo ::: A T  ::: g c n
 \end{lstlisting}
 output:
 \begin{lstlisting}
-list_genes_01.txt list_genes_05.txt
-list_genes_02.txt list_genes_06.txt
-list_genes_03.txt list_genes_05.txt
-list_genes_04.txt list_genes_06.txt
+A g
+T c
+A n
 \end{lstlisting}
 
 \subsection{Changing the argument separator}
@@ -229,76 +303,76 @@ I7FC33 PABPC1 C9J4L2_HUMAN
 \end{lstlisting}
 \subsubsection{Changing the argument file separator}
 \begin{lstlisting}
-$parallel --arg-file-sep schtroumph grep ::: B7ZGX9 I7FC33 schtroumph  <(ls list_genes_*.txt)
+$ ls list_genes_0* | parallel --arg-file-sep schtroumph 'grep -nH' ::: B7ZGX9 I7FC33 schtroumph -
 \end{lstlisting}
 output:
 \begin{lstlisting}
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
+list_genes_01.txt:1:B7ZGX9_HUMAN
+list_genes_02.txt:1:B7ZGX9_HUMAN
+list_genes_04.txt:1:B7ZGX9_HUMAN
+list_genes_07.txt:1:B7ZGX9_HUMAN
+list_genes_08.txt:1:B7ZGX9_HUMAN
+list_genes_09.txt:1:B7ZGX9_HUMAN
+list_genes_02.txt:3:I7FC33_HUMAN
+list_genes_06.txt:3:I7FC33_HUMAN
+list_genes_07.txt:4:I7FC33_HUMAN
+list_genes_08.txt:3:I7FC33_HUMAN
 \end{lstlisting}
 \subsubsection{Changing the argument delimiter}
 \begin{lstlisting}
-$ echo -n "B7ZGX9,I7FC33" |\
-	parallel -d, grep :::: - ::: list_genes_0*
+$ $ echo -n "7ZGX9,I7FC33" | \
+	parallel -d , 'grep -nH' :::: - :::  list_genes_0*
 \end{lstlisting}
 output:
 \begin{lstlisting}
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
+list_genes_01.txt:1:B7ZGX9_HUMAN
+list_genes_02.txt:1:B7ZGX9_HUMAN
+list_genes_04.txt:1:B7ZGX9_HUMAN
+list_genes_07.txt:1:B7ZGX9_HUMAN
+list_genes_08.txt:1:B7ZGX9_HUMAN
+list_genes_09.txt:1:B7ZGX9_HUMAN
+list_genes_02.txt:3:I7FC33_HUMAN
+list_genes_06.txt:3:I7FC33_HUMAN
+list_genes_07.txt:4:I7FC33_HUMAN
+list_genes_08.txt:3:I7FC33_HUMAN
 \end{lstlisting}
 
 \subsubsection{NULL can be given as  \texttt{\textbackslash{}0}}
 \begin{lstlisting}
-$ echo -n -e "B7ZGX9\0I7FC33" | ~/package/parallel-20130922/bin/parallel -d '\0' grep :::: - ::: list_genes_0*
+$  echo -n -e "7ZGX9\0I7FC33" |  parallel -d '\0' 'grep -nH' :::: - :::  list_genes_0*
 \end{lstlisting}
 output:
 \begin{lstlisting}
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
+list_genes_01.txt:1:B7ZGX9_HUMAN
+list_genes_02.txt:1:B7ZGX9_HUMAN
+list_genes_04.txt:1:B7ZGX9_HUMAN
+list_genes_07.txt:1:B7ZGX9_HUMAN
+list_genes_08.txt:1:B7ZGX9_HUMAN
+list_genes_09.txt:1:B7ZGX9_HUMAN
+list_genes_02.txt:3:I7FC33_HUMAN
+list_genes_06.txt:3:I7FC33_HUMAN
+list_genes_07.txt:4:I7FC33_HUMAN
+list_genes_08.txt:3:I7FC33_HUMAN
 \end{lstlisting}
 
 \subsubsection{A shorthand for '\texttt{-d  \textbackslash{}0}' is \texttt{-0}}
 This will often be used to read files from find ... -print0
 \begin{lstlisting}
 $ find ./ -name "list_genes_0*.txt" -print0 |\
-	parallel -0 grep ::: B7ZGX9 I7FC33 :::: -
+	parallel -0 'grep -nH'  ::: B7ZGX9 I7FC33 :::: -
 \end{lstlisting}
 output:
 \begin{lstlisting}
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-B7ZGX9_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
-I7FC33_HUMAN
+./list_genes_01.txt:1:B7ZGX9_HUMAN
+./list_genes_04.txt:1:B7ZGX9_HUMAN
+./list_genes_02.txt:1:B7ZGX9_HUMAN
+./list_genes_09.txt:1:B7ZGX9_HUMAN
+./list_genes_07.txt:1:B7ZGX9_HUMAN
+./list_genes_08.txt:1:B7ZGX9_HUMAN
+./list_genes_06.txt:3:I7FC33_HUMAN
+./list_genes_02.txt:3:I7FC33_HUMAN
+./list_genes_07.txt:4:I7FC33_HUMAN
+./list_genes_08.txt:3:I7FC33_HUMAN
 \end{lstlisting}
 
 \section{References}

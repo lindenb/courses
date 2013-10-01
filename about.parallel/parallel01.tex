@@ -7,6 +7,10 @@
 \usepackage{color}
 \usepackage{xcolor}
 \usepackage{indentfirst}
+\usepackage{makeidx}
+
+\makeindex
+
 
 \lstset{language=bash,frame=single,backgroundcolor=\color{lightgray},numbers=left,breaklines=true,breakautoindent=true,basicstyle=\small}
 \date{\today}
@@ -19,15 +23,52 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-This document follows the \prl{} tutorial \url{http://www.gnu.org/software/parallel/parallel_tutorial.html}.
+This document follows the Ole Tange's \prl{} tutorial \url{http://www.gnu.org/software/parallel/parallel_tutorial.html}.
 \end{abstract}
 
+\tableofcontents
+
 \section{Input Source}
-\section{A single input source}
-Input can be read from the command line.
+\subsection{A single input source}
+\subsubsection{Input can be read from the command line.}
 \begin{lstlisting}
 $ parallel file ::: samtools-0.1.18/examples/*.bam
+\end{lstlisting}
+output:
+\begin{lstlisting}
+samtools-0.1.18/examples/ex1a.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1b.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1f.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1f-rmduppe.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1f-rmdupse.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1_sorted.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/toy.bam: gzip compressed data, extra field
+\end{lstlisting}
 
+\subsubsection{The input source can be a file}
+\begin{lstlisting}
+$ find samtools-0.1.18/examples/ -name "*.bam" -type f > listbams.txt
+$ parallel -a listbams.txt file
+\end{lstlisting}
+output:
+\begin{lstlisting}
+samtools-0.1.18/examples/ex1a.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1b.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1f.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1f-rmduppe.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1f-rmdupse.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/ex1_sorted.bam: gzip compressed data, extra field
+samtools-0.1.18/examples/toy.bam: gzip compressed data, extra field
+\end{lstlisting}
+
+\subsubsection{STDIN (standard input) can be the input source}
+\begin{lstlisting}
+$ find samtools-0.1.18/examples/ -name "*.bam" -type f | parallel file
+\end{lstlisting}
+output:
+\begin{lstlisting}
 samtools-0.1.18/examples/ex1a.bam: gzip compressed data, extra field
 samtools-0.1.18/examples/ex1.bam: gzip compressed data, extra field
 samtools-0.1.18/examples/ex1b.bam: gzip compressed data, extra field
@@ -39,6 +80,226 @@ samtools-0.1.18/examples/toy.bam: gzip compressed data, extra field
 \end{lstlisting}
 
 
+\subsection{Multiple input source}
+
+%%
+%% $ for L in 01 02 03 04 05 06 07 08 09 ; do curl -s "http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/kgXref.txt.gz" | gunzip -c | cut -d '   ' -f 4 | grep _ | uniq | head -n 10 | shuf | head -n 5 | sort > list_genes_${L}.txt  ; done
+%%
+
+\begin{lstlisting}
+$ parallel echo ::: list_genes_01.txt list_genes_02.txt  ::: list_genes_03.txt list_genes_04.txt  
+\end{lstlisting}
+output:
+\begin{lstlisting}
+list_genes_01.txt list_genes_03.txt
+list_genes_01.txt list_genes_04.txt
+list_genes_02.txt list_genes_03.txt
+list_genes_02.txt list_genes_04.txt
+\end{lstlisting}
+
+\subsubsection{If one of the input sources is too short, its values will wrap}
+\begin{lstlisting}
+$ parallel echo ::: list_genes_01.txt list_genes_02.txt   ::: list_genes_03.txt list_genes_04.txt  list_genes_05.txt
+\end{lstlisting}
+
+output:
+\begin{lstlisting}
+list_genes_01.txt list_genes_03.txt
+list_genes_01.txt list_genes_04.txt
+list_genes_01.txt list_genes_05.txt
+list_genes_02.txt list_genes_03.txt
+list_genes_02.txt list_genes_04.txt
+list_genes_02.txt list_genes_05.txt
+\end{lstlisting}
+
+\subsubsection{The input sources can be files}
+\begin{lstlisting}
+$  parallel -a <(ls list_genes_0[123].txt) -a <(ls list_genes_0[456].txt) echo
+\end{lstlisting}
+output:
+\begin{lstlisting}
+list_genes_01.txt list_genes_04.txt
+list_genes_01.txt list_genes_05.txt
+list_genes_01.txt list_genes_06.txt
+list_genes_02.txt list_genes_04.txt
+list_genes_02.txt list_genes_05.txt
+list_genes_02.txt list_genes_06.txt
+list_genes_03.txt list_genes_04.txt
+list_genes_03.txt list_genes_05.txt
+list_genes_03.txt list_genes_06.txt
+\end{lstlisting}
+
+
+\subsubsection{STDIN can be one of the input sources using '-'}
+\begin{lstlisting}
+$ ls  list_genes_0[12].txt |\
+  parallel -a - -a <(ls list_genes_0[45].txt) echo
+\end{lstlisting}
+output:
+\begin{lstlisting}
+list_genes_01.txt list_genes_04.txt
+list_genes_01.txt list_genes_05.txt
+list_genes_02.txt list_genes_04.txt
+list_genes_02.txt list_genes_05.txt
+\end{lstlisting}
+
+\subsubsection{Instead of -a files can be given after '\texttt{::::}'}
+\begin{lstlisting}
+$ ls  list_genes_0[12].txt |\
+/parallel echo :::: - :::: <(ls list_genes_0[45].txt)
+\end{lstlisting}
+output:
+\begin{lstlisting}
+list_genes_01.txt list_genes_04.txt
+list_genes_01.txt list_genes_05.txt
+list_genes_02.txt list_genes_04.txt
+list_genes_02.txt list_genes_05.txt
+\end{lstlisting}
+
+\subsubsection{'\texttt{:::}' and '\texttt{::::}' can be mixed:}
+\begin{lstlisting}
+$ parallel grep ::: B7ZGX9 I7FC33 :::: <(ls list_genes_*.txt)
+\end{lstlisting}
+output:
+\begin{lstlisting}
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+\end{lstlisting}
+
+\subsection{Matching arguments from all input sources}
+\subsubsection{With \texttt{--xapply} you can get one argument from each input source}
+
+with \texttt{--xapply}
+\begin{lstlisting}
+$ parallel --xapply echo ::: list_genes_01.txt list_genes_02.txt   ::: list_genes_03.txt list_genes_04.txt
+\end{lstlisting}
+output:
+\begin{lstlisting}
+list_genes_01.txt list_genes_03.txt
+list_genes_02.txt list_genes_04.txt
+\end{lstlisting}
+
+without \texttt{--xapply}:
+\begin{lstlisting}
+$ parallel echo ::: list_genes_01.txt list_genes_02.txt   ::: list_genes_03.txt list_genes_04.txt 
+\end{lstlisting}
+output:
+\begin{lstlisting}
+list_genes_01.txt list_genes_03.txt
+list_genes_01.txt list_genes_04.txt
+list_genes_02.txt list_genes_03.txt
+list_genes_02.txt list_genes_04.txt
+\end{lstlisting}
+
+\subsubsection{If one of the input sources is too short, its values will wrap}
+\begin{lstlisting}
+$ parallel --xapply echo ::: list_genes_01.txt list_genes_02.txt list_genes_03.txt  list_genes_04.txt :::  list_genes_05.txt list_genes_06.txt
+\end{lstlisting}
+output:
+\begin{lstlisting}
+list_genes_01.txt list_genes_05.txt
+list_genes_02.txt list_genes_06.txt
+list_genes_03.txt list_genes_05.txt
+list_genes_04.txt list_genes_06.txt
+\end{lstlisting}
+
+\subsection{Changing the argument separator}
+GNU Parallel can use other separators than ::: or ::::. This is typically useful if ::: or :::: is used in the command to run.
+\begin{lstlisting}
+$parallel --arg-sep yoyo echo yoyo B7ZGX9 I7FC33 yoyo EIF4G1 PABPC1 yoyo B7ZGX9_HUMAN  C9J4L2_HUMAN
+\end{lstlisting}
+output:
+\begin{lstlisting}
+B7ZGX9 EIF4G1 B7ZGX9_HUMAN
+B7ZGX9 EIF4G1 C9J4L2_HUMAN
+B7ZGX9 PABPC1 B7ZGX9_HUMAN
+B7ZGX9 PABPC1 C9J4L2_HUMAN
+I7FC33 EIF4G1 B7ZGX9_HUMAN
+I7FC33 EIF4G1 C9J4L2_HUMAN
+I7FC33 PABPC1 B7ZGX9_HUMAN
+I7FC33 PABPC1 C9J4L2_HUMAN
+\end{lstlisting}
+\subsubsection{Changing the argument file separator}
+\begin{lstlisting}
+$parallel --arg-file-sep schtroumph grep ::: B7ZGX9 I7FC33 schtroumph  <(ls list_genes_*.txt)
+\end{lstlisting}
+output:
+\begin{lstlisting}
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+\end{lstlisting}
+\subsubsection{Changing the argument delimiter}
+\begin{lstlisting}
+$ echo -n "B7ZGX9,I7FC33" |\
+	parallel -d, grep :::: - ::: list_genes_0*
+\end{lstlisting}
+output:
+\begin{lstlisting}
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+\end{lstlisting}
+
+\subsubsection{NULL can be given as  \texttt{\textbackslash{}0}}
+\begin{lstlisting}
+$ echo -n -e "B7ZGX9\0I7FC33" | ~/package/parallel-20130922/bin/parallel -d '\0' grep :::: - ::: list_genes_0*
+\end{lstlisting}
+output:
+\begin{lstlisting}
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+\end{lstlisting}
+
+\subsubsection{A shorthand for '\texttt{-d  \textbackslash{}0}' is \texttt{-0}}
+This will often be used to read files from find ... -print0
+\begin{lstlisting}
+$ find ./ -name "list_genes_0*.txt" -print0 |\
+	parallel -0 grep ::: B7ZGX9 I7FC33 :::: -
+\end{lstlisting}
+output:
+\begin{lstlisting}
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+B7ZGX9_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+I7FC33_HUMAN
+\end{lstlisting}
 
 \section{References}
 \begin{itemize}

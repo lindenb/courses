@@ -19,6 +19,9 @@
 
 
 \def\prl{\textbf{parallel}}
+\def\bam{\textbf{bam}}
+\def\BAM{\textbf{BAM}}
+\def\samtools{\textbf{samtools}}
 
 \begin{document}
 \maketitle
@@ -63,6 +66,9 @@ samtools-0.1.18/examples/ex1_sorted.bam: gzip compressed data, extra field
 samtools-0.1.18/examples/toy.bam: gzip compressed data, extra field
 \end{lstlisting}
 
+
+
+
 \subsubsection{STDIN (standard input) can be the input source}
 \begin{lstlisting}
 $ find samtools-0.1.18/examples/ -name "*.bam" -type f | parallel file
@@ -79,6 +85,17 @@ samtools-0.1.18/examples/ex1_sorted.bam: gzip compressed data, extra field
 samtools-0.1.18/examples/toy.bam: gzip compressed data, extra field
 \end{lstlisting}
 
+
+Another example: indexing sorted sorted \bam{} files with \samtools{}:
+\begin{lstlisting}
+$ find dir1 -name "*.bam" | grep sorted |\
+	parallel -a -  'samtools index '
+\end{lstlisting}
+or , without '-a -'
+\begin{lstlisting}
+$ find dir1 -name "*.bam" | grep sorted |\
+	parallel   'samtools index '
+\end{lstlisting}
 
 \subsection{Multiple input source}
 

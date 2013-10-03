@@ -668,7 +668,92 @@ output:
 8 test.fasta
 \end{lstlisting}
 
+
+%% for I in 01 02 03 04 05; do ../misc/wgsim ex1.fa -N 1000 ${I}_F.fastq ${I}_R.fastq && gzip --best *.fastq ; done
 \subsection{Positional replacement strings}
+With multiple input sources the argument from the individual input sources can be access with \{number\}:
+
+
+The positional replacement strings can also be modified using  \texttt{'/'}  or \texttt{'//'} or \texttt{'/.'} or  \texttt{'.'}:
+
+aligning with 'BWA aln' two pairs of fastqs on two indexed references.
+\begin{lstlisting}
+$ parallel  bwa aln -f {1//}/{2/.}_{1/.}.sai {2} {1} \
+ ::: examples/01_F.fastq.gz examples/01_R.fastq.gz examples/02_F.fastq.gz  examples/02_R.fastq.gz \
+ ::: examples/toy.fa examples/ex1.fa
+\end{lstlisting}
+will generate
+\begin{lstlisting}
+bwa aln -f examples/toy_01_F.fastq.sai examples/toy.fa examples/01_F.fastq.gz
+bwa aln -f examples/ex1_01_F.fastq.sai examples/ex1.fa examples/01_F.fastq.gz
+bwa aln -f examples/toy_01_R.fastq.sai examples/toy.fa examples/01_R.fastq.gz
+bwa aln -f examples/ex1_01_R.fastq.sai examples/ex1.fa examples/01_R.fastq.gz
+bwa aln -f examples/toy_02_F.fastq.sai examples/toy.fa examples/02_F.fastq.gz
+bwa aln -f examples/ex1_02_F.fastq.sai examples/ex1.fa examples/02_F.fastq.gz
+bwa aln -f examples/toy_02_R.fastq.sai examples/toy.fa examples/02_R.fastq.gz
+bwa aln -f examples/ex1_02_R.fastq.sai examples/ex1.fa examples/02_R.fastq.gz
+\end{lstlisting}
+
+output:
+\begin{lstlisting}
+$ ls -lah examples/*.sai
+
+-rw-rw-r-- 1 lindenb lindenb  27K Oct  3 12:38 examples/ex1_01_F.fastq.sai
+-rw-rw-r-- 1 lindenb lindenb  27K Oct  3 12:38 examples/ex1_01_R.fastq.sai
+-rw-rw-r-- 1 lindenb lindenb  27K Oct  3 12:38 examples/ex1_02_F.fastq.sai
+-rw-rw-r-- 1 lindenb lindenb  27K Oct  3 12:38 examples/ex1_02_R.fastq.sai
+-rw-rw-r-- 1 lindenb lindenb 4.0K Oct  3 12:38 examples/toy_01_F.fastq.sai
+-rw-rw-r-- 1 lindenb lindenb 4.0K Oct  3 12:38 examples/toy_01_R.fastq.sai
+-rw-rw-r-- 1 lindenb lindenb 4.0K Oct  3 12:38 examples/toy_02_F.fastq.sai
+-rw-rw-r-- 1 lindenb lindenb 4.0K Oct  3 12:38 examples/toy_02_R.fastq.sai
+\end{lstlisting}
+
+\subsection{Input from columns}
+
+The columns in a file can be bound to positional replacement strings using --colsep. Here the columns are separated with TAB:
+
+\begin{lstlisting}
+$ find examples/ -name "*.fastq.gz" |\
+  sort |\
+  paste -- - - |\
+  parallel  --colsep '\t' bwa mem examples/ex1.fa {1} {2} ">" {1//}/{1/.}_{2/.}.sam
+\end{lstlisting}
+will generate
+\begin{lstlisting}
+bwa mem examples/ex1.fa examples/01_F.fastq.gz examples/01_R.fastq.gz > examples/01_F.fastq_01_R.fastq.sam
+bwa mem examples/ex1.fa examples/02_F.fastq.gz examples/02_R.fastq.gz > examples/02_F.fastq_02_R.fastq.sam
+bwa mem examples/ex1.fa examples/03_F.fastq.gz examples/03_R.fastq.gz > examples/03_F.fastq_03_R.fastq.sam
+bwa mem examples/ex1.fa examples/04_F.fastq.gz examples/04_R.fastq.gz > examples/04_F.fastq_04_R.fastq.sam
+bwa mem examples/ex1.fa examples/05_F.fastq.gz examples/05_R.fastq.gz > examples/05_F.fastq_05_R.fastq.sam
+\end{lstlisting}
+output:
+\begin{lstlisting}
+$ ls -la examples/*.sam
+
+-rw-rw-r-- 1 lindenb lindenb 447025 Oct  3 13:03 examples/01_F.fastq_01_R.fastq.sam
+-rw-rw-r-- 1 lindenb lindenb 447025 Oct  3 13:03 examples/02_F.fastq_02_R.fastq.sam
+-rw-rw-r-- 1 lindenb lindenb 447025 Oct  3 13:03 examples/03_F.fastq_03_R.fastq.sam
+-rw-rw-r-- 1 lindenb lindenb 447025 Oct  3 13:03 examples/04_F.fastq_04_R.fastq.sam
+-rw-rw-r-- 1 lindenb lindenb 447025 Oct  3 13:03 examples/05_F.fastq_05_R.fastq.sam
+\end{lstlisting}
+
+
+\subsection{Header defined replacement strings}
+With --header GNU Parallel will use the first value of the input source as the name of the replacement string. Only the non-modified version {} is supported
+\begin{lstlisting}
+$ parallel --header : primer3-2.3.5/src/ntdpal {FORWARD} {REVERSE} g \
+   ::: REVERSE ATCTGACTCGTGC ACTGATCGATCGATCG \
+   ::: FORWARD ATAGTAATAT ACTATA GAAATTC
+\end{lstlisting}
+output:
+\begin{lstlisting}
+|ATAGTAATAT|  |ATCTGACTCGTGC| g score=2.00 len=4 |6,0|7,1|8,2|9,3|
+|ACTATA|  |ATCTGACTCGTGC| g score=1.00 len=6 |0,5|1,6|2,7|3,9|4,10|5,11|
+|GAAATTC|  |ATCTGACTCGTGC| g score=2.00 len=3 |3,0|5,1|6,2|
+|ATAGTAATAT|  |ACTGATCGATCGATCG| g score=2.00 len=8 |0,4|1,5|2,6|3,7|6,8|7,9|8,12|9,13|
+|ACTATA|  |ACTGATCGATCGATCG| g score=3.00 len=6 |0,0|1,1|2,2|3,4|4,5|5,8|
+|GAAATTC|  |ACTGATCGATCGATCG| g score=1.00 len=6 |0,7|1,8|2,11|3,12|5,13|6,14|
+\end{lstlisting}
 
 
 \section{References}

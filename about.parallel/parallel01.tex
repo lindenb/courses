@@ -392,6 +392,285 @@ output:
 ./list_genes_08.txt:3:I7FC33_HUMAN
 \end{lstlisting}
 
+
+\section{Building the command line}
+
+\subsubsection{No command means arguments are commands}
+
+If no command is given after parallel the arguments themselves are treated as commands:
+\begin{lstlisting}
+parallel ::: 'ls -la  toy*' 'file toy.bam' pwd
+\end{lstlisting}
+output:
+\begin{lstlisting}
+toy.bam: gzip compressed data, extra field
+/path/to/samtools-0.1.18/examples
+-rw-rw-r-- 1 lindenb lindenb 478 Mar 27  2013 toy.bam
+-rw-rw-r-- 1 lindenb lindenb 176 Mar 27  2013 toy.bam.bai
+-rw-rw-r-- 1 lindenb lindenb 254 Mar 27  2013 toy.dict
+-rw-r--r-- 1 lindenb lindenb  98 Mar 27  2013 toy.fa
+-rw-rw-r-- 1 lindenb lindenb  32 Mar 27  2013 toy.fa.fai
+-rw-r--r-- 1 lindenb lindenb 786 Apr 22  2011 toy.sam
+-rw-rw-r-- 1 lindenb lindenb 176 Jul 19 09:28 toy_sorted.bai
+-rw-rw-r-- 1 lindenb lindenb 478 Aug  6 15:11 toy_sorted.bam
+-rw-rw-r-- 1 lindenb lindenb 176 Oct  2 10:24 toy_sorted.bam.bai
+\end{lstlisting}
+
+The command can be a script, a binary or a Bash function if the function is exported using 'export -f':
+\begin{lstlisting}
+$ index_bam_with_samtools() {
+echo "Indexing $1" && samtools index $1
+}
+$ export -f index_bam_with_samtools
+$ find ./ -name "*_sorted.bam" |\
+   parallel -a - index_bam_with_samtools
+\end{lstlisting}
+output:
+\begin{lstlisting}
+Indexing ./ex1b_sorted_sorted.bam
+Indexing ./ex1b_sorted.bam
+Indexing ./sorted_sorted_sorted.bam
+Indexing ./ex1f-rmduppe_sorted.bam
+Indexing ./ex1f-rmdupse_sorted.bam
+Indexing ./toy_sorted.bam
+Indexing ./ex1_sorted_sorted.bam
+Indexing ./ex1a_sorted.bam
+Indexing ./ex1_sorted.bam
+Indexing ./ex1f-rmduppe_sorted_sorted.bam
+Indexing ./ex1f-rmdupse_sorted_sorted.bam
+Indexing ./ex1f_sorted_sorted.bam
+Indexing ./ex1a_sorted_sorted.bam
+Indexing ./sorted_sorted.bam
+Indexing ./ex1f_sorted.bam
+\end{lstlisting}
+
+\section{Replacement strings}
+\subsection{The 5 replacement strings}
+GNU Parallel has several replacement strings. If no replacement strings are used the default is to append {}:
+\begin{lstlisting}
+$ parallel  'grep -Hn ">" ' ::: toy.fa ex1.fa
+toy.fa:1:>ref
+toy.fa:3:>ref2
+ex1.fa:1:>seq1
+ex1.fa:29:>seq2
+\end{lstlisting}
+output:
+\begin{lstlisting}
+toy.fa:1:>ref
+toy.fa:3:>ref2
+ex1.fa:1:>seq1
+ex1.fa:29:>seq2
+\end{lstlisting}
+
+The default replacement string is \texttt{'\{\}'}:
+\begin{lstlisting}
+$ parallel  'grep -Hn ">" ' {} ::: toy.fa ex1.fa
+\end{lstlisting}
+output:
+\begin{lstlisting}
+toy.fa:1:>ref
+toy.fa:3:>ref2
+ex1.fa:1:>seq1
+ex1.fa:29:>seq2
+\end{lstlisting}
+
+The replacement string \texttt{'\{\}'} can be changed with \texttt{'-I'}:
+\begin{lstlisting}
+$ parallel -I FILE_NAME 'grep -Hn ">" ' FILE_NAME ::: toy.fa ex1.fa
+\end{lstlisting}
+output:
+\begin{lstlisting}
+toy.fa:1:>ref
+toy.fa:3:>ref2
+ex1.fa:1:>seq1
+ex1.fa:29:>seq2
+\end{lstlisting}
+
+The replacement string  \texttt{'\{.\}'} removes the extension:
+
+Sorting the BAMs:
+\begin{lstlisting}
+$ find ./ -name "*.bam" |\
+  parallel -a - 'samtools sort' {} {.}_sorted &&\
+  find ./ -name "*_sorted.bam"
+\end{lstlisting}
+output:
+\begin{lstlisting}
+./examples/ex1b_sorted.bam
+./examples/ex1f-rmduppe_sorted.bam
+./examples/ex1f-rmdupse_sorted.bam
+./examples/toy_sorted.bam
+./examples/ex1a_sorted.bam
+./examples/ex1_sorted.bam
+./examples/ex1f_sorted.bam
+\end{lstlisting}
+
+The replacement string \texttt{'\{.\}'} can be changed with  \texttt{'--extensionreplace'}:
+Sorting the BAMs:
+\begin{lstlisting}
+$ find ./ -name "*.bam" |\
+  parallel --extensionreplace BARBAPAPA -a - 'samtools sort' {} BARBAPAPA_sorted &&\
+  find ./ -name "*_sorted.bam"
+\end{lstlisting}
+output:
+\begin{lstlisting}
+./examples/ex1b_sorted.bam
+./examples/ex1f-rmduppe_sorted.bam
+./examples/ex1f-rmdupse_sorted.bam
+./examples/toy_sorted.bam
+./examples/ex1a_sorted.bam
+./examples/ex1_sorted.bam
+./examples/ex1f_sorted.bam
+\end{lstlisting}
+
+
+
+The replacement string \texttt{'\{/\}'}: removes the path:
+\begin{lstlisting}
+$ find ~/dir1 ~/dir2 ~/dir3  -name "*.fasta" |\
+  parallel -a - echo {/}
+\end{lstlisting}
+output:
+\begin{lstlisting}
+seq1.fasta
+seq2.fasta
+alnfile.fasta
+test_project.fasta
+hs_owlmonkey.fasta
+genomic-seq.fasta
+testaln.fasta
+test.fasta
+\end{lstlisting}
+
+copy all fasta to the current working directory:
+
+\begin{lstlisting}
+$ ls -l *.fasta
+
+ls: cannot access *.fasta: No such file or directory
+
+$ find ~/tmp/ /home/lindenb/daily/  -name "*.fasta" |\
+   parallel -a - cp  {} {/}  && \
+   ls -l *.fasta
+\end{lstlisting}
+output:
+\begin{lstlisting}
+-rw------- 1 lindenb lindenb    294 Oct  3 10:22 alnfile.fasta
+-rw------- 1 lindenb lindenb 171524 Oct  3 10:22 genomic-seq.fasta
+-rw------- 1 lindenb lindenb    416 Oct  3 10:22 hs_owlmonkey.fasta
+-rw------- 1 lindenb lindenb   7194 Oct  3 10:22 seq1.fasta
+-rw------- 1 lindenb lindenb  25756 Oct  3 10:22 seq2.fasta
+-rw------- 1 lindenb lindenb   4620 Oct  3 10:22 testaln.fasta
+-rw------- 1 lindenb lindenb    804 Oct  3 10:22 test.fasta
+-rw------- 1 lindenb lindenb   3475 Oct  3 10:22 test_project.fasta
+\end{lstlisting}
+
+The replacement string \texttt{'\{/\}'} can be replaced with \texttt{'--basenamereplace'}:
+\begin{lstlisting}
+$ find ~/tmp/ /home/lindenb/daily/  -name "*.fasta" |\
+   parallel --basenamereplace BASE_FILE_NAME -a - cp {}  BASE_FILE_NAME && \
+   ls -l *.fasta
+\end{lstlisting}
+output:
+\begin{lstlisting}
+-rw------- 1 lindenb lindenb    294 Oct  3 11:34 alnfile.fasta
+-rw------- 1 lindenb lindenb 171524 Oct  3 11:34 genomic-seq.fasta
+-rw------- 1 lindenb lindenb    416 Oct  3 11:34 hs_owlmonkey.fasta
+-rw------- 1 lindenb lindenb   7194 Oct  3 11:34 seq1.fasta
+-rw------- 1 lindenb lindenb  25756 Oct  3 11:34 seq2.fasta
+-rw------- 1 lindenb lindenb   4620 Oct  3 11:34 testaln.fasta
+-rw------- 1 lindenb lindenb    804 Oct  3 11:34 test.fasta
+-rw------- 1 lindenb lindenb   3475 Oct  3 11:34 test_project.fasta
+\end{lstlisting}
+
+
+The replacement string  \texttt{\{/.\}} removes the path and the extension.\\
+
+
+Sorting the BAM in the current working directory:
+\begin{lstlisting}
+$ ls -l sorted_*.bam
+
+ls: cannot access sorted_*.bam: No such file or directory
+
+$ find ./ -name "*.bam" |\
+  parallel -a - '../samtools sort' {} sorted_{/.} && \
+  ls -l sorted_*.bam
+\end{lstlisting}
+output:
+\begin{lstlisting}
+-rw-rw-r-- 1 lindenb lindenb 126888 Oct  3 10:31 sorted_ex1a.bam
+-rw-rw-r-- 1 lindenb lindenb 126583 Oct  3 10:31 sorted_ex1.bam
+-rw-rw-r-- 1 lindenb lindenb 126878 Oct  3 10:31 sorted_ex1b.bam
+-rw-rw-r-- 1 lindenb lindenb 208594 Oct  3 10:31 sorted_ex1f.bam
+-rw-rw-r-- 1 lindenb lindenb 180639 Oct  3 10:31 sorted_ex1f-rmduppe.bam
+-rw-rw-r-- 1 lindenb lindenb 132225 Oct  3 10:31 sorted_ex1f-rmdupse.bam
+-rw-rw-r-- 1 lindenb lindenb    478 Oct  3 10:31 sorted_toy.bam
+\end{lstlisting}
+
+
+The replacement string \texttt{'\{//\}'} keeps only the path:
+\begin{lstlisting}
+find dir -name "*.fa" |\
+ parallel echo {//} |\
+ sort | uniq
+\end{lstlisting}
+output:
+\begin{lstlisting}
+dir/dir1
+dir/dir2
+dir/dir3
+\end{lstlisting}
+The replacement string \texttt{'\{//\}'} can be changed with --dirnamereplace.
+\begin{lstlisting}
+find dir -name "*.fa" |\
+ parallel --dirnamereplace BARBALALA echo BARBALALA |\
+ sort | uniq
+\end{lstlisting}
+output:
+\begin{lstlisting}
+dir/dir1
+dir/dir2
+dir/dir3
+\end{lstlisting}
+
+
+The replacement string \texttt{\{\#\}} gives the job number:
+\begin{lstlisting}
+$ find ~/tmp -name "*.fasta" |\
+  parallel -a - echo {#} {/}
+\end{lstlisting}
+output:
+\begin{lstlisting}
+1 seq1.fasta
+2 seq2.fasta
+4 test_project.fasta
+3 alnfile.fasta
+5 hs_owlmonkey.fasta
+6 genomic-seq.fasta
+7 testaln.fasta
+8 test.fasta
+\end{lstlisting}
+
+The replacement string \texttt{\{\#\}} can be changed with --seqreplace:
+\begin{lstlisting}
+$ find ~/tmp -name "*.fasta" | parallel -a - --seqreplace JOBNUM echo JOBNUM {/}
+\end{lstlisting}
+output:
+\begin{lstlisting}
+1 seq1.fasta
+2 seq2.fasta
+3 alnfile.fasta
+4 test_project.fasta
+5 hs_owlmonkey.fasta
+6 genomic-seq.fasta
+7 testaln.fasta
+8 test.fasta
+\end{lstlisting}
+
+\subsection{Positional replacement strings}
+
+
 \section{References}
 \begin{itemize}
 \item{}

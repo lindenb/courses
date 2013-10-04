@@ -769,6 +769,90 @@ $ seq 1 100000 | parallel --xargs -s  1000 echo  | wc -l
 595
 \end{lstlisting}
 
+\subsection{Quoting}
+Command lines that contain special characters may need to be protected from the shell.
+\begin{lstlisting}
+ find dir1 -name "*.fa" |\
+ xargs awk '/^>/ {printf("\n%s\t",$0);next;} { printf("%s",$0);} END { printf("\n");} ' |\
+ head | cut -c 1-100
+
+>seq1	CACTAGTGGCTCATTGTAAATGTGTGGTTTAACTCGTCCATGGCCCAGCATTAGGGAGCTGTGGACCCTGCAGCCTGGCTGTGGGGGCCGCAGT
+>seq2	TTCAAATGAACTTCTGTAATTGAAAAATTCATTTAAGAAATTACAAAATATAGTTGAAAGCTCTAACAATAGACTAAACCAAGCAGAAGAAAGA
+>ref	AGCATGTTAGATAAGATAGCTGTGCTAGTAGGCAGTCAGCGCCAT
+>ref2	aggttttataaaacaattaagtctacagagcaactacgcg
+\end{lstlisting}
+
+this won't work:
+\begin{lstlisting}
+Command lines that contain special characters may need to be protected from the shell.
+\begin{lstlisting}
+ find dir1 -name "*.fa" |\
+ parallel awk '/^>/ {printf("\n%s\t",$0);next;} { printf("%s",$0);} END { printf("\n");} ' 
+\end{lstlisting}
+To quote the command use \texttt{'-q'}:
+\begin{lstlisting}
+ find dir1 -name "*.fa" |\
+ parallel -q awk '/^>/ {printf("\n%s\t",$0);next;} { printf("%s",$0);} END { printf("\n");} ' |\
+ head | cut -c 1-100
+
+>seq1	CACTAGTGGCTCATTGTAAATGTGTGGTTTAACTCGTCCATGGCCCAGCATTAGGGAGCTGTGGACCCTGCAGCCTGGCTGTGGGGGCCGCAGT
+>seq2	TTCAAATGAACTTCTGTAATTGAAAAATTCATTTAAGAAATTACAAAATATAGTTGAAAGCTCTAACAATAGACTAAACCAAGCAGAAGAAAGA
+
+>ref	AGCATGTTAGATAAGATAGCTGTGCTAGTAGGCAGTCAGCGCCAT
+>ref2	aggttttataaaacaattaagtctacagagcaactacgcg
+\end{lstlisting}
+
+Or you can quote the critical part using \texttt{\textbackslash{}'}:
+\begin{lstlisting}
+$ find dir -name "*.fa" |\
+ parallel awk \' '/^>/ {printf("\n%s\t",$0);next;} { printf("%s",$0);} END { printf("\n");} ' \' |\
+ head | cut -c 1-100
+
+>seq1	CACTAGTGGCTCATTGTAAATGTGTGGTTTAACTCGTCCATGGCCCAGCATTAGGGAGCTGTGGACCCTGCAGCCTGGCTGTGGGGGCCGCAGT
+>seq2	TTCAAATGAACTTCTGTAATTGAAAAATTCATTTAAGAAATTACAAAATATAGTTGAAAGCTCTAACAATAGACTAAACCAAGCAGAAGAAAGA
+
+>ref	AGCATGTTAGATAAGATAGCTGTGCTAGTAGGCAGTCAGCGCCAT
+>ref2	aggttttataaaacaattaagtctacagagcaactacgcg
+\end{lstlisting}
+
+%% missing example for   parallel --shellquote
+
+\subsection{Trimming space}
+Space can be trimmed on the arguments using  \texttt{--trim}
+\begin{lstlisting}
+$ parallel --trim l echo [{}] :::  " A " " T " " C " " G "
+\end{lstlisting}
+output:
+\begin{lstlisting}
+[A ]
+[T ]
+[C ]
+[G ]
+\end{lstlisting}
+
+\begin{lstlisting}
+$ parallel --trim r echo [{}] :::  " A " " T " " C " " G "
+\end{lstlisting}
+output:
+\begin{lstlisting}
+[ A]
+[ T]
+[ C]
+[ G]
+\end{lstlisting}
+
+\begin{lstlisting}
+$ parallel --trim lr echo [{}] :::  " A " " T " " C " " G "
+\end{lstlisting}
+output:
+\begin{lstlisting}
+[A]
+[T]
+[C]
+[G]
+\end{lstlisting}
+
+\section{Controling the output}
 
 
 \section{References}

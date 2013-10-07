@@ -853,6 +853,697 @@ output:
 \end{lstlisting}
 
 \section{Controling the output}
+The output can prefixed with the argument:
+\begin{lstlisting}
+$ parallel --tag echo prefix-{} ::: A T G C
+\end{lstlisting}
+output:
+\begin{lstlisting}Output (the order may be different):
+A	prefix-A
+T	prefix-T
+G	prefix-G
+C	prefix-C
+\end{lstlisting}
+
+To prefix it with another string use --tagstring:
+\begin{lstlisting}
+parallel --tagstring suffix-{} echo  ::: A T G C
+\end{lstlisting}
+output:
+\begin{lstlisting}
+suffix-A	A
+suffix-T	T
+suffix-G	G
+suffix-C	C
+\end{lstlisting}
+
+\subsection{To see what commands will be run without running them}
+\begin{lstlisting}
+$ find ./ -name "*.fastq.gz" |\
+	parallel --dryrun  bwa aln -f {/.}.sai toy.fa {}
+\end{lstlisting}
+output:
+\begin{lstlisting}
+bwa aln -f 02_R_.fastq.sai toy.fa ./02_R_.fastq.gz
+bwa aln -f 03_R_.fastq.sai toy.fa ./03_R_.fastq.gz
+bwa aln -f 01_R_.fastq.sai toy.fa ./01_R_.fastq.gz
+bwa aln -f 05_F_.fastq.sai toy.fa ./05_F_.fastq.gz
+bwa aln -f 05_R_.fastq.sai toy.fa ./05_R_.fastq.gz
+bwa aln -f 04_R_.fastq.sai toy.fa ./04_R_.fastq.gz
+bwa aln -f 03_F_.fastq.sai toy.fa ./03_F_.fastq.gz
+bwa aln -f 04_F_.fastq.sai toy.fa ./04_F_.fastq.gz
+bwa aln -f 01_F_.fastq.sai toy.fa ./01_F_.fastq.gz
+bwa aln -f 02_F_.fastq.sai toy.fa ./02_F_.fastq.gz
+\end{lstlisting}
+
+\subsection{To print the command before running them use --verbose}
+\begin{lstlisting}
+$ find ./ -name "*.fastq.gz" |\
+	parallel --verbose  bwa aln -f {/.}.sai toy.fa {}
+\end{lstlisting}
+output:
+\begin{lstlisting}
+bwa aln -f 02_R_.fastq.sai toy.fa ./02_R_.fastq.gz
+bwa aln -f 03_R_.fastq.sai toy.fa ./03_R_.fastq.gz
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln_core] calculate SA coordinate... 0.01 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 1000 sequences have been processed.
+[main] Version: 0.7.4-r385
+[main] CMD: bwa aln -f 02_R_.fastq.sai toy.fa ./02_R_.fastq.gz
+[main] Real time: 0.017 sec; CPU: 0.020 sec
+bwa aln -f 01_R_.fastq.sai toy.fa ./01_R_.fastq.gz
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln_core] calculate SA coordinate... 0.00 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 1000 sequences have been processed.
+[main] Version: 0.7.4-r385
+[main] CMD: bwa aln -f 03_R_.fastq.sai toy.fa ./03_R_.fastq.gz
+[main] Real time: 0.016 sec; CPU: 0.012 sec
+bwa aln -f 05_F_.fastq.sai toy.fa ./05_F_.fastq.gz
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln_core] calculate SA coordinate... 0.01 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 1000 sequences have been processed.
+[main] Version: 0.7.4-r385
+[main] CMD: bwa aln -f 01_R_.fastq.sai toy.fa ./01_R_.fastq.gz
+[main] Real time: 0.012 sec; CPU: 0.012 sec
+bwa aln -f 05_R_.fastq.sai toy.fa ./05_R_.fastq.gz
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln_core] calculate SA coordinate... 0.00 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 1000 sequences have been processed.
+[main] Version: 0.7.4-r385
+[main] CMD: bwa aln -f 05_F_.fastq.sai toy.fa ./05_F_.fastq.gz
+[main] Real time: 0.013 sec; CPU: 0.012 sec
+bwa aln -f 04_R_.fastq.sai toy.fa ./04_R_.fastq.gz
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln_core] calculate SA coordinate... 0.01 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 1000 sequences have been processed.
+[main] Version: 0.7.4-r385
+[main] CMD: bwa aln -f 05_R_.fastq.sai toy.fa ./05_R_.fastq.gz
+[main] Real time: 0.012 sec; CPU: 0.012 sec
+bwa aln -f 03_F_.fastq.sai toy.fa ./03_F_.fastq.gz
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln_core] calculate SA coordinate... 0.01 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 1000 sequences have been processed.
+[main] Version: 0.7.4-r385
+[main] CMD: bwa aln -f 04_R_.fastq.sai toy.fa ./04_R_.fastq.gz
+[main] Real time: 0.012 sec; CPU: 0.012 sec
+bwa aln -f 04_F_.fastq.sai toy.fa ./04_F_.fastq.gz
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln_core] calculate SA coordinate... 0.00 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 1000 sequences have been processed.
+[main] Version: 0.7.4-r385
+[main] CMD: bwa aln -f 03_F_.fastq.sai toy.fa ./03_F_.fastq.gz
+[main] Real time: 0.013 sec; CPU: 0.012 sec
+bwa aln -f 02_F_.fastq.sai toy.fa ./02_F_.fastq.gz
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln_core] calculate SA coordinate... 0.00 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 1000 sequences have been processed.
+[main] Version: 0.7.4-r385
+[main] CMD: bwa aln -f 04_F_.fastq.sai toy.fa ./04_F_.fastq.gz
+[main] Real time: 0.012 sec; CPU: 0.012 sec
+bwa aln -f 01_F_.fastq.sai toy.fa ./01_F_.fastq.gz
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln_core] calculate SA coordinate... 0.00 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 1000 sequences have been processed.
+[main] Version: 0.7.4-r385
+[main] CMD: bwa aln -f 02_F_.fastq.sai toy.fa ./02_F_.fastq.gz
+[main] Real time: 0.016 sec; CPU: 0.012 sec
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln_core] calculate SA coordinate... 0.01 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 1000 sequences have been processed.
+[main] Version: 0.7.4-r385
+[main] CMD: bwa aln -f 01_F_.fastq.sai toy.fa ./01_F_.fastq.gz
+[main] Real time: 0.012 sec; CPU: 0.012 sec
+\end{lstlisting}
+
+\subsection{GNU Parallel will postpone the output until the command completes}
+\begin{lstlisting}
+$ parallel -j 3 --verbose 'bwa aln -f 0{}_F.fastq.sai toy.fa 0{}_F_.fastq.gz ; sleep {} ; bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz ' ::: 1 2 3 4 5
+\end{lstlisting}
+output:
+\begin{lstlisting}
+$ parallel -j 3 --verbose  'bwa aln -f 0{}_F.fastq.sai toy.fa 0{}_F_.fastq.gz ; sleep {} ; bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz ' ::: 1 2 3 4 5
+
+bwa aln -f 01_F.fastq.sai toy.fa 01_F_.fastq.gz ; sleep 1 ; bwa aln -f 01_R.fastq.sai toy.fa 01_R_.fastq.gz 
+bwa aln -f 02_F.fastq.sai toy.fa 02_F_.fastq.gz ; sleep 2 ; bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz 
+bwa aln -f 03_F.fastq.sai toy.fa 03_F_.fastq.gz ; sleep 3 ; bwa aln -f 03_R.fastq.sai toy.fa 03_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 01_F.fastq.sai toy.fa 01_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 01_R.fastq.sai toy.fa 01_R_.fastq.gz
+(...)
+bwa aln -f 04_F.fastq.sai toy.fa 04_F_.fastq.gz ; sleep 4 ; bwa aln -f 04_R.fastq.sai toy.fa 04_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 02_F.fastq.sai toy.fa 02_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz
+(...)
+bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz ; sleep 5 ; bwa aln -f 05_R.fastq.sai toy.fa 05_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 03_F.fastq.sai toy.fa 03_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 03_R.fastq.sai toy.fa 03_R_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 04_F.fastq.sai toy.fa 04_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 04_R.fastq.sai toy.fa 04_R_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 05_R.fastq.sai toy.fa 05_R_.fastq.gz
+\end{lstlisting}
+
+
+
+\subsection{To get the output immediately use --ungroup}
+\begin{lstlisting}
+$ parallel -j 3 --verbose --ungroup 'bwa aln -f 0{}_F.fastq.sai toy.fa 0{}_F_.fastq.gz ; sleep {} ; bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz ' ::: 1 2 3 4 5
+\end{lstlisting}
+output:
+\begin{lstlisting}
+bwa aln -f 01_F.fastq.sai toy.fa 01_F_.fastq.gz ; sleep 1 ; bwa aln -f 01_R.fastq.sai toy.fa 01_R_.fastq.gz 
+bwa aln -f 02_F.fastq.sai toy.fa 02_F_.fastq.gz ; sleep 2 ; bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz 
+(...)
+bwa aln -f 03_F.fastq.sai toy.fa 03_F_.fastq.gz ; sleep 3 ; bwa aln -f 03_R.fastq.sai toy.fa 03_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 01_F.fastq.sai toy.fa 01_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 02_F.fastq.sai toy.fa 02_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 03_F.fastq.sai toy.fa 03_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 01_R.fastq.sai toy.fa 01_R_.fastq.gz
+(...)
+bwa aln -f 04_F.fastq.sai toy.fa 04_F_.fastq.gz ; sleep 4 ; bwa aln -f 04_R.fastq.sai toy.fa 04_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 04_F.fastq.sai toy.fa 04_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz
+(...)
+bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz ; sleep 5 ; bwa aln -f 05_R.fastq.sai toy.fa 05_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 03_R.fastq.sai toy.fa 03_R_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 04_R.fastq.sai toy.fa 04_R_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 05_R.fastq.sai toy.fa 05_R_.fastq.gz
+(...)
+\end{lstlisting}
+
+--ungroup is fast, but can cause half a line from one job to be mixed with half a line of another job. That has happend in the second line, where the line '4-middle' is mixed with '2-start'.
+
+To avoid this use --linebuffer (which, however, is much slower):
+\begin{lstlisting}
+$ parallel -j 3 --verbose --linebuffer 'bwa aln -f 0{}_F.fastq.sai toy.fa 0{}_F_.fastq.gz ; sleep {} ; bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz ' ::: 1 2 3 4 5
+\end{lstlisting}
+output:
+\begin{lstlisting}
+bwa aln -f 01_F.fastq.sai toy.fa 01_F_.fastq.gz ; sleep 1 ; bwa aln -f 01_R.fastq.sai toy.fa 01_R_.fastq.gz 
+bwa aln -f 02_F.fastq.sai toy.fa 02_F_.fastq.gz ; sleep 2 ; bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz 
+bwa aln -f 03_F.fastq.sai toy.fa 03_F_.fastq.gz ; sleep 3 ; bwa aln -f 03_R.fastq.sai toy.fa 03_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 01_F.fastq.sai toy.fa 01_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 03_F.fastq.sai toy.fa 03_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 02_F.fastq.sai toy.fa 02_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 01_R.fastq.sai toy.fa 01_R_.fastq.gz
+(...)
+bwa aln -f 04_F.fastq.sai toy.fa 04_F_.fastq.gz ; sleep 4 ; bwa aln -f 04_R.fastq.sai toy.fa 04_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 04_F.fastq.sai toy.fa 04_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz
+(...)
+bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz ; sleep 5 ; bwa aln -f 05_R.fastq.sai toy.fa 05_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 03_R.fastq.sai toy.fa 03_R_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 04_R.fastq.sai toy.fa 04_R_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 05_R.fastq.sai toy.fa 05_R_.fastq.gz
+(...)
+\end{lstlisting}
+
+To force the output in the same order as the arguments use --keep-order/-k:
+
+\begin{lstlisting}
+$ parallel -j 2 --verbose --keep-order 'bwa aln -f 0{}_F.fastq.sai toy.fa 0{}_F_.fastq.gz ; sleep {} ; bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz ' ::: 1 2 3 4 5
+\end{lstlisting}
+output:
+\begin{lstlisting}
+bwa aln -f 01_F.fastq.sai toy.fa 01_F_.fastq.gz ; sleep 1 ; bwa aln -f 01_R.fastq.sai toy.fa 01_R_.fastq.gz 
+bwa aln -f 02_F.fastq.sai toy.fa 02_F_.fastq.gz ; sleep 2 ; bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 01_F.fastq.sai toy.fa 01_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 01_R.fastq.sai toy.fa 01_R_.fastq.gz
+(...)
+bwa aln -f 03_F.fastq.sai toy.fa 03_F_.fastq.gz ; sleep 3 ; bwa aln -f 03_R.fastq.sai toy.fa 03_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 02_F.fastq.sai toy.fa 02_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz
+(...)
+bwa aln -f 04_F.fastq.sai toy.fa 04_F_.fastq.gz ; sleep 4 ; bwa aln -f 04_R.fastq.sai toy.fa 04_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 03_F.fastq.sai toy.fa 03_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 03_R.fastq.sai toy.fa 03_R_.fastq.gz
+(...)
+bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz ; sleep 5 ; bwa aln -f 05_R.fastq.sai toy.fa 05_R_.fastq.gz 
+(...)
+[main] CMD: bwa aln -f 04_F.fastq.sai toy.fa 04_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 04_R.fastq.sai toy.fa 04_R_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz
+(...)
+[main] CMD: bwa aln -f 05_R.fastq.sai toy.fa 05_R_.fastq.gz
+\end{lstlisting}
+
+\subsubsection{Saving output into files}
+GNU Parallel can save the output of each job into files:
+\begin{lstlisting}
+$ parallel --files --verbose primer3-2.3.5/src/ntdpal {1} {2} g \
+	::: AATCGTACGTACG ATAGCATCGA \
+	::: AATCGTACGTCG  ATAGCATCGAG
+\end{lstlisting}
+output:
+\begin{lstlisting}
+/home/lindenb/package/primer3-2.3.5/src/ntdpal AATCGTACGTACG AATCGTACGTCG g
+/home/lindenb/package/primer3-2.3.5/src/ntdpal AATCGTACGTACG ATAGCATCGAG g
+/tmp/eLAmSSq0DY.par
+/home/lindenb/package/primer3-2.3.5/src/ntdpal ATAGCATCGA AATCGTACGTCG g
+/tmp/Yv7YvDPzzw.par
+/home/lindenb/package/primer3-2.3.5/src/ntdpal ATAGCATCGA ATAGCATCGAG g
+/tmp/mea6UUq1Li.par
+/tmp/VLbG2gkq2c.par
+
+$ head /tmp/eLAmSSq0DY.par /tmp/Yv7YvDPzzw.par /tmp/mea6UUq1Li.par /tmp/VLbG2gkq2c.par
+==> /tmp/eLAmSSq0DY.par <==
+|AATCGTACGTACG|  |AATCGTACGTCG| g score=11.00 len=12 |0,0|1,1|2,2|3,3|4,4|5,5|6,6|7,7|8,8|9,9|11,10|12,11|
+
+==> /tmp/Yv7YvDPzzw.par <==
+|AATCGTACGTACG|  |ATAGCATCGAG| g score=3.00 len=10 |1,0|2,1|3,2|4,3|5,4|6,5|7,7|8,8|10,9|12,10|
+
+==> /tmp/mea6UUq1Li.par <==
+|ATAGCATCGA|  |AATCGTACGTCG| g score=3.00 len=6 |4,0|5,1|6,2|7,3|8,4|9,6|
+
+==> /tmp/VLbG2gkq2c.par <==
+|ATAGCATCGA|  |ATAGCATCGAG| g score=10.00 len=10 |0,0|1,1|2,2|3,3|4,4|5,5|6,6|7,7|8,8|9,9|
+\end{lstlisting}
+
+By default GNU Parallel will cache the output in files in /tmp. This can be changed by setting \$TMPDIR or --tmpdir:
+\begin{lstlisting}
+$ parallel --files --verbose --tmpdir . primer3-2.3.5/src/ntdpal {1} {2} g \
+	::: AATCGTACGTACG ATAGCATCGA \
+	::: AATCGTACGTCG  ATAGCATCGAG
+\end{lstlisting}
+output:
+\begin{lstlisting}
+/home/lindenb/package/primer3-2.3.5/src/ntdpal AATCGTACGTACG AATCGTACGTCG g
+/home/lindenb/package/primer3-2.3.5/src/ntdpal AATCGTACGTACG ATAGCATCGAG g
+./0gCXxOB_fm.par
+/home/lindenb/package/primer3-2.3.5/src/ntdpal ATAGCATCGA AATCGTACGTCG g
+./SD67tLyZTs.par
+/home/lindenb/package/primer3-2.3.5/src/ntdpal ATAGCATCGA ATAGCATCGAG g
+./RR54nlC0yu.par
+./K1c6EBsxZq.par
+\end{lstlisting}
+
+The output files can be saved in a structured way using --results:
+\begin{lstlisting}
+parallel --result ALN  bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz  ::: 1 2 3 4 5
+\end{lstlisting}
+output:
+\begin{lstlisting}
+$ find ALN
+ALN
+ALN/1
+ALN/1/2
+ALN/1/2/stdout
+ALN/1/2/stderr
+ALN/1/1
+ALN/1/1/stdout
+ALN/1/1/stderr
+ALN/1/5
+ALN/1/5/stdout
+ALN/1/5/stderr
+ALN/1/4
+ALN/1/4/stdout
+ALN/1/4/stderr
+ALN/1/3
+ALN/1/3/stdout
+ALN/1/3/stderr
+\end{lstlisting}
+
+\begin{lstlisting}
+ parallel --result NTDPAL  primer3-2.3.5/src/ntdpal {1} {2} g ::: AATCGTACGTACG ATAGCATCGA ::: AATCGTACGTCG  ATAGCATCGAG
+\end{lstlisting}
+output:
+\begin{lstlisting}
+$ find NTDPAL/
+NTDPAL/
+NTDPAL/1
+NTDPAL/1/AATCGTACGTACG
+NTDPAL/1/AATCGTACGTACG/2
+NTDPAL/1/AATCGTACGTACG/2/ATAGCATCGAG
+NTDPAL/1/AATCGTACGTACG/2/ATAGCATCGAG/stdout
+NTDPAL/1/AATCGTACGTACG/2/ATAGCATCGAG/stderr
+NTDPAL/1/AATCGTACGTACG/2/AATCGTACGTCG
+NTDPAL/1/AATCGTACGTACG/2/AATCGTACGTCG/stdout
+NTDPAL/1/AATCGTACGTACG/2/AATCGTACGTCG/stderr
+NTDPAL/1/ATAGCATCGA
+NTDPAL/1/ATAGCATCGA/2
+NTDPAL/1/ATAGCATCGA/2/ATAGCATCGAG
+NTDPAL/1/ATAGCATCGA/2/ATAGCATCGAG/stdout
+NTDPAL/1/ATAGCATCGA/2/ATAGCATCGAG/stderr
+NTDPAL/1/ATAGCATCGA/2/AATCGTACGTCG
+NTDPAL/1/ATAGCATCGA/2/AATCGTACGTCG/stdout
+NTDPAL/1/ATAGCATCGA/2/AATCGTACGTCG/stderr
+
+$ cat NTDPAL/1/AATCGTACGTACG/2/ATAGCATCGAG/stdout
+|AATCGTACGTACG|  |ATAGCATCGAG| g score=3.00 len=10 |1,0|2,1|3,2|4,3|5,4|6,5|7,7|8,8|10,9|12,10|
+\end{lstlisting}
+
+
+This is useful if you are running multiple variables:
+\begin{lstlisting}
+$ parallel --header : --result NTDPAL  primer3-2.3.5/src/ntdpal {1} {2} g \
+	::: primer-foward AATCGTACGTACG ATAGCATCGA \
+	::: primer-reverse AATCGTACGTCG  ATAGCATCGAG
+\end{lstlisting}
+Generated files:
+\begin{lstlisting}
+$ find NTDPAL/
+
+NTDPAL/
+NTDPAL/primer-foward
+NTDPAL/primer-foward/AATCGTACGTACG
+NTDPAL/primer-foward/AATCGTACGTACG/primer-reverse
+NTDPAL/primer-foward/AATCGTACGTACG/primer-reverse/ATAGCATCGAG
+NTDPAL/primer-foward/AATCGTACGTACG/primer-reverse/ATAGCATCGAG/stdout
+NTDPAL/primer-foward/AATCGTACGTACG/primer-reverse/ATAGCATCGAG/stderr
+NTDPAL/primer-foward/AATCGTACGTACG/primer-reverse/AATCGTACGTCG
+NTDPAL/primer-foward/AATCGTACGTACG/primer-reverse/AATCGTACGTCG/stdout
+NTDPAL/primer-foward/AATCGTACGTACG/primer-reverse/AATCGTACGTCG/stderr
+NTDPAL/primer-foward/ATAGCATCGA
+NTDPAL/primer-foward/ATAGCATCGA/primer-reverse
+NTDPAL/primer-foward/ATAGCATCGA/primer-reverse/ATAGCATCGAG
+NTDPAL/primer-foward/ATAGCATCGA/primer-reverse/ATAGCATCGAG/stdout
+NTDPAL/primer-foward/ATAGCATCGA/primer-reverse/ATAGCATCGAG/stderr
+NTDPAL/primer-foward/ATAGCATCGA/primer-reverse/AATCGTACGTCG
+NTDPAL/primer-foward/ATAGCATCGA/primer-reverse/AATCGTACGTCG/stdout
+NTDPAL/primer-foward/ATAGCATCGA/primer-reverse/AATCGTACGTCG/stderr
+\end{lstlisting}
+The directories are named after the variables and their values.
+\section{Control the execution.}
+\subsection{Number of simultaneous jobs.}
+The number of concurrent jobs is given with --jobs/-j. By default --jobs is the same as the number of CPU cores. --jobs 0 will run as many jobs in parallel as possible.
+\begin{lstlisting}
+$ ls *.bam | parallel --verbose -j 2 samtools sort {} sorted_{.}
+\end{lstlisting}
+output:
+\begin{lstlisting}
+samtools sort ex1a.bam sorted_ex1a
+samtools sort ex1.bam sorted_ex1
+samtools sort ex1b.bam sorted_ex1b
+samtools sort ex1f.bam sorted_ex1f
+samtools sort ex1f-rmduppe.bam sorted_ex1f-rmduppe
+samtools sort ex1f-rmdupse.bam sorted_ex1f-rmdupse
+samtools sort toy.bam sorted_toy
+\end{lstlisting}
+
+\section{Interactiveness.}
+
+\begin{lstlisting}
+$ ls *.bam | parallel --verbose --interactive  samtools sort {} sorted_{.}
+\end{lstlisting}
+output:
+\begin{lstlisting}
+samtools sort ex1a.bam sorted_ex1a ?...y
+samtools sort ex1.bam sorted_ex1 ?...n
+samtools sort ex1b.bam sorted_ex1b ?...n
+samtools sort ex1f.bam sorted_ex1f ?...n
+samtools sort ex1f-rmduppe.bam sorted_ex1f-rmduppe ?...y
+samtools sort ex1f-rmdupse.bam sorted_ex1f-rmdupse ?...y
+samtools sort toy.bam sorted_toy ?...y
+
+$ ls sorted*.bam
+sorted_ex1a.bam
+sorted_ex1f-rmduppe.bam
+sorted_ex1f-rmdupse.bam
+sorted_toy.bam
+\end{lstlisting}
+
+
+%%GNU Parallel can be used to put arguments on the command line for an interactive command such as emacs to edit one file at a time:
+%%Or give multiple argument in one go to open multiple files:
+
+\subsection{Timing}
+Some jobs do heavy I/O when they start. To avoid a thundering herd GNU Parallel can delay starting new jobs. --delay X will make sure there is at least X seconds between each start:
+\begin{lstlisting}
+ls *.bam | parallel -j 2 --verbose --delay 2.0 samtools sort {} sorted_{.}
+\end{lstlisting}
+output:
+\begin{lstlisting}
+samtools sort ex1a.bam sorted_ex1a
+samtools sort ex1.bam sorted_ex1
+samtools sort ex1b.bam sorted_ex1b
+samtools sort ex1f.bam sorted_ex1f
+samtools sort ex1f-rmduppe.bam sorted_ex1f-rmduppe
+samtools sort ex1f-rmdupse.bam sorted_ex1f-rmdupse
+samtools sort toy.bam sorted_toy
+\end{lstlisting}
+If jobs taking more than a certain amount of time are known to fail, they can be stopped with --timeout:
+\begin{lstlisting}
+ls ex1f-rmdupse_sorted.bam ~/tmp/BIGBAM/sorted_.bam ex1a_sorted.bam |\
+	parallel --timeout 5.0 --verbose samtools index {} 
+samtools index ex1a_sorted.bam
+samtools index ex1f-rmdupse_sorted.bam
+samtools index /home/lindenb/tmp/BIGBAM/sorted_.bam #no bam.bai
+\end{lstlisting}
+
+Based on the runtime of completed jobs GNU Parallel can estimate the total runtime:
+\begin{lstlisting}
+$ ls ex1f-rmdupse_sorted.bam BIGBAM/sorted_.bam ex1a_sorted.bam |\
+	parallel --eta --verbose samtools index {} 
+\end{lstlisting}
+output:
+\begin{lstlisting}
+samtools index ex1a_sorted.bam
+samtools index ex1f-rmdupse_sorted.bam
+
+
+Computers / CPU cores / Max jobs to run
+1:local / 2 / 2
+
+Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
+local:2/0/100%/0.0s samtools index BIGBAM/sorted_.bam
+ETA: 28s 0left 19.00avg  local:0/3/100%/19.0s 
+\end{lstlisting}
+
+
+\subsection{Progress}
+GNU Parallel can give progress information with --progress:
+\begin{lstlisting}
+$ ls *_sorted.bam BIGBAM/sorted_.bam  |\
+   parallel --progress  samtools index {}
+\end{lstlisting}
+output:
+\begin{lstlisting}
+Computers / CPU cores / Max jobs to run
+1:local / 2 / 2
+
+Computer:jobs running/jobs completed/%of started jobs/Average seconds to complete
+local:0/8/100%/7.2s 
+\end{lstlisting}
+
+A logfile of the jobs completed so far can be generated with --joblog:
+\begin{lstlisting}
+$ ls *_sorted.bam BIGBAM/sorted_.bam  |\
+   parallel --joblog log.txt  samtools index {}
+
+$ cat log.txt
+Seq	Host	Starttime	Runtime	Send	Receive	Exitval	Signal	Command
+1	:	1381155497.299	0.002	0	0	0	0	samtools index ex1a_sorted.bam
+2	:	1381155497.301	0.004	0	0	0	0	samtools index ex1b_sorted.bam
+3	:	1381155497.306	0.006	0	0	0	0	samtools index ex1f-rmduppe_sorted.bam
+4	:	1381155497.313	0.006	0	0	0	0	samtools index ex1f-rmdupse_sorted.bam
+5	:	1381155497.319	0.009	0	0	0	0	samtools index ex1f_sorted.bam
+6	:	1381155497.326	0.006	0	0	0	0	samtools index ex1_sorted.bam
+8	:	1381155497.334	0.004	0	0	0	0	samtools index toy_sorted.bam
+7	:	1381155497.332	59.246	0	0	0	0	samtools index BIGBAM/sorted_.bam
+\end{lstlisting}
+The log contains the job sequence, which host the job was run on, the start time and run time, how much data was transferred if the job was run on a remote host, the exit value, the signal that killed the job, and finally the command being run.
+
+
+Same command with --timeout
+\begin{lstlisting}
+$ ls *_sorted.bam BIGBAM/sorted_.bam  |\
+   parallel --timeout 5.0 --joblog log.txt  samtools index {}
+
+$ cat log.txt
+Seq	Host	Starttime	Runtime	Send	Receive	Exitval	Signal	Command
+1	:	1381155638.224	0.002	0	0	0	0	samtools index ex1a_sorted.bam
+2	:	1381155638.225	0.008	0	0	0	0	samtools index ex1b_sorted.bam
+3	:	1381155638.233	0.006	0	0	0	0	samtools index ex1f-rmduppe_sorted.bam
+4	:	1381155638.235	0.009	0	0	0	0	samtools index ex1f-rmdupse_sorted.bam
+5	:	1381155638.243	0.007	0	0	0	0	samtools index ex1f_sorted.bam
+6	:	1381155638.248	0.008	0	0	0	0	samtools index ex1_sorted.bam
+8	:	1381155638.258	0.003	0	0	0	0	samtools index toy_sorted.bam
+7	:	1381155638.255	6.188	0	0	-1	15	samtools index BIGBAM/sorted_.bam
+\end{lstlisting}
+With a joblog GNU Parallel can be stopped and later pickup where it left off. It it important that the input of the completed jobs is unchanged.
+\begin{lstlisting}
+$ parallel --joblog log.txt  bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz  ::: 1 2
+$ cat log.txt
+Seq	Host	Starttime	Runtime	Send	Receive	Exitval	Signal	Command
+1	:	1381156165.018	0.012	0	0	0	0	bwa aln -f 01_R.fastq.sai toy.fa 01_R_.fastq.gz
+2	:	1381156165.028	0.016	0	0	0	0	bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz
+\end{lstlisting}
+With a joblog GNU Parallel can be stopped and later pickup where it left off. It it important that the input of the completed jobs is unchanged.
+\begin{lstlisting}
+$  parallel --resume --joblog log.txt  \
+ bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz  ::: 1 2 3 DOESNTEXIST 4 5
+$ cat log.txt
+
+Seq	Host	Starttime	Runtime	Send	Receive	Exitval	Signal	Command
+1	:	1381156165.018	0.012	0	0	0	0	bwa aln -f 01_R.fastq.sai toy.fa 01_R_.fastq.gz
+2	:	1381156165.028	0.016	0	0	0	0	bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz
+3	:	1381156215.782	0.014	0	0	0	0	bwa aln -f 03_R.fastq.sai toy.fa 03_R_.fastq.gz
+5	:	1381156215.800	0.026	0	0	0	0	bwa aln -f 04_R.fastq.sai toy.fa 04_R_.fastq.gz
+6	:	1381156215.830	0.014	0	0	0	0	bwa aln -f 05_R.fastq.sai toy.fa 05_R_.fastq.gz
+4	:	1381156215.791	0.139	0	0	0	6	bwa aln -f 0DOESNTEXIST_R.fastq.sai toy.fa 0DOESNTEXIST_R_.fastq.gz
+\end{lstlisting}
+
+With --resume-failed GNU Parallel will re-run the jobs that failed:
+\begin{lstlisting}
+$ parallel --resume-failed --verbose --joblog log.txt  bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz  ::: 1 2 3 DOESNTEXIST 4 5
+bwa aln -f 0DOESNTEXIST_R.fastq.sai toy.fa 0DOESNTEXIST_R_.fastq.gz
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_seq_open] fail to open file '0DOESNTEXIST_R_.fastq.gz'. Abort!
+
+#create the file 0DOESNTEXIST_R_.fastq.gz 
+$ cp 01_R_.fastq.gz 0DOESNTEXIST_R_.fastq.gz
+
+$ parallel --resume-failed --verbose --joblog log.txt  bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz  ::: 1 2 3 DOESNTEXIST 4 5
+bwa aln -f 0DOESNTEXIST_R.fastq.sai toy.fa 0DOESNTEXIST_R_.fastq.gz
+[bwa_aln] 17bp reads: max_diff = 2
+[bwa_aln] 38bp reads: max_diff = 3
+[bwa_aln] 64bp reads: max_diff = 4
+[bwa_aln] 93bp reads: max_diff = 5
+[bwa_aln] 124bp reads: max_diff = 6
+[bwa_aln] 157bp reads: max_diff = 7
+[bwa_aln] 190bp reads: max_diff = 8
+[bwa_aln] 225bp reads: max_diff = 9
+[bwa_aln_core] calculate SA coordinate... 0.01 sec
+[bwa_aln_core] write to the disk... 0.00 sec
+[bwa_aln_core] 1000 sequences have been processed.
+[main] Version: 0.7.4-r385
+[main] CMD: bwa aln -f 0DOESNTEXIST_R.fastq.sai toy.fa 0DOESNTEXIST_R_.fastq.gz
+[main] Real time: 0.014 sec; CPU: 0.012 sec
+\end{lstlisting}
+\subsection{Termination}
+todo
+
+\subsection{Limiting the ressources}
+todo
+
+\section{Remote execution}
+
 
 
 \section{References}

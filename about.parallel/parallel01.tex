@@ -858,7 +858,7 @@ The output can prefixed with the argument:
 $ parallel --tag echo prefix-{} ::: A T G C
 \end{lstlisting}
 output:
-\begin{lstlisting}Output (the order may be different):
+\begin{lstlisting}
 A	prefix-A
 T	prefix-T
 G	prefix-G
@@ -1543,10 +1543,389 @@ todo
 todo
 
 \section{Remote execution}
+\subsection{Sshlogin}
+(on remote side, add parallel to the PATH if needed in .bashrc )
+\begin{lstlisting}
+PATH=${PATH}:/commun/data/packages/parallel/bin
+\end{lstlisting}
+
+The most basic sshlogin is -S host:
+
+\begin{lstlisting}
+$ parallel -S user@host echo ::: A T G C
+A
+T
+C
+G
+\end{lstlisting}
+The special sshlogin ':' is the local machine
+\begin{lstlisting}
+$ parallel -S : echo ::: A T G C
+A
+T
+G
+C
+\end{lstlisting}
+
+If ssh is not in $PATH it can be prepended to $SERVER1:
+\begin{lstlisting}
+$ parallel -S '/usr/bin/ssh 'user@host echo ::: A T G C
+A
+T
+C
+G
+\end{lstlisting}
+Several servers can be given using multiple -S:
+\begin{lstlisting}
+$ parallel -S user@host1 -S user@host2 echo ::: A T G C
+A
+T
+C
+G
+\end{lstlisting}
+Or they can be separated by ',':
+\begin{lstlisting}
+$ parallel -S user@host1,user@host2 echo ::: A T G C
+A
+T
+C
+G
+\end{lstlisting}
+
+The can also be read from a file (replace user@ with the user on \$SERVER2):
+
+\begin{lstlisting}
+$ echo "user@host1" > nodefile
+$ echo "4//usr/bin/ssh/ user@host2" >> nodefile 
+$ parallel --sshloginfile nodefile echo ::: A T G C
+A
+T
+G
+C
+\end{lstlisting}
+The special \texttt{--sshloginfile '..'} reads from \texttt{~/.parallel/sshloginfile}.
+
+%% To force GNU Parallel to treat a server having a given number of CPU cores prepend #/ to the sshlogin:
+%%
+
+\subsection{Transferring files}
+GNU Parallel can transfer the files to be processed to the remote host. It does that using rsync.
+
+\begin{lstlisting}
+$ parallel -S user@host --transfer file ::: *.bam
+\end{lstlisting}
+output
+\begin{lstlisting}
+parallel: Warning: ssh to user@host only allows for 10 simultaneous logins.
+You may raise this by changing /etc/ssh/sshd_config:MaxStartup on user@host.
+Using only 9 connections to avoid race conditions.
+ex1f-rmdupse.bam: gzip compressed data, extra field
+ex1b.bam: gzip compressed data, extra field
+ex1f-rmduppe.bam: gzip compressed data, extra field
+ex1f.bam: gzip compressed data, extra field
+ex1.bam: gzip compressed data, extra field
+ex1a.bam: gzip compressed data, extra field
+toy.bam: gzip compressed data, extra field
+\end{lstlisting}
+
+If the files is processed into another file, the resulting file can be transferred back:
+\begin{lstlisting}
+$ parallel -S user@host --transfer  --return {/.}_s.bam samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
+\end{lstlisting}
+output
+\begin{lstlisting}
+$ ls -la
+-rw-rw-r-- 1 lindenb lindenb 207931 Oct  8 11:28 ex1f_s.bam
+-rw-rw-r-- 1 lindenb lindenb 126522 Oct  8 11:28 ex1_s.bam
+-rw-rw-r-- 1 lindenb lindenb    502 Oct  8 11:28 toy_s.bam
+\end{lstlisting}
+To remove the input and output file on the remote server use --cleanup:
+\begin{lstlisting}
+$ parallel -S user@host --transfer   --cleanup  --return {/.}_s.bam samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
+\end{lstlisting}
+
+There is a short hand for --transfer --return --cleanup called --trc:
+\begin{lstlisting}
+$ parallel -S user@host --trc {/.}_s.bam samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
+\end{lstlisting}
 
 
+Some jobs need a common database for all jobs. GNU Parallel can transfer that using --basefile which will transfer the file before the first job:
+\begin{lstlisting}
+$ parallel -S user@host --basefile ex1.fa grep -inH {} ex1.fa  :::  GCCTGGCT CCAGCT ATCACC
+\end{lstlisting}
+output
+\begin{lstlisting}
+ex1.fa:3:GTGGACCCTGCAGCCTGGCTGTGGGGGCCGCAGTGGCTGAGGGGTGCAGAGCCGAGTCAC
+ex1.fa:9:CTTCTTCCAAAGATGAAACGCGTAACTGCGCTCTCATTCACTCCAGCTCCCTGTCACCCA
+ex1.fa:11:AGCCCAGCTCCAGATTGCTTGTGGTCTGACAGGCTGCAACTGTGAGCCATCACAATGAAC
+ex1.fa:14:CATCCCTGTCTTACTTCCAGCTCCCCAGAGGGAAAGCTTTCAACGCTTCTAGCCATTTCT
+ex1.fa:23:TTGGGCTGTAATGATGCCCCTTGGCCATCACCCAGTCCCTGCCCCATCTCTTGTAATCTC
+\end{lstlisting}
+  
 
+%To remove it from the remote host after the last job use --cleanup. ??
+
+\subsection{Working dir}
+The default working dir on the remote machines is the login dir. This can be changed with --workdir mydir.
+
+Files transferred using --transfer and --return will be relative to mydir on remote computers, and the command will be executed in the dir mydir.
+
+The special mydir value ... will create working dirs under ~/.parallel/tmp/ on the remote computers. If --cleanup is given these dirs will be removed.
+
+\begin{lstlisting}
+$ parallel --workdir . -S user@host --trc {/.}_s.bam  pwd "&&" samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
+/home/user/package/samtools-0.1.18/examples
+/home/user/package/samtools-0.1.18/examples
+/home/user/package/samtools-0.1.18/examples
+\end{lstlisting}
+
+\begin{lstlisting}
+$ parallel --workdir ... -S user@host --trc {/.}_s.bam  pwd "&&" samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
+/home/lindenb/.parallel/tmp/hardyweinberg-10672-2
+/home/lindenb/.parallel/tmp/hardyweinberg-10672-3
+/home/lindenb/.parallel/tmp/hardyweinberg-10672-1
+\end{lstlisting}
+
+
+\begin{lstlisting}
+$ parallel --workdir /home/user/tmp -S user@host --trc {/.}_s.bam  pwd "&&" samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
+/home/user/tmp
+/home/user/tmp
+/home/user/tmp
+\end{lstlisting}
+
+
+\subsection{Avoid overloading sshd}
+If many jobs are started on the same server, sshd can be overloaded. GNU Parallel can insert a delay between each job run on the same server:
+
+\begin{lstlisting}
+$ parallel -S user@host --sshdelay 5 --trc {/.}_s.bam  date "&&"samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
+Tue Oct  8 12:26:45 CEST 2013
+Tue Oct  8 12:26:50 CEST 2013
+Tue Oct  8 12:26:55 CEST 2013
+\end{lstlisting}
+Sshd will be less overloaded if using --controlmaster, which will multiplex ssh connections:
+\begin{lstlisting}
+$ parallel -S user@host --controlmaster  --trc {/.}_s.bam  samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
+\end{lstlisting}
+
+\subsection{Ignore hosts that are down}
+In clusters with many hosts a few of the are often down. GNU Parallel can ignore those hosts. In this case the host 173.194.32.46 is down:
+\begin{lstlisting}
+$ parallel --filter-hosts  -S user@host,user@nowhere.com echo ::: A T G  ::: A T G 
+\end{lstlisting}
+output
+\begin{lstlisting}
+A A
+A T
+A G
+T A
+T T
+T G
+G A
+G T
+G G
+\end{lstlisting}
+
+%\subsection{Running the same commands on all hosts}
+\subsection{Transfer environment variables and functions}
+Using --env GNU Parallel can transfer an environment variable to the remote system.
+
+\begin{lstlisting}
+$ export REFERENCE=/path/to/human_g1k_v37.fasta
+# warning the following cmd can produce mixed lines from different fasta (?)
+$ parallel --env REFERENCE -S user@host "samtools faidx ${REFERENCE} {}" ::: "1:10000010-10000020" "MT:20-30" "3:1000050-1000080"
+>1:10000010-10000020
+CTACAATAAAT
+>3:1000050-1000080
+AAAAGCCCATCAAGGTTGTAAGAAGACTCCC
+>MT:20-30
+TATTAACCACT
+\end{lstlisting}
+
+This works for functions too:
+
+\begin{lstlisting}
+$  align2primer() {
+primer3-2.3.5/src/ntdpal $1 $2 g
+}
+
+$  export -f align2primer
+$ parallel --env align2primer -S  user@host align2primer \
+	 ::: ACTGACGACTG ATCGATGACTAG  \
+	 ::: TGACGACTG TCGATGACT
+\end{lstlisting}
+output
+\begin{lstlisting}
+|ACTGACGACTG|  |TGACGACTG| g score=9.00 len=9 |2,0|3,1|4,2|5,3|6,4|7,5|8,6|9,7|10,8|
+|ACTGACGACTG|  |TCGATGACT| g score=5.00 len=8 |2,0|3,2|4,3|5,4|6,5|7,6|8,7|9,8|
+|ATCGATGACTAG|  |TCGATGACT| g score=9.00 len=9 |1,0|2,1|3,2|4,3|5,4|6,5|7,6|8,7|9,8|
+|ATCGATGACTAG|  |TGACGACTG| g score=5.00 len=9 |1,0|3,1|4,2|5,3|6,4|7,5|8,6|9,7|11,8|
+\end{lstlisting}
+
+GNU Parallel can copy all defined variables and functions to the remote system. It just need to record which ones to ignore in ~/.parallel/ignored\_vars. Do that by running this once:
+\begin{lstlisting}
+$ parallel --record-env
+
+$ cat ~/.parallel/ignored_vars 
+XAUTHORITY
+XDG_CURRENT_DESKTOP
+UBUNTU_MENUPROXY
+LC_COLLATE
+XDG_SEAT_PATH
+MANDATORY_PATH
+(...)
+\end{lstlisting}
+Now all new variables and functions defined will be copied when using  '--env \_'
+
+%\subsection{Showing what is actually run}
+%
+%--verbose will show the command that would be run on the local machine. When a job is run on a remote machine this is wrapped with ssh and possibly transferring files and environment variables, setting the workdir, and setting --nice value. -vv shows all of this.
+
+\section{--pipe}
+\subsection{Chunk size}
+By default GNU Parallel will start an instance of command\_B, read a chunk of about 1 MB, and pass that to the instance. Then start another instance, read another chunk, and pass that to the second instance.
+\begin{lstlisting}
+$ samtools view  file.bam | parallel --pipe wc -l | head
+6310
+6347
+6328
+6337
+6378
+6302
+6354
+6352
+6306
+6334
+\end{lstlisting}
+ou can change the block size to 2 MB with --block:
+\begin{lstlisting}
+$ samtools view  file.bam | parallel--block 2M  --pipe wc -l | head
+12657
+12665
+12680
+12706
+12640
+12579
+12600
+12677
+12643
+12654
+\end{lstlisting}
+%GNU Parallel treats each line as a record. If the order of record is unimportant (e.g. you need all lines processed, but you do not care which is processed first), then you can use --round-robin. Without --round-robin GNU Parallel will start a command per block; with --round-robin only the requested number of jobs will be started (--jobs). The records will then be distributed between the running jobs
+\subsection{Records}
+Using -N400 GNU Parallel will read 400 records at a time
+\begin{lstlisting}
+$ gunzip -c  examples/0*.fastq.gz | parallel --pipe -N400 "paste -- - - - - | cut -f 2 | sort | uniq -dc " 
+      2 AATTGGGGAAAACCTCTTTAGTCTTGCTAGAGATTTAGACATCTAAATGAAAGAGGCTCAAAGAATGCCA
+      2 GGAAATAAAGTCAAGTCTTTCCTGACAAGCAAATGCTAAGATAATTCATCATCACTAAACCAGTCCTATA
+      2 GAAAAAAATTCTAAAATCAGCAAGAGAAAAGCATACAGTCATCTATAAAGGAAATCCCATCAGAATAACA
+      2 ATGAACTAACTATATGCTGTTTACAAGAAACTCATTAATAAAGACATGAGTTCAGGTAAAGGGGTGGAAA
+      2 AATTGGGGAAAACCTCTTTAGTCTTGCTAGAGATTTAGACATCTAAATGAAAGAGGCTCAAAGAATGCCA
+      2 GGAAATAAAGTCAAGTCTTTCCTGACAAGCAAATGCTAAGATAATTCATCATCACTAAACCAGTCCTATA
+      2 GAAAAAAATTCTAAAATCAGCAAGAGAAAAGCATACAGTCATCTATAAAGGAAATCCCATCAGAATAACA
+      2 ATGAACTAACTATATGCTGTTTACAAGAAACTCATTAATAAAGACATGAGTTCAGGTAAAGGGGTGGAAA
+      2 AATTGGGGAAAACCTCTTTAGTCTTGCTAGAGATTTAGACATCTAAATGAAAGAGGCTCAAAGAATGCCA
+      2 GGAAATAAAGTCAAGTCTTTCCTGACAAGCAAATGCTAAGATAATTCATCATCACTAAACCAGTCCTATA
+      2 GAAAAAAATTCTAAAATCAGCAAGAGAAAAGCATACAGTCATCTATAAAGGAAATCCCATCAGAATAACA
+      2 ATGAACTAACTATATGCTGTTTACAAGAAACTCATTAATAAAGACATGAGTTCAGGTAAAGGGGTGGAAA
+      2 AATTGGGGAAAACCTCTTTAGTCTTGCTAGAGATTTAGACATCTAAATGAAAGAGGCTCAAAGAATGCCA
+      2 GGAAATAAAGTCAAGTCTTTCCTGACAAGCAAATGCTAAGATAATTCATCATCACTAAACCAGTCCTATA
+      2 GAAAAAAATTCTAAAATCAGCAAGAGAAAAGCATACAGTCATCTATAAAGGAAATCCCATCAGAATAACA
+      2 ATGAACTAACTATATGCTGTTTACAAGAAACTCATTAATAAAGACATGAGTTCAGGTAAAGGGGTGGAAA
+      2 AATTGGGGAAAACCTCTTTAGTCTTGCTAGAGATTTAGACATCTAAATGAAAGAGGCTCAAAGAATGCCA
+      2 GGAAATAAAGTCAAGTCTTTCCTGACAAGCAAATGCTAAGATAATTCATCATCACTAAACCAGTCCTATA
+      2 GAAAAAAATTCTAAAATCAGCAAGAGAAAAGCATACAGTCATCTATAAAGGAAATCCCATCAGAATAACA
+      2 ATGAACTAACTATATGCTGTTTACAAGAAACTCATTAATAAAGACATGAGTTCAGGTAAAGGGGTGGAAA
+\end{lstlisting}
+If a record is 75 lines -L can be used:
+\begin{lstlisting}
+$ gunzip -c  examples/0*.fastq.gz | parallel --pipe -L4 "paste -- - - - - | cut -f 2 | sort | uniq -dc "
+      4 AAAAAAAAAAAAAAAAAGAGAAAAGAAAAAAAAAAAAACGAAATTACCAAATTGTTTTCCAAAGTGGAAA
+      2 AAAAAAAAAAAAAAAAGAGAAAAGAAAAAAAAAAAAACGAAATTAGCAAATTGTTTTCCAAAGTGGCAAA
+      2 AAAAAAAAAAAAACGAAATTACCAAATTGTTTACCAAAGTGGAAAACAATTTATACTCCCACTAGCAATA
+      2 AAAAAAAAAAAAAGAGAAAAGAAAAAAAAAAAAACGAAATTACCAAATTGTTTTCCAAAGTGGAAAACAA
+      2 AAAAAAAAAAAACGAAATTACCAAATTGTTTTCCAAAGTGGAAAACAATTTATACTCGCACTAGCAATAT
+      2 AAAAAAAAAACGAAATTACCAAATTGTTTTCCAAAGTGGAAAACAATTTATACTCCCACTAGCAATATTT
+      4 AAAAAAAAAAGAGAAAAGAAAAAAAAAAAAACGAAATTACCAAATTGTTTTCCAAAGTGGAAAACAATTT
+      2 AAAAAAAAACAAAAAGAGAAAATAAAAAAAAAAAAACGAAATTACCAAATTGTTTTCCAAAGTGGAAAAC
+      2 AAAAAAAAACGAAATTACCAAATTGTTTTCCAAAGTGGACAACAATTTATACTCCCACTAGCAATATTTG
+      2 AAAAAAAAAGAGAAAAGAAAAAAAAAAAAACGAAATTACCAAAATGTTTTCCAAAGTGGAAAACAATTTA
+(...)
+\end{lstlisting}
+
+%\subsection{Record separators}
+%GNU Parallel uses separators to determine where two record split.
+\subsection{Header}
+If the input data has a header, the header can be repeated for each job by matching the header with --header. If headers start with '\#':
+\begin{lstlisting}
+view -h path/big.bam   | parallel --header '(@.*\n)*' --pipe 'samtools view -f4 -Sc - ' 2> /dev/null 
+\end{lstlisting}
+output:
+\begin{lstlisting}
+10996
+5496
+5510
+5611
+5431
+5549
+5566
+5431
+5510
+5392
+\end{lstlisting}
+
+\subsection{Shebang}
+GNU Parallel is often called as:
+\begin{lstlisting}
+  cat input_file | parallel command
+\end{lstlisting}
+With --shebang the input\_file and parallel can be combined into the same script.
+
+UNIX-scripts start with a shebang line like:
+\begin{lstlisting}
+#!/bin/bash
+\end{lstlisting}
+
+GNU Parallel can do that, too. With --shebang the arguments can be listed in the file. The parallel command is the first line of the script:
+\begin{lstlisting}
+#!/usr/local/bin/parallel --shebang --verbose -r samtools index
+examples/sorted_ex1a.bam
+examples/sorted_ex1.bam
+examples/sorted_ex1b.bam
+examples/sorted_ex1f.bam
+examples/sorted_ex1f-rmduppe.bam
+examples/sorted_ex1f-rmdupse.bam
+examples/sorted_toy.bam
+\end{lstlisting}
+
+Execute:
+\begin{lstlisting}
+$ ./parallelindex
+
+samtools index examples/sorted_ex1a.bam
+samtools index examples/sorted_ex1.bam
+samtools index examples/sorted_ex1b.bam
+samtools index examples/sorted_ex1f.bam
+samtools index examples/sorted_ex1f-rmduppe.bam
+samtools index examples/sorted_ex1f-rmdupse.bam
+samtools index examples/sorted_toy.ba
+\end{lstlisting}
+
+\subsection{Parallelizing existing scripts}
+GNU Parallel is often called as:
+\begin{lstlisting}
+$ cat input_file | parallel command
+$ parallel command ::: foo bar
+\end{lstlisting}
+If command is a script parallel can be combined into a single file so:
+\begin{lstlisting}
+  cat input_file | command
+  command foo bar
+\end{lstlisting}
 \section{References}
+
 \begin{itemize}
 \item{}
 \end{itemize}

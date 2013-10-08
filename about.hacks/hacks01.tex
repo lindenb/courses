@@ -1,0 +1,225 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{indentfirst}
+\usepackage{makeidx}
+
+\makeindex
+
+\title{Programming Hacks}
+\author{Pierre Lindenbaum PhD.}
+\date{\today}
+
+\lstset{language=bash,frame=single,backgroundcolor=\color{lightgray},numbers=left,breaklines=true,breakautoindent=true,basicstyle=\small}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\section{C/C++}
+\subsection{Scanning a directory tree}
+\url{http://stackoverflow.com/questions/3833581}
+\begin{lstlisting}
+static int callback(const char *fpath, const struct stat *sb, int typeflag) {
+	{
+	(...)
+	}
+ftw(".", callback, 16);
+\end{lstlisting}
+
+\section{Make}
+\subsection{Patterns}
+\begin{lstlisting}
+%.pdf:%.dvi
+	dvipdf $<
+%.dvi:%.tex
+	latex $<
+\end{lstlisting}
+\subsection{Phony targets}
+\url{http://www.gnu.org/s/hello/manual/make/Phony-Targets.html}
+'.PHONY' declares the target as "symbolic". e.g. "clean". It will be executed even if there is a file named "clean".
+\begin{lstlisting}
+.PHONY : clean
+clean:
+             rm *.o temp
+\end{lstlisting}
+
+\section{Java}
+\subsection{Double Brace Initialization}
+\url{http://www.c2.com/cgi/wiki?DoubleBraceInitialization}
+\begin{lstlisting}
+removeProductsWithCodeIn(new HashSet<String>() {{
+   add("XZ13s");
+   add("AB21/X");
+   add("YYLEX");
+   add("AR5E");
+ }});
+\end{lstlisting}
+\subsection{Joint union in type parameter variance}
+\begin{lstlisting}
+public class Baz<T extends Foo & Bar> {}
+\end{lstlisting}
+\section{C/C++}
+\subsection{List predefined macros in gcc}
+\url{http://en.wikipedia.org/wiki/C_preprocessor#Compiler-specific_predefined_macros}
+\begin{lstlisting}
+gcc -dM -E - < /dev/null
+\end{lstlisting}
+
+\section{Unix}
+\subsection{Regex with one column}
+\begin{lstlisting}
+$ echo -e "A B C\nA T G C\n" | awk -F ' ' '($2 ~ "B" )'
+A B C
+\end{lstlisting}
+\subsection{Replace one column}
+\begin{lstlisting}
+$ echo -e "A B C\nA T G C\n" | awk -F ' ' '($3 = "B" )'
+A B B
+A T B C
+  B
+
+\end{lstlisting}
+\subsection{csplit }
+split a file into sections determined by context lines
+\subsection{fold: split lines}
+\begin{lstlisting}
+$ echo "AAAAAAAAAAAAAAAAAA" | fold -w 3
+AAA
+AAA
+AAA
+AAA
+AAA
+AAA
+\end{lstlisting}
+
+\subsection{mv more than one file}
+\begin{lstlisting}
+mv path/{*.tex,*.cpp} WS/
+\end{lstlisting}
+
+\subsection{speed up sort}
+\begin{lstlisting}
+export LC_ALL=C
+\end{lstlisting}
+
+\subsection{Adding message when logging a server}
+modify: /etc/motd
+\subsection{finding executables}
+\begin{lstlisting}
+ find ./ -type f -perm -o+rx
+\end{lstlisting}
+
+\subsection{Merge PDF}
+\begin{lstlisting}
+gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=jeter.pdf -dBATCH status.*.pdf
+\end{lstlisting}
+
+\subsection{passwordless connection with ssh}
+on client side:
+\begin{lstlisting}
+$ ssh-keygen -t rsa
+Enter file in which to save the key (~/.ssh/id_rsa): 
+/home/lindenb/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in ~/.ssh/id_rsa.
+Your public key has been saved in ~/.ssh/id_rsa.pub.
+The key fingerprint is:
+xxx lindenb@hardyweinberg
+
+##tell ssh-agent
+$ ssh-add
+
+## transfert your key
+
+cat .ssh/id_rsa.pub | ssh LOGIN@HOST 'cat >> .ssh/authorized_key'
+
+\end{lstlisting}
+on server side, if needed
+\begin{lstlisting}
+$ chmod 700 .ssh
+$ chmod 600 .ssh/authorized_keys
+\end{lstlisting}
+
+\section{Virtual ssh directory}
+\begin{lstlisting}
+sudo apt-get install sshfs
+mkdir VIRTUAL
+sshfs  LOGIN@HOST:/data/users/me VIRTUAL
+\end{lstlisting}
+
+\section{HTML/Mozilla}
+\subsection{multiple file input in Firefox 3.6}
+\url{http://hacks.mozilla.org/2009/12/multiple-file-input-in-firefox-3-6/}
+\begin{lstlisting}
+<input type="file" multiple=""/>
+\end{lstlisting}
+\subsection{Mozilla JS shell}
+\begin{lstlisting}
+ xpcshell-2.0 -e 'print("Hello");'
+\end{lstlisting}
+\section{Postcript}
+Including a picture: use the run operator.
+\begin{lstlisting}
+%!PS
+0 0 moveto
+100 100 lineto
+stroke
+(jeter.eps) run
+0 0 moveto
+100 100 lineto
+stroke
+\end{lstlisting}
+\section{Github}
+You've cloned a repo but you want to update the data from your colleague's original repository:
+\begin{lstlisting}
+
+$ git remote add parent "https://github.com/michaelbarton/bioinformatics-career-survey.git"
+$ git pull parent master
+\end{lstlisting}
+\section{Javascript}
+\paragraph{Mozilla/Xul interpreter:}
+\begin{lstlisting}
+export LD_LIBRARY_PATH=/usr/lib/xulrunner-2.0
+JavaScript-C 1.8.0 pre-release 1 2007-10-03
+usage: xpcshell [-g gredir] [-r manifest]... [-PsSwWxCij] [-v version] [-f scriptfile] [-e script] [scriptfile] [scriptarg...]
+\end{lstlisting}
+\section{Ecore/XMI}
+\paragraph{Where is the XML schema for ECore}
+%%\url{http://dev.eclipse.org/viewcvs/viewvc.cgi/org.eclipse.emf/org.eclipse.emf/plugins/org.eclipse.emf.ecore/model/Ecore.xsd?view=co\&root=Modeling_Project} .
+
+\section{Apache2}
+%allowing public_html:
+%via: http://kimbriggs.com/computers/computer-notes/linux-notes/apache2-public_html-virtual-directories.file
+
+\begin{lstlisting}
+
+me@myhost$ cd /etc/apache2/mods-enabled
+me@myhost$ sudo ln -s ../mods-available/userdir.conf userdir.conf
+me@myhost$ sudo ln -s ../mods-available/userdir.load userdir.load
+me@myhost$ sudo /etc/init.d/apache2 restart 
+$ mkdir -p ~/public_html/cgi-bin
+(...)
+ chmod a+x flickr.cgi
+ 
+edit:  sudo nano /etc/apache2/apache2.conf
+and append:
+
+<Directory /home/*/public_html/cgi-bin/>
+Options ExecCGI
+SetHandler cgi-script
+</Directory>
+\end{lstlisting}
+
+
+
+
+\end{document}

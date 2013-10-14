@@ -8,15 +8,23 @@
 \usepackage{xcolor}
 \usepackage{indentfirst}
 \usepackage{makeidx}
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
 
 \makeindex
 
 
-\lstset{language=bash,frame=single,backgroundcolor=\color{lightgray},numbers=left,breaklines=true,breakautoindent=true,basicstyle=\small}
+\lstset{language=bash,frame=single,backgroundcolor=\color{yellow},numbers=left,breaklines=true,breakautoindent=true,basicstyle=\tiny}
 \date{\today}
 \title{GNU Parallel for Bioinformatics}
 \author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\\url{http://plindenbaum.blogspot.com} }
 
+
+\newcommand{\example}[1]{
+\textbf{Example: } {\color[rgb]{0,0,1} #1 } .
+}
+\newcommand{\cmdoption}[1]{\texttt{'#1'}}
 
 \def\prl{\textbf{parallel}}
 \def\bam{\textbf{bam}}
@@ -26,7 +34,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-This document follows the Ole Tange's \prl{} tutorial \url{http://www.gnu.org/software/parallel/parallel_tutorial.html}.
+This document follows Ole Tange's \prl{} tutorial \url{http://www.gnu.org/software/parallel/parallel_tutorial.html}.
 \end{abstract}
 
 \tableofcontents
@@ -34,6 +42,8 @@ This document follows the Ole Tange's \prl{} tutorial \url{http://www.gnu.org/so
 \section{Input Source}
 \subsection{A single input source}
 \subsubsection{Input can be read from the command line.}
+
+\example{determine the file type of a list of \bam{}}
 \begin{lstlisting}
 $ parallel file ::: samtools-0.1.18/examples/*.bam
 \end{lstlisting}
@@ -50,6 +60,7 @@ samtools-0.1.18/examples/toy.bam: gzip compressed data, extra field
 \end{lstlisting}
 
 \subsubsection{The input source can be a file}
+\example{determine the file type of a list of \bam{}}
 \begin{lstlisting}
 $ find samtools-0.1.18/examples/ -name "*.bam" -type f > listbams.txt
 $ parallel -a listbams.txt file
@@ -70,6 +81,7 @@ samtools-0.1.18/examples/toy.bam: gzip compressed data, extra field
 
 
 \subsubsection{STDIN (standard input) can be the input source}
+\example{determine the file type of a list of \bam{}}
 \begin{lstlisting}
 $ find samtools-0.1.18/examples/ -name "*.bam" -type f | parallel file
 \end{lstlisting}
@@ -86,7 +98,7 @@ samtools-0.1.18/examples/toy.bam: gzip compressed data, extra field
 \end{lstlisting}
 
 
-Another example: indexing sorted sorted \bam{} files with \samtools{}:
+\example{indexing sorted sorted \bam{} files with \samtools{}}:
 \begin{lstlisting}
 $ find dir1 -name "*.bam" | grep sorted |\
 	parallel -a -  'samtools index '
@@ -104,60 +116,55 @@ $ find dir1 -name "*.bam" | grep sorted |\
 %%
 
 \begin{lstlisting}
-$  parallel echo ::: A T G C ::: A T G C
+\example{Print the combinations of two lists of nucleotides }
+$  parallel echo ::: A T G C ::: a t g c
 \end{lstlisting}
 output:
 \begin{lstlisting}
-A A
-A T
-A G
-A C
-T A
-T T
-T G
-T C
-G A
-G T
-G G
-G C
-C A
-C T
-C G
-C C
+A a
+A t
+A g
+A c
+T a
+T t
+T g
+T c
+G a
+G t
+G g
+G c
+C a
+C t
+C g
+C c
 \end{lstlisting}
 
 \subsubsection{If one of the input sources is too short, its values will wrap}
+\example{Print the combinations of two lists of nucleotides. The second list is shorter }
 \begin{lstlisting}
-$  parallel echo ::: A T G C N ::: A T G C
+$  parallel echo ::: A T G C N ::: a t
 \end{lstlisting}
 
 output:
 \begin{lstlisting}
-A A
-A T
-A G
-A C
-T A
-T T
-T G
-T C
-G A
-G T
-G G
-G C
-C A
-C T
-C G
-C C
-N A
-N T
-N G
-N C
+A a
+A t
+T a
+T t
+G a
+G t
+C a
+C t
+N a
+N t
 \end{lstlisting}
 
 \subsubsection{The input sources can be files}
+\example{Print the combinations of two files of nucleotides. }
 \begin{lstlisting}
-$  parallel  -a <(echo -e "A\nT\nG\nC") -a   <(echo -e "a\nt\ng\nc") echo
+$ echo -e "A\nT\nG\nC" > ATGC.txt
+$ echo -e "a\nt\ng\nc" > atgc.txt
+$  parallel  -a ATGC.txt -a  atgc.txt echo
 \end{lstlisting}
 output:
 \begin{lstlisting}
@@ -181,9 +188,11 @@ C c
 
 
 \subsubsection{STDIN can be one of the input sources using '-'}
+\example{Print the combinations of one file of nucleotides and stdin }
 \begin{lstlisting}
-$  echo -e "A\nT\nG\nC" |\
-	parallel  -a - -a   <(echo -e "a\nt\ng\nc") echo
+$ echo -e "a\nt\ng\nc" > atgc.txt
+$ echo -e "A\nT\nG\nC" |\
+	parallel  -a - -a  atgc.txt echo
 \end{lstlisting}
 output:
 \begin{lstlisting}
@@ -205,9 +214,12 @@ C g
 C c
 \end{lstlisting}
 
-\subsubsection{Instead of -a files can be given after '\texttt{::::}'}
+\subsubsection{Instead of -a files can be given after \cmdoption{::::}}
+\example{Print the combinations of two files of nucleotides. }
 \begin{lstlisting}
-parallel  echo :::: <(echo -e "A\nT\nG\nC") ::::   <(echo -e "a\nt\ng\nc")
+$ echo -e "A\nT\nG\nC" > ATGC.txt
+$ echo -e "a\nt\ng\nc" > atgc.txt
+parallel  echo ::::  ATGC.txt ::::  atgc.txt
 \end{lstlisting}
 output:
 \begin{lstlisting}
@@ -229,9 +241,17 @@ C g
 C c
 \end{lstlisting}
 
-\subsubsection{'\texttt{:::}' and '\texttt{::::}' can be mixed:}
+\subsubsection{\cmdoption{:::} and \cmdoption{::::} can be mixed:}
+I created a random list of genes using:
 \begin{lstlisting}
-$ parallel 'grep -Hn ' ::: B7ZGX9 I7FC33 :::: <(ls list_genes_*.txt)
+for L in 01 02 03 04 05 06 07 08 09 ; do curl -s "http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/kgXref.txt.gz" | gunzip -c | cut -d '	' -f 4 | grep _ | uniq | head -n 10 | shuf | head -n 5 | sort > list_genes_${L}.txt  ; done
+\end{lstlisting}
+
+
+\example{search two genes in a file containing the filenames of lists of genes.}
+\begin{lstlisting}
+$ ls list_genes_*.txt > list_of_files.txt
+$ parallel grep -Hn  ::: B7ZGX9 I7FC33 :::: list_of_files.txt
 \end{lstlisting}
 output:
 \begin{lstlisting}
@@ -249,10 +269,10 @@ list_genes_08.txt:3:I7FC33_HUMAN
 
 \subsection{Matching arguments from all input sources}
 \subsubsection{With \texttt{--xapply} you can get one argument from each input source}
-
-with \texttt{--xapply}
+\example{Print the pairs of bases from two sets of nucleotides. }
+with \cmdoption{--xapply}
 \begin{lstlisting}
-parallel --xapply echo ::: A T G C ::: a t g c n
+parallel --xapply echo ::: A T G C ::: a t g c
 \end{lstlisting}
 output:
 \begin{lstlisting}
@@ -260,12 +280,12 @@ A a
 T t
 G g
 C c
-A n
 \end{lstlisting}
 
-without \texttt{--xapply}:
+without \cmdoption{--xapply}:
+\example{Print the pairs from two sets of nucleotides. }
 \begin{lstlisting}
-$ parallel echo ::: A T G C ::: a t g c n
+$ parallel echo ::: A T G C ::: a t g c
 \end{lstlisting}
 output:
 \begin{lstlisting}
@@ -273,25 +293,22 @@ A a
 A t
 A g
 A c
-A n
 T a
 T t
 T g
 T c
-T n
 G a
 G t
 G g
 G c
-G n
 C a
 C t
 C g
 C c
-C n
 \end{lstlisting}
 
 \subsubsection{If one of the input sources is too short, its values will wrap}
+\example{Print the pairs of two sets of nucleotides. }
 \begin{lstlisting}
 $ parallel --xapply echo ::: A T  ::: g c n
 \end{lstlisting}
@@ -303,7 +320,8 @@ A n
 \end{lstlisting}
 
 \subsection{Changing the argument separator}
-GNU Parallel can use other separators than ::: or ::::. This is typically useful if ::: or :::: is used in the command to run.
+GNU \prl{} can use other separators than \cmdoption{:::} or \cmdoption{::::}. This is typically useful if \cmdoption{:::} or \cmdoption{::::} is used in the command to run.
+\example{Print the combinations of 3 sets of swissprot accessions }
 \begin{lstlisting}
 $parallel --arg-sep yoyo echo yoyo B7ZGX9 I7FC33 yoyo EIF4G1 PABPC1 yoyo B7ZGX9_HUMAN  C9J4L2_HUMAN
 \end{lstlisting}
@@ -319,8 +337,10 @@ I7FC33 PABPC1 B7ZGX9_HUMAN
 I7FC33 PABPC1 C9J4L2_HUMAN
 \end{lstlisting}
 \subsubsection{Changing the argument file separator}
+\example{Search two accessions in a set of files containing some  swissprot accessions }
 \begin{lstlisting}
-$ ls list_genes_0* | parallel --arg-file-sep schtroumph 'grep -nH' ::: B7ZGX9 I7FC33 schtroumph -
+$ ls list_genes_0* |\
+	parallel --arg-file-sep schtroumph 'grep -nH' ::: B7ZGX9 I7FC33 schtroumph -
 \end{lstlisting}
 output:
 \begin{lstlisting}
@@ -336,6 +356,7 @@ list_genes_07.txt:4:I7FC33_HUMAN
 list_genes_08.txt:3:I7FC33_HUMAN
 \end{lstlisting}
 \subsubsection{Changing the argument delimiter}
+\example{Search two accessions in a set of files containing some  swissprot accessions }
 \begin{lstlisting}
 $ $ echo -n "7ZGX9,I7FC33" | \
 	parallel -d , 'grep -nH' :::: - :::  list_genes_0*
@@ -354,7 +375,8 @@ list_genes_07.txt:4:I7FC33_HUMAN
 list_genes_08.txt:3:I7FC33_HUMAN
 \end{lstlisting}
 
-\subsubsection{NULL can be given as  \texttt{\textbackslash{}0}}
+\subsubsection{NULL can be given as  \cmdoption{\textbackslash{}0}}
+\example{Search two accessions in a set of files containing some swissprot accessions }
 \begin{lstlisting}
 $  echo -n -e "7ZGX9\0I7FC33" |  parallel -d '\0' 'grep -nH' :::: - :::  list_genes_0*
 \end{lstlisting}
@@ -372,8 +394,10 @@ list_genes_07.txt:4:I7FC33_HUMAN
 list_genes_08.txt:3:I7FC33_HUMAN
 \end{lstlisting}
 
-\subsubsection{A shorthand for '\texttt{-d  \textbackslash{}0}' is \texttt{-0}}
-This will often be used to read files from find ... -print0
+\subsubsection{A shorthand for '\texttt{-d  \textbackslash{}0}' is \cmdoption{-0} }
+
+\example{Search two accessions in a set of files containing some  swissprot accessions }
+This will often be used to read files from \cmdoption{find ... -print0}.
 \begin{lstlisting}
 $ find ./ -name "list_genes_0*.txt" -print0 |\
 	parallel -0 'grep -nH'  ::: B7ZGX9 I7FC33 :::: -
@@ -398,6 +422,7 @@ output:
 \subsubsection{No command means arguments are commands}
 
 If no command is given after parallel the arguments themselves are treated as commands:
+\example{Get the file type and list a directory and print the workind directory}
 \begin{lstlisting}
 parallel ::: 'ls -la  toy*' 'file toy.bam' pwd
 \end{lstlisting}
@@ -416,7 +441,8 @@ toy.bam: gzip compressed data, extra field
 -rw-rw-r-- 1 lindenb lindenb 176 Oct  2 10:24 toy_sorted.bam.bai
 \end{lstlisting}
 
-The command can be a script, a binary or a Bash function if the function is exported using 'export -f':
+The command can be a script, a binary or a Bash function if the function is exported using \cmdoption{export -f}.
+\example{Index a list of sorted BAMs with samtools}
 \begin{lstlisting}
 $ index_bam_with_samtools() {
 echo "Indexing $1" && samtools index $1
@@ -446,9 +472,10 @@ Indexing ./ex1f_sorted.bam
 
 \section{Replacement strings}
 \subsection{The 5 replacement strings}
-GNU Parallel has several replacement strings. If no replacement strings are used the default is to append {}:
+\prl{} has several replacement strings. If no replacement strings are used the default is to append \cmdoption{\{\}}:
+\example{get the headers from a list of fasta files}
 \begin{lstlisting}
-$ parallel  'grep -Hn ">" ' ::: toy.fa ex1.fa
+$ parallel  grep -Hn ">"  ::: toy.fa ex1.fa
 toy.fa:1:>ref
 toy.fa:3:>ref2
 ex1.fa:1:>seq1
@@ -462,9 +489,10 @@ ex1.fa:1:>seq1
 ex1.fa:29:>seq2
 \end{lstlisting}
 
-The default replacement string is \texttt{'\{\}'}:
+The default replacement string is \cmdoption{\{\}}:
+\example{get the headers from a list of fasta files}
 \begin{lstlisting}
-$ parallel  'grep -Hn ">" ' {} ::: toy.fa ex1.fa
+$ parallel  grep -Hn ">"  {} ::: toy.fa ex1.fa
 \end{lstlisting}
 output:
 \begin{lstlisting}
@@ -474,9 +502,10 @@ ex1.fa:1:>seq1
 ex1.fa:29:>seq2
 \end{lstlisting}
 
-The replacement string \texttt{'\{\}'} can be changed with \texttt{'-I'}:
+The replacement string \cmdoption{\{\}} can be changed with \cmdoption{-I}:
+\example{get the fasta headers from a list of fasta files}
 \begin{lstlisting}
-$ parallel -I FILE_NAME 'grep -Hn ">" ' FILE_NAME ::: toy.fa ex1.fa
+$ parallel -I FILE_NAME grep -Hn ">"  FILE_NAME ::: toy.fa ex1.fa
 \end{lstlisting}
 output:
 \begin{lstlisting}
@@ -487,8 +516,7 @@ ex1.fa:29:>seq2
 \end{lstlisting}
 
 The replacement string  \texttt{'\{.\}'} removes the extension:
-
-Sorting the BAMs:
+\example{Sort a list of BAMs:}
 \begin{lstlisting}
 $ find ./ -name "*.bam" |\
   parallel -a - 'samtools sort' {} {.}_sorted &&\
@@ -506,7 +534,7 @@ output:
 \end{lstlisting}
 
 The replacement string \texttt{'\{.\}'} can be changed with  \texttt{'--extensionreplace'}:
-Sorting the BAMs:
+\example{Sort a list of BAMs}
 \begin{lstlisting}
 $ find ./ -name "*.bam" |\
   parallel --extensionreplace BARBAPAPA -a - 'samtools sort' {} BARBAPAPA_sorted &&\
@@ -526,6 +554,7 @@ output:
 
 
 The replacement string \texttt{'\{/\}'}: removes the path:
+\example{List the basenames of a list of FASTA files.}
 \begin{lstlisting}
 $ find ~/dir1 ~/dir2 ~/dir3  -name "*.fasta" |\
   parallel -a - echo {/}
@@ -542,8 +571,7 @@ testaln.fasta
 test.fasta
 \end{lstlisting}
 
-copy all fasta to the current working directory:
-
+\example{copy all fasta files into the current working directory}
 \begin{lstlisting}
 $ ls -l *.fasta
 
@@ -565,7 +593,8 @@ output:
 -rw------- 1 lindenb lindenb   3475 Oct  3 10:22 test_project.fasta
 \end{lstlisting}
 
-The replacement string \texttt{'\{/\}'} can be replaced with \texttt{'--basenamereplace'}:
+The replacement string \texttt{'\{/\}'} can be replaced with \texttt{'--basenamereplace'}.\\
+\example{copy all fasta files into the current working directory}
 \begin{lstlisting}
 $ find ~/tmp/ /home/lindenb/daily/  -name "*.fasta" |\
    parallel --basenamereplace BASE_FILE_NAME -a - cp {}  BASE_FILE_NAME && \
@@ -585,9 +614,7 @@ output:
 
 
 The replacement string  \texttt{\{/.\}} removes the path and the extension.\\
-
-
-Sorting the BAM in the current working directory:
+\example{Sorting the BAM in the current working directory}
 \begin{lstlisting}
 $ ls -l sorted_*.bam
 
@@ -609,7 +636,8 @@ output:
 \end{lstlisting}
 
 
-The replacement string \texttt{'\{//\}'} keeps only the path:
+The replacement string \texttt{'\{//\}'} keeps only the path.\\
+\example{print the path of the fasta files}
 \begin{lstlisting}
 find dir -name "*.fa" |\
  parallel echo {//} |\
@@ -621,7 +649,8 @@ dir/dir1
 dir/dir2
 dir/dir3
 \end{lstlisting}
-The replacement string \texttt{'\{//\}'} can be changed with --dirnamereplace.
+The replacement string \texttt{'\{//\}'} can be changed with  \texttt{'--dirnamereplace'}.\\
+\example{print the path of the fasta files}
 \begin{lstlisting}
 find dir -name "*.fa" |\
  parallel --dirnamereplace BARBALALA echo BARBALALA |\
@@ -635,7 +664,8 @@ dir/dir3
 \end{lstlisting}
 
 
-The replacement string \texttt{\{\#\}} gives the job number:
+The replacement string \texttt{\{\#\}} gives the job number.\\
+\example{Print the basename of some FASTA files and the job number}
 \begin{lstlisting}
 $ find ~/tmp -name "*.fasta" |\
   parallel -a - echo {#} {/}
@@ -652,9 +682,11 @@ output:
 8 test.fasta
 \end{lstlisting}
 
-The replacement string \texttt{\{\#\}} can be changed with --seqreplace:
+The replacement string \texttt{\{\#\}} can be changed with  \texttt{--seqreplace}.\\
+\example{Print the basename of some FASTA files and the job number}
 \begin{lstlisting}
-$ find ~/tmp -name "*.fasta" | parallel -a - --seqreplace JOBNUM echo JOBNUM {/}
+$ find ~/tmp -name "*.fasta" |\
+  parallel -a - --seqreplace JOBNUM echo JOBNUM {/}
 \end{lstlisting}
 output:
 \begin{lstlisting}
@@ -676,7 +708,7 @@ With multiple input sources the argument from the individual input sources can b
 
 The positional replacement strings can also be modified using  \texttt{'/'}  or \texttt{'//'} or \texttt{'/.'} or  \texttt{'.'}:
 
-aligning with 'BWA aln' two pairs of fastqs on two indexed references.
+\example{Aligning with 'BWA aln' two pairs of fastqs on two indexed references}
 \begin{lstlisting}
 $ parallel  bwa aln -f {1//}/{2/.}_{1/.}.sai {2} {1} \
  ::: examples/01_F.fastq.gz examples/01_R.fastq.gz examples/02_F.fastq.gz  examples/02_R.fastq.gz \
@@ -710,8 +742,9 @@ $ ls -lah examples/*.sai
 
 \subsection{Input from columns}
 
-The columns in a file can be bound to positional replacement strings using --colsep. Here the columns are separated with TAB:
+The columns in a file can be bound to positional replacement strings using \cmdoption{--colsep}. Here the columns are separated with TAB:
 
+\example{use `paste` to get two columns containing two FASTQs forward and reverse and align with `bwa mem`}
 \begin{lstlisting}
 $ find examples/ -name "*.fastq.gz" |\
   sort |\
@@ -739,7 +772,8 @@ $ ls -la examples/*.sam
 
 
 \subsection{Header defined replacement strings}
-With --header GNU Parallel will use the first value of the input source as the name of the replacement string. Only the non-modified version {} is supported
+With --header GNU Parallel will use the first value of the input source as the name of the replacement string. Only the non-modified version '\{\}' is supported.\\
+\example{global alignment of oligonucleotides with primer3/ntdpal}
 \begin{lstlisting}
 $ parallel --header : primer3-2.3.5/src/ntdpal {FORWARD} {REVERSE} g \
    ::: REVERSE ATCTGACTCGTGC ACTGATCGATCGATCG \
@@ -756,33 +790,36 @@ output:
 \end{lstlisting}
 
 \subsection{More than one argument}
-With --xargs will GNU Parallel fit as many arguments as possible on a single line:
+With \texttt{'--xargs'} will GNU Parallel fit as many arguments as possible on a single line:
 \begin{lstlisting}
 $ seq 1 100000 | parallel --xargs echo  | wc -l
 5
 \end{lstlisting}
-The 100000 arguments fitted on 5 lines.
+The 100000 arguments fitted on 5 lines.\\
 
-The maximal length of a single line can be set with -s. With a maximal line length of 10000 chars 595 commands will be run:
+The maximal length of a single line can be set with \texttt{'-s'}. With a maximal line length of 10000 chars 595 commands will be run:
 \begin{lstlisting}
 $ seq 1 100000 | parallel --xargs -s  1000 echo  | wc -l
 595
 \end{lstlisting}
 
 \subsection{Quoting}
-Command lines that contain special characters may need to be protected from the shell.
+Command lines that contain special characters may need to be protected from the shell.\\
+\example{linearize some FASTA files with awk}
 \begin{lstlisting}
  find dir1 -name "*.fa" |\
- xargs awk '/^>/ {printf("\n%s\t",$0);next;} { printf("%s",$0);} END { printf("\n");} ' |\
- head | cut -c 1-100
-
+ xargs awk '/^>/ {printf("\n%s\t",$0);next;} { printf("%s",$0);} END { printf("\n");} '
+\end{lstlisting}
+output
+\begin{lstlisting}
 >seq1	CACTAGTGGCTCATTGTAAATGTGTGGTTTAACTCGTCCATGGCCCAGCATTAGGGAGCTGTGGACCCTGCAGCCTGGCTGTGGGGGCCGCAGT
 >seq2	TTCAAATGAACTTCTGTAATTGAAAAATTCATTTAAGAAATTACAAAATATAGTTGAAAGCTCTAACAATAGACTAAACCAAGCAGAAGAAAGA
 >ref	AGCATGTTAGATAAGATAGCTGTGCTAGTAGGCAGTCAGCGCCAT
 >ref2	aggttttataaaacaattaagtctacagagcaactacgcg
+(...)
 \end{lstlisting}
 
-this won't work:
+This won't work:
 \begin{lstlisting}
 Command lines that contain special characters may need to be protected from the shell.
 \begin{lstlisting}
@@ -790,10 +827,11 @@ Command lines that contain special characters may need to be protected from the 
  parallel awk '/^>/ {printf("\n%s\t",$0);next;} { printf("%s",$0);} END { printf("\n");} ' 
 \end{lstlisting}
 To quote the command use \texttt{'-q'}:
+
+\example{linearize some FASTA files with awk}
 \begin{lstlisting}
  find dir1 -name "*.fa" |\
- parallel -q awk '/^>/ {printf("\n%s\t",$0);next;} { printf("%s",$0);} END { printf("\n");} ' |\
- head | cut -c 1-100
+ parallel -q awk '/^>/ {printf("\n%s\t",$0);next;} { printf("%s",$0);} END { printf("\n");} '
 
 >seq1	CACTAGTGGCTCATTGTAAATGTGTGGTTTAACTCGTCCATGGCCCAGCATTAGGGAGCTGTGGACCCTGCAGCCTGGCTGTGGGGGCCGCAGT
 >seq2	TTCAAATGAACTTCTGTAATTGAAAAATTCATTTAAGAAATTACAAAATATAGTTGAAAGCTCTAACAATAGACTAAACCAAGCAGAAGAAAGA
@@ -802,11 +840,11 @@ To quote the command use \texttt{'-q'}:
 >ref2	aggttttataaaacaattaagtctacagagcaactacgcg
 \end{lstlisting}
 
-Or you can quote the critical part using \texttt{\textbackslash{}'}:
+Or you can quote the critical part using \texttt{\textbackslash{}'}.\\
+\example{linearize some FASTA files with awk}
 \begin{lstlisting}
 $ find dir -name "*.fa" |\
- parallel awk \' '/^>/ {printf("\n%s\t",$0);next;} { printf("%s",$0);} END { printf("\n");} ' \' |\
- head | cut -c 1-100
+ parallel awk \' '/^>/ {printf("\n%s\t",$0);next;} { printf("%s",$0);} END { printf("\n");} ' \'
 
 >seq1	CACTAGTGGCTCATTGTAAATGTGTGGTTTAACTCGTCCATGGCCCAGCATTAGGGAGCTGTGGACCCTGCAGCCTGGCTGTGGGGGCCGCAGT
 >seq2	TTCAAATGAACTTCTGTAATTGAAAAATTCATTTAAGAAATTACAAAATATAGTTGAAAGCTCTAACAATAGACTAAACCAAGCAGAAGAAAGA
@@ -818,7 +856,8 @@ $ find dir -name "*.fa" |\
 %% missing example for   parallel --shellquote
 
 \subsection{Trimming space}
-Space can be trimmed on the arguments using  \texttt{--trim}
+Space can be trimmed on the arguments using  \texttt{'--trim'}\\
+\example{Print A T G C, trim left spaces}
 \begin{lstlisting}
 $ parallel --trim l echo [{}] :::  " A " " T " " C " " G "
 \end{lstlisting}
@@ -830,6 +869,7 @@ output:
 [G ]
 \end{lstlisting}
 
+\example{Print A T G C, trim right spaces}
 \begin{lstlisting}
 $ parallel --trim r echo [{}] :::  " A " " T " " C " " G "
 \end{lstlisting}
@@ -840,7 +880,7 @@ output:
 [ C]
 [ G]
 \end{lstlisting}
-
+\example{Print A T G C, trim left and right spaces}
 \begin{lstlisting}
 $ parallel --trim lr echo [{}] :::  " A " " T " " C " " G "
 \end{lstlisting}
@@ -878,6 +918,7 @@ suffix-C	C
 \end{lstlisting}
 
 \subsection{To see what commands will be run without running them}
+\example{Align a set of FASTQs with bwa aln }
 \begin{lstlisting}
 $ find ./ -name "*.fastq.gz" |\
 	parallel --dryrun  bwa aln -f {/.}.sai toy.fa {}
@@ -896,7 +937,16 @@ bwa aln -f 01_F_.fastq.sai toy.fa ./01_F_.fastq.gz
 bwa aln -f 02_F_.fastq.sai toy.fa ./02_F_.fastq.gz
 \end{lstlisting}
 
+
+Hack from \href{https://twitter.com/genetics\_blog/status/389765670336212992}{Stephen Turner @genetics\_blog}
+\begin{verbatim}
+In bash, ^foo^bar repeats the latest command, replacing the first instance of 'foo' with 'bar'.
+ith GNU parallel to actually run last dry run commands: \$ ^--dry-run^
+\end{verbatim}
+
+
 \subsection{To print the command before running them use --verbose}
+\example{Show how to align a set of FASTQs with bwa aln }
 \begin{lstlisting}
 $ find ./ -name "*.fastq.gz" |\
 	parallel --verbose  bwa aln -f {/.}.sai toy.fa {}
@@ -1056,6 +1106,7 @@ bwa aln -f 01_F_.fastq.sai toy.fa ./01_F_.fastq.gz
 \end{lstlisting}
 
 \subsection{GNU Parallel will postpone the output until the command completes}
+\example{Align the FASTQs forward with bwa aln, wait a few seconds and then align the FASTQs reverse }
 \begin{lstlisting}
 $ parallel -j 3 --verbose 'bwa aln -f 0{}_F.fastq.sai toy.fa 0{}_F_.fastq.gz ; sleep {} ; bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz ' ::: 1 2 3 4 5
 \end{lstlisting}
@@ -1094,7 +1145,8 @@ bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz ; sleep 5 ; bwa aln -f 05_R.fast
 
 
 
-\subsection{To get the output immediately use --ungroup}
+\subsection{To get the output immediately use \cmdoption{--ungroup}}
+\example{Align the FASTQs forward with bwa aln, wait a few seconds and then align the FASTQs reverse }
 \begin{lstlisting}
 $ parallel -j 3 --verbose --ungroup 'bwa aln -f 0{}_F.fastq.sai toy.fa 0{}_F_.fastq.gz ; sleep {} ; bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz ' ::: 1 2 3 4 5
 \end{lstlisting}
@@ -1131,9 +1183,8 @@ bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz ; sleep 5 ; bwa aln -f 05_R.fast
 (...)
 \end{lstlisting}
 
---ungroup is fast, but can cause half a line from one job to be mixed with half a line of another job. That has happend in the second line, where the line '4-middle' is mixed with '2-start'.
-
-To avoid this use --linebuffer (which, however, is much slower):
+\cmdoption{-ungroup} is fast, but can cause half a line from one job to be mixed with half a line of another job. That has happend in the second line, where the line '4-middle' is mixed with '2-start'. To avoid this use \cmdoption{--linebuffer} (which, however, is much slower).\\
+\example{Align the FASTQs forward with bwa aln, wait a few seconds and then align the FASTQs reverse }
 \begin{lstlisting}
 $ parallel -j 3 --verbose --linebuffer 'bwa aln -f 0{}_F.fastq.sai toy.fa 0{}_F_.fastq.gz ; sleep {} ; bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz ' ::: 1 2 3 4 5
 \end{lstlisting}
@@ -1169,8 +1220,8 @@ bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz ; sleep 5 ; bwa aln -f 05_R.fast
 (...)
 \end{lstlisting}
 
-To force the output in the same order as the arguments use --keep-order/-k:
-
+To force the output in the same order as the arguments use \cmdoption{--keep-order}/\cmdoption{-k}.
+\example{Align the FASTQs forward with bwa aln, wait a few seconds and then align the FASTQs reverse }
 \begin{lstlisting}
 $ parallel -j 2 --verbose --keep-order 'bwa aln -f 0{}_F.fastq.sai toy.fa 0{}_F_.fastq.gz ; sleep {} ; bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz ' ::: 1 2 3 4 5
 \end{lstlisting}
@@ -1206,8 +1257,58 @@ bwa aln -f 05_F.fastq.sai toy.fa 05_F_.fastq.gz ; sleep 5 ; bwa aln -f 05_R.fast
 [main] CMD: bwa aln -f 05_R.fastq.sai toy.fa 05_R_.fastq.gz
 \end{lstlisting}
 
+Another example with \cmdoption{-k}.\\
+\example{get the flanking sequence +/- 100bp from a VCF file using samtools faidx}.
+\begin{lstlisting}
+grep -vE "^#" ~/data.vcf |\
+awk '{printf("%s:%d-%d\n",$1,$2 -100, $2+100);}' |\
+parallel -k samtools faidx  hg18.fa 
+\end{lstlisting}
+output:
+\begin{lstlisting}
+>chr1:762173-762373
+GTATAGTCTCCTCGTCATGTCTGCCGCTTCTTCCTGAGTCAGGGAATATCTCTTAGGCCA
+TATCTATTATAGTCGTGGTCTGACTTATATTTGTGGTCAAtttttttttcttaatttttc
+gtagagacggggtctcactatgttgcccaggctggtctcaaactctaagtgatcctcctg
+cctcagcctcccaaactgctg
+>chr1:860908-861108
+AGGTCATCCCCACGCTCACACACAGAGCTAGGCACTCCCTGTGCCCAGGCTGGGCTCCAG
+CCTCGCAGCTGCCCACGGGGTCAGCTTTTCCCGGTCTCGTTCTGCAGCCAGGACGGCAAC
+CTTCCCACCCTCATATCCAGCGTCCACCGCAGCCGCCACCTCGTTATGCCCGAGCATCAG
+AGCCGCTGTGAATTCCAGAGA
+>chr1:861530-861730
+AGGGCTCCTGGACGGAGGGGGTCCCCGGTCCCGCCTCCTAGGGCTCCTGGACGGAAGGGG
+TCCCCGGTCCCGCCTCCTAGGGCTCCTGGACGGAAGGGGTCCCCGGTCCCGCCTCCTAGG
+GCTCCTGGACGGAGGGGGTCCCCGGTCGGTCCCGCCTTCTAGGGCTCCGGGAAGGATGGG
+GTTCTCGGGAGGGAAGGGATC
+>chr1:866219-866419
+GGCCCTGTGGCCGCCCATCCTCCTGCCCCGTGCCCGAGACCAGCCCAGGGGCCGAGCACG
+GCCGAGTGGTGTGGTCAGTTCCCCACCTCAGTGTTCTACGCCAGGACGCGGGCTGGGGAG
+GATGAGGGCGCATAGCCGGGGGGATCACTGCTGTTGTCCCCCACCCAGATCTCCTGAGGG
+TCCGGCAGGAGGTGGCGGCTG
+>chr1:866411-866611
+TGGCGGCTGCAGCTCTGAGGGGCCCCAGTGGCCTGGAAGCCCACCTGCCCTCCTCCACGG
+CAGGTCAGCGTCGGAAGCAGGGCCTGGCTCAGCACCGGGAGGGCGCCGCCCCAGCTGCCG
+CCCCGTCCTTCTCGGAGAGGTACTGGGGTGGCTGCCGTTCTCTGCTTGTTTCTGGGGTGC
+CGCCCGCACCCCCGCGCTCTC
+>chr1:870803-871003
+TCAGGTCAAAGAGGTCTTTAAATTGCTTCCTGTCCTCATCCTTCCTGTCAGCCATCTTCC
+TTCGTTTGATCTCAGGGAAGTTCAGGTCTTCCAGCTGGAAGGCCAAAGAACCAGGGGCTC
+AGGTGAGAGAGGGCAGGGGCTGGCGGCCACAGCAGGGCCAGGCATCGCCAGACCCACCAC
+CAGGGCCCCATGTGGCCAATT
+>chr1:871234-871434
+GGAAACGCCTGGTTCTGGCCAGTTCTCCAACACCTACCCCCTCTCCAAGTCGAATCATCC
+GGGCACGGCCCTGGCCGCCTGGCACTGTTTCCAAACCCTCGCCCTGGTCTCAAGTCATAG
+TGCGCTAGATCTGAAACCCAGGAAGTCACAACACACCCCCAGGTCCCCTCGCCGAGCCGC
+ACCCGCTCTTTGCCACTGATC
+\end{lstlisting}
+
+
+
+
 \subsubsection{Saving output into files}
-GNU Parallel can save the output of each job into files:
+GNU Parallel can save the output of each job into files.\\
+\example{Align two sets of oligos using primer3/ntdpal, save the result in a structured output}
 \begin{lstlisting}
 $ parallel --files --verbose primer3-2.3.5/src/ntdpal {1} {2} g \
 	::: AATCGTACGTACG ATAGCATCGA \
@@ -1238,7 +1339,8 @@ $ head /tmp/eLAmSSq0DY.par /tmp/Yv7YvDPzzw.par /tmp/mea6UUq1Li.par /tmp/VLbG2gkq
 |ATAGCATCGA|  |ATAGCATCGAG| g score=10.00 len=10 |0,0|1,1|2,2|3,3|4,4|5,5|6,6|7,7|8,8|9,9|
 \end{lstlisting}
 
-By default GNU Parallel will cache the output in files in /tmp. This can be changed by setting \$TMPDIR or --tmpdir:
+By default GNU Parallel will cache the output in files in '/tmp'. This can be changed by setting \cmdoption{\$TMPDIR} or \cmdoption{--tmpdir}.\\
+\example{Align two sets of oligos using primer3/ntdpal, save the result in a structured output}
 \begin{lstlisting}
 $ parallel --files --verbose --tmpdir . primer3-2.3.5/src/ntdpal {1} {2} g \
 	::: AATCGTACGTACG ATAGCATCGA \
@@ -1256,7 +1358,8 @@ output:
 ./K1c6EBsxZq.par
 \end{lstlisting}
 
-The output files can be saved in a structured way using --results:
+The output files can be saved in a structured way using \cmdoption{--results}.\\
+\example{Align a set of five FASTQs, save stdin and stdout in a structured output under the ALN directory}
 \begin{lstlisting}
 parallel --result ALN  bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz  ::: 1 2 3 4 5
 \end{lstlisting}
@@ -1282,8 +1385,11 @@ ALN/1/3/stdout
 ALN/1/3/stderr
 \end{lstlisting}
 
+\example{Align two sets of oligos using primer3/ntdpal, save the result in a structured output, under the NTDPAL directory}
 \begin{lstlisting}
- parallel --result NTDPAL  primer3-2.3.5/src/ntdpal {1} {2} g ::: AATCGTACGTACG ATAGCATCGA ::: AATCGTACGTCG  ATAGCATCGAG
+ parallel --result NTDPAL  primer3-2.3.5/src/ntdpal {1} {2} g \
+ 	::: AATCGTACGTACG ATAGCATCGA \
+ 	::: AATCGTACGTCG  ATAGCATCGAG
 \end{lstlisting}
 output:
 \begin{lstlisting}
@@ -1312,7 +1418,8 @@ $ cat NTDPAL/1/AATCGTACGTACG/2/ATAGCATCGAG/stdout
 \end{lstlisting}
 
 
-This is useful if you are running multiple variables:
+This is useful if you are running multiple variables.\\
+\example{Align two sets of oligos using primer3/ntdpal, save the result in a structured output, under the NTDPAL directory, use the data headers for the directories names}
 \begin{lstlisting}
 $ parallel --header : --result NTDPAL  primer3-2.3.5/src/ntdpal {1} {2} g \
 	::: primer-foward AATCGTACGTACG ATAGCATCGA \
@@ -1344,7 +1451,8 @@ NTDPAL/primer-foward/ATAGCATCGA/primer-reverse/AATCGTACGTCG/stderr
 The directories are named after the variables and their values.
 \section{Control the execution.}
 \subsection{Number of simultaneous jobs.}
-The number of concurrent jobs is given with --jobs/-j. By default --jobs is the same as the number of CPU cores. --jobs 0 will run as many jobs in parallel as possible.
+The number of concurrent jobs is given with \cmdoption{--jobs}/\cmdoption{-j}. By default \cmdoption{--jobs} is the same as the number of CPU cores. \cmdoption{--jobs 0} will run as many jobs in parallel as possible.\\
+\example{sort a set of BAMS, using two parallel jobs}
 \begin{lstlisting}
 $ ls *.bam | parallel --verbose -j 2 samtools sort {} sorted_{.}
 \end{lstlisting}
@@ -1360,7 +1468,7 @@ samtools sort toy.bam sorted_toy
 \end{lstlisting}
 
 \section{Interactiveness.}
-
+\example{sort a set of BAMS, prompt user for confirmation }
 \begin{lstlisting}
 $ ls *.bam | parallel --verbose --interactive  samtools sort {} sorted_{.}
 \end{lstlisting}
@@ -1386,7 +1494,8 @@ sorted_toy.bam
 %%Or give multiple argument in one go to open multiple files:
 
 \subsection{Timing}
-Some jobs do heavy I/O when they start. To avoid a thundering herd GNU Parallel can delay starting new jobs. --delay X will make sure there is at least X seconds between each start:
+Some jobs do heavy I/O when they start. To avoid a thundering herd GNU Parallel can delay starting new jobs. \cmdoption{--delay X} will make sure there is at least X seconds between each start.\\
+\example{sort a set of BAMS, using two parallel jobs, wait 0.2 seconds between each jobs}
 \begin{lstlisting}
 ls *.bam | parallel -j 2 --verbose --delay 2.0 samtools sort {} sorted_{.}
 \end{lstlisting}
@@ -1400,7 +1509,8 @@ samtools sort ex1f-rmduppe.bam sorted_ex1f-rmduppe
 samtools sort ex1f-rmdupse.bam sorted_ex1f-rmdupse
 samtools sort toy.bam sorted_toy
 \end{lstlisting}
-If jobs taking more than a certain amount of time are known to fail, they can be stopped with --timeout:
+If jobs taking more than a certain amount of time are known to fail, they can be stopped with \cmdoption{--timeout}.
+\example{index a set of sorted BAMS, cancel is the job takes more than 5 seconds}
 \begin{lstlisting}
 ls ex1f-rmdupse_sorted.bam ~/tmp/BIGBAM/sorted_.bam ex1a_sorted.bam |\
 	parallel --timeout 5.0 --verbose samtools index {} 
@@ -1409,7 +1519,8 @@ samtools index ex1f-rmdupse_sorted.bam
 samtools index /home/lindenb/tmp/BIGBAM/sorted_.bam #no bam.bai
 \end{lstlisting}
 
-Based on the runtime of completed jobs GNU Parallel can estimate the total runtime:
+Based on the runtime of completed jobs GNU Parallel can estimate the total runtime with \cmdoption{--eta}.\\
+\example{index a set of sorted BAMS, print an estimation of the total runtime}
 \begin{lstlisting}
 $ ls ex1f-rmdupse_sorted.bam BIGBAM/sorted_.bam ex1a_sorted.bam |\
 	parallel --eta --verbose samtools index {} 
@@ -1430,7 +1541,8 @@ ETA: 28s 0left 19.00avg  local:0/3/100%/19.0s
 
 
 \subsection{Progress}
-GNU Parallel can give progress information with --progress:
+GNU Parallel can give progress information with \cmdoption{--progress}.\\
+\example{index a set of sorted BAMS, print the progress}
 \begin{lstlisting}
 $ ls *_sorted.bam BIGBAM/sorted_.bam  |\
    parallel --progress  samtools index {}
@@ -1444,7 +1556,8 @@ Computer:jobs running/jobs completed/%of started jobs/Average seconds to complet
 local:0/8/100%/7.2s 
 \end{lstlisting}
 
-A logfile of the jobs completed so far can be generated with --joblog:
+A logfile of the jobs completed so far can be generated with \cmdoption{--joblog}.\\
+\example{index a set of sorted BAMS, log the jobs into the file 'log.txt'}
 \begin{lstlisting}
 $ ls *_sorted.bam BIGBAM/sorted_.bam  |\
    parallel --joblog log.txt  samtools index {}
@@ -1460,10 +1573,11 @@ Seq	Host	Starttime	Runtime	Send	Receive	Exitval	Signal	Command
 8	:	1381155497.334	0.004	0	0	0	0	samtools index toy_sorted.bam
 7	:	1381155497.332	59.246	0	0	0	0	samtools index BIGBAM/sorted_.bam
 \end{lstlisting}
-The log contains the job sequence, which host the job was run on, the start time and run time, how much data was transferred if the job was run on a remote host, the exit value, the signal that killed the job, and finally the command being run.
+The log contains the job sequence, which host the job was run on, the start time and run time, how much data was transferred if the job was run on a remote host, the exit value, the signal that killed the job, and finally the command being run.\\
 
 
-Same command with --timeout
+Same command with \cmdoption{--timeout}.\\
+\example{index a set of sorted BAMS with timeout=5 sec, log the jobs into the file 'log.txt', BIGBAM/sorted\_.bam fails}
 \begin{lstlisting}
 $ ls *_sorted.bam BIGBAM/sorted_.bam  |\
    parallel --timeout 5.0 --joblog log.txt  samtools index {}
@@ -1488,6 +1602,7 @@ Seq	Host	Starttime	Runtime	Send	Receive	Exitval	Signal	Command
 2	:	1381156165.028	0.016	0	0	0	0	bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz
 \end{lstlisting}
 With a joblog GNU Parallel can be stopped and later pickup where it left off. It it important that the input of the completed jobs is unchanged.
+\example{Resume the previous command: create a BAM  for the remaining files  DOESNTEXIST 4 5, 'Starttime' doesn't change for 1 and 2 }
 \begin{lstlisting}
 $  parallel --resume --joblog log.txt  \
  bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz  ::: 1 2 3 DOESNTEXIST 4 5
@@ -1502,7 +1617,8 @@ Seq	Host	Starttime	Runtime	Send	Receive	Exitval	Signal	Command
 4	:	1381156215.791	0.139	0	0	0	6	bwa aln -f 0DOESNTEXIST_R.fastq.sai toy.fa 0DOESNTEXIST_R_.fastq.gz
 \end{lstlisting}
 
-With --resume-failed GNU Parallel will re-run the jobs that failed:
+With \cmdoption{--resume-failed GNU Parallel will re-run the jobs that failed}
+\example{Align some FASTQs with 'bwa aln', but a FASTQ doesn't exist}
 \begin{lstlisting}
 $ parallel --resume-failed --verbose --joblog log.txt  bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz  ::: 1 2 3 DOESNTEXIST 4 5
 bwa aln -f 0DOESNTEXIST_R.fastq.sai toy.fa 0DOESNTEXIST_R_.fastq.gz
@@ -1515,10 +1631,13 @@ bwa aln -f 0DOESNTEXIST_R.fastq.sai toy.fa 0DOESNTEXIST_R_.fastq.gz
 [bwa_aln] 190bp reads: max_diff = 8
 [bwa_aln] 225bp reads: max_diff = 9
 [bwa_seq_open] fail to open file '0DOESNTEXIST_R_.fastq.gz'. Abort!
-
-#create the file 0DOESNTEXIST_R_.fastq.gz 
+\end{lstlisting}
+now create the file 0DOESNTEXIST\_R\_.fastq.gz 
+\begin{lstlisting}
 $ cp 01_R_.fastq.gz 0DOESNTEXIST_R_.fastq.gz
-
+\end{lstlisting}
+and re-run the command. Only one command is run.
+\begin{lstlisting}
 $ parallel --resume-failed --verbose --joblog log.txt  bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz  ::: 1 2 3 DOESNTEXIST 4 5
 bwa aln -f 0DOESNTEXIST_R.fastq.sai toy.fa 0DOESNTEXIST_R_.fastq.gz
 [bwa_aln] 17bp reads: max_diff = 2
@@ -1549,8 +1668,8 @@ todo
 PATH=${PATH}:/commun/data/packages/parallel/bin
 \end{lstlisting}
 
-The most basic sshlogin is -S host:
-
+The most basic sshlogin is \cmdoption{-S host}.\\
+\example{print four bases on the remote server}
 \begin{lstlisting}
 $ parallel -S user@host echo ::: A T G C
 A
@@ -1558,7 +1677,8 @@ T
 C
 G
 \end{lstlisting}
-The special sshlogin ':' is the local machine
+The special sshlogin \cmdoption{:} is the local machine.\\
+\example{print four bases on the remote server}
 \begin{lstlisting}
 $ parallel -S : echo ::: A T G C
 A
@@ -1567,7 +1687,8 @@ G
 C
 \end{lstlisting}
 
-If ssh is not in $PATH it can be prepended to $SERVER1:
+If ssh is not in \cmdoption{\$PATH} it can be prepended to \cmdoption{\$SERVER1}.\\
+\example{print four bases on the remote server using "/usr/bin/ssh" }
 \begin{lstlisting}
 $ parallel -S '/usr/bin/ssh 'user@host echo ::: A T G C
 A
@@ -1575,7 +1696,8 @@ T
 C
 G
 \end{lstlisting}
-Several servers can be given using multiple -S:
+Several servers can be given using multiple \cmdoption{-S}.\\
+\example{print four bases using two remote servers}
 \begin{lstlisting}
 $ parallel -S user@host1 -S user@host2 echo ::: A T G C
 A
@@ -1583,7 +1705,8 @@ T
 C
 G
 \end{lstlisting}
-Or they can be separated by ',':
+Or they can be separated by ','.\\
+\example{print four bases using two remote servers}
 \begin{lstlisting}
 $ parallel -S user@host1,user@host2 echo ::: A T G C
 A
@@ -1592,8 +1715,8 @@ C
 G
 \end{lstlisting}
 
-The can also be read from a file (replace user@ with the user on \$SERVER2):
-
+The can also be read from a file (replace user@ with the user on \$SERVER2).\\
+\example{print four bases using two remote servers}
 \begin{lstlisting}
 $ echo "user@host1" > nodefile
 $ echo "4//usr/bin/ssh/ user@host2" >> nodefile 
@@ -1610,7 +1733,7 @@ The special \texttt{--sshloginfile '..'} reads from \texttt{~/.parallel/sshlogin
 
 \subsection{Transferring files}
 GNU Parallel can transfer the files to be processed to the remote host. It does that using rsync.
-
+\example{copy the BAMs on the remote server}
 \begin{lstlisting}
 $ parallel -S user@host --transfer file ::: *.bam
 \end{lstlisting}
@@ -1628,7 +1751,8 @@ ex1a.bam: gzip compressed data, extra field
 toy.bam: gzip compressed data, extra field
 \end{lstlisting}
 
-If the files is processed into another file, the resulting file can be transferred back:
+If the files is processed into another file, the resulting file can be transferred back.\\
+\example{copy the BAMs on the remote server, sort them with samtools, fetch the sorted bam}
 \begin{lstlisting}
 $ parallel -S user@host --transfer  --return {/.}_s.bam samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
 \end{lstlisting}
@@ -1639,18 +1763,21 @@ $ ls -la
 -rw-rw-r-- 1 lindenb lindenb 126522 Oct  8 11:28 ex1_s.bam
 -rw-rw-r-- 1 lindenb lindenb    502 Oct  8 11:28 toy_s.bam
 \end{lstlisting}
-To remove the input and output file on the remote server use --cleanup:
+To remove the input and output file on the remote server use \cmdoption{--cleanup}.\\
+\example{copy the BAMs on the remote server, sort them with samtools, fetch the sorted bam, cleanup on server side}
 \begin{lstlisting}
 $ parallel -S user@host --transfer   --cleanup  --return {/.}_s.bam samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
 \end{lstlisting}
 
-There is a short hand for --transfer --return --cleanup called --trc:
+There is a short hand for \cmdoption{--transfer} \cmdoption{--return} \cmdoption{--cleanup} called \cmdoption{--trc}.\\
+\example{copy the BAMs on the remote server, sort them with samtools, fetch the sorted bam, cleanup on server side}
 \begin{lstlisting}
 $ parallel -S user@host --trc {/.}_s.bam samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
 \end{lstlisting}
 
 
-Some jobs need a common database for all jobs. GNU Parallel can transfer that using --basefile which will transfer the file before the first job:
+Some jobs need a common database for all jobs. GNU Parallel can transfer that using \cmdoption{--basefile} which will transfer the file before the first job.\\
+\example{transfert the file  ex1.fa on a remote server, grep three oligos}
 \begin{lstlisting}
 $ parallel -S user@host --basefile ex1.fa grep -inH {} ex1.fa  :::  GCCTGGCT CCAGCT ATCACC
 \end{lstlisting}
@@ -1667,12 +1794,13 @@ ex1.fa:23:TTGGGCTGTAATGATGCCCCTTGGCCATCACCCAGTCCCTGCCCCATCTCTTGTAATCTC
 %To remove it from the remote host after the last job use --cleanup. ??
 
 \subsection{Working dir}
-The default working dir on the remote machines is the login dir. This can be changed with --workdir mydir.
+The default working dir on the remote machines is the login dir. This can be changed with \cmdoption{--workdir} mydir.
 
-Files transferred using --transfer and --return will be relative to mydir on remote computers, and the command will be executed in the dir mydir.
+Files transferred using \cmdoption{--transfer} and \cmdoption{--return} will be relative to mydir on remote computers, and the command will be executed in the dir mydir.
 
-The special mydir value ... will create working dirs under ~/.parallel/tmp/ on the remote computers. If --cleanup is given these dirs will be removed.
 
+
+\example{copy the BAMs on the remote server, print the working directory, sort the BAMs with samtools, fetch the sorted bam, cleanup on server side. Use the login directory}
 \begin{lstlisting}
 $ parallel --workdir . -S user@host --trc {/.}_s.bam  pwd "&&" samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
 /home/user/package/samtools-0.1.18/examples
@@ -1680,6 +1808,9 @@ $ parallel --workdir . -S user@host --trc {/.}_s.bam  pwd "&&" samtools sort {} 
 /home/user/package/samtools-0.1.18/examples
 \end{lstlisting}
 
+The special mydir value \cmdoption{...} will create working dirs under \cmdoption{~/.parallel/tmp/} on the remote computers. If \cmdoption{--cleanup} is given these dirs will be removed.\\
+
+\example{copy the BAMs on the remote server, print the working directory, sort the BAMs with samtools, fetch the sorted bam, cleanup on server side. Use the '~/.parallel/tmp/' directory}
 \begin{lstlisting}
 $ parallel --workdir ... -S user@host --trc {/.}_s.bam  pwd "&&" samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
 /home/lindenb/.parallel/tmp/hardyweinberg-10672-2
@@ -1687,7 +1818,7 @@ $ parallel --workdir ... -S user@host --trc {/.}_s.bam  pwd "&&" samtools sort {
 /home/lindenb/.parallel/tmp/hardyweinberg-10672-1
 \end{lstlisting}
 
-
+\example{copy the BAMs on the remote server, print the working directory, sort the BAMs with samtools, fetch the sorted bam, cleanup on server side. Use the '~/tmp/' directory}
 \begin{lstlisting}
 $ parallel --workdir /home/user/tmp -S user@host --trc {/.}_s.bam  pwd "&&" samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
 /home/user/tmp
@@ -1697,21 +1828,23 @@ $ parallel --workdir /home/user/tmp -S user@host --trc {/.}_s.bam  pwd "&&" samt
 
 
 \subsection{Avoid overloading sshd}
-If many jobs are started on the same server, sshd can be overloaded. GNU Parallel can insert a delay between each job run on the same server:
-
+If many jobs are started on the same server, sshd can be overloaded. GNU Parallel can insert a delay between each job run on the same server.\\
+\example{copy the BAMs on the remote server, sort the BAMs with samtools, fetch the sorted bam, cleanup on server side. Take five seconds between each call to sshd}
 \begin{lstlisting}
 $ parallel -S user@host --sshdelay 5 --trc {/.}_s.bam  date "&&"samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
 Tue Oct  8 12:26:45 CEST 2013
 Tue Oct  8 12:26:50 CEST 2013
 Tue Oct  8 12:26:55 CEST 2013
 \end{lstlisting}
-Sshd will be less overloaded if using --controlmaster, which will multiplex ssh connections:
+Sshd will be less overloaded if using \cmdoption{--controlmaster}, which will multiplex ssh connections.\\
+\example{copy the BAMs on the remote server, sort the BAMs with samtools, fetch the sorted bam, cleanup on server side. Use \cmdoption{--controlmaster} }
 \begin{lstlisting}
 $ parallel -S user@host --controlmaster  --trc {/.}_s.bam  samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
 \end{lstlisting}
 
 \subsection{Ignore hosts that are down}
-In clusters with many hosts a few of the are often down. GNU Parallel can ignore those hosts. In this case the host 173.194.32.46 is down:
+In clusters with many hosts a few of the are often down. GNU Parallel can ignore those hosts. In this case the host nowhere.com is down.\\
+\example{print combinations of bases on a remote set of servers even if one server is down}
 \begin{lstlisting}
 $ parallel --filter-hosts  -S user@host,user@nowhere.com echo ::: A T G  ::: A T G 
 \end{lstlisting}
@@ -1730,12 +1863,11 @@ G G
 
 %\subsection{Running the same commands on all hosts}
 \subsection{Transfer environment variables and functions}
-Using --env GNU Parallel can transfer an environment variable to the remote system.
-
+Using \cmdoption{--env} GNU Parallel can transfer an environment variable to the remote system.\\
+\example{export the REFERENCE variable and extract some subsequences from the FASTA file}
 \begin{lstlisting}
 $ export REFERENCE=/path/to/human_g1k_v37.fasta
-# warning the following cmd can produce mixed lines from different fasta (?)
-$ parallel --env REFERENCE -S user@host "samtools faidx ${REFERENCE} {}" ::: "1:10000010-10000020" "MT:20-30" "3:1000050-1000080"
+$ parallel --env REFERENCE -S user@host -k "samtools faidx ${REFERENCE} {}" ::: "1:10000010-10000020" "MT:20-30" "3:1000050-1000080"
 >1:10000010-10000020
 CTACAATAAAT
 >3:1000050-1000080
@@ -1744,8 +1876,8 @@ AAAAGCCCATCAAGGTTGTAAGAAGACTCCC
 TATTAACCACT
 \end{lstlisting}
 
-This works for functions too:
-
+This works for functions too.\\
+\example{create and export a function to align two oligos with primer3/ntdpal, and then, align some combinations of oligos on a remote server}
 \begin{lstlisting}
 $  align2primer() {
 primer3-2.3.5/src/ntdpal $1 $2 g
@@ -1764,7 +1896,7 @@ output
 |ATCGATGACTAG|  |TGACGACTG| g score=5.00 len=9 |1,0|3,1|4,2|5,3|6,4|7,5|8,6|9,7|11,8|
 \end{lstlisting}
 
-GNU Parallel can copy all defined variables and functions to the remote system. It just need to record which ones to ignore in ~/.parallel/ignored\_vars. Do that by running this once:
+GNU Parallel can copy all defined variables and functions to the remote system. It just need to record which ones to ignore in \cmdoption{~/.parallel/ignored\_vars}. Do that by running this once:
 \begin{lstlisting}
 $ parallel --record-env
 
@@ -1777,7 +1909,7 @@ XDG_SEAT_PATH
 MANDATORY_PATH
 (...)
 \end{lstlisting}
-Now all new variables and functions defined will be copied when using  '--env \_'
+Now all new variables and functions defined will be copied when using  \cmdoption{--env \_}
 
 %\subsection{Showing what is actually run}
 %
@@ -1785,7 +1917,8 @@ Now all new variables and functions defined will be copied when using  '--env \_
 
 \section{--pipe}
 \subsection{Chunk size}
-By default GNU Parallel will start an instance of command\_B, read a chunk of about 1 MB, and pass that to the instance. Then start another instance, read another chunk, and pass that to the second instance.
+By default GNU Parallel will start an instance of command\_B, read a chunk of about 1 MB, and pass that to the instance. Then start another instance, read another chunk, and pass that to the second instance.\\
+\example{count some chunks of SAM records}
 \begin{lstlisting}
 $ samtools view  file.bam | parallel --pipe wc -l | head
 6310
@@ -1799,7 +1932,8 @@ $ samtools view  file.bam | parallel --pipe wc -l | head
 6306
 6334
 \end{lstlisting}
-ou can change the block size to 2 MB with --block:
+ou can change the block size to 2 MB with  \cmdoption{--block}.\\
+\example{count some chunks of SAM records}
 \begin{lstlisting}
 $ samtools view  file.bam | parallel--block 2M  --pipe wc -l | head
 12657
@@ -1815,7 +1949,7 @@ $ samtools view  file.bam | parallel--block 2M  --pipe wc -l | head
 \end{lstlisting}
 %GNU Parallel treats each line as a record. If the order of record is unimportant (e.g. you need all lines processed, but you do not care which is processed first), then you can use --round-robin. Without --round-robin GNU Parallel will start a command per block; with --round-robin only the requested number of jobs will be started (--jobs). The records will then be distributed between the running jobs
 \subsection{Records}
-Using -N400 GNU Parallel will read 400 records at a time
+Using \cmdoption{-N400} GNU Parallel will read 400 records at a time.\\
 \begin{lstlisting}
 $ gunzip -c  examples/0*.fastq.gz | parallel --pipe -N400 "paste -- - - - - | cut -f 2 | sort | uniq -dc " 
       2 AATTGGGGAAAACCTCTTTAGTCTTGCTAGAGATTTAGACATCTAAATGAAAGAGGCTCAAAGAATGCCA
@@ -1858,7 +1992,8 @@ $ gunzip -c  examples/0*.fastq.gz | parallel --pipe -L4 "paste -- - - - - | cut 
 %\subsection{Record separators}
 %GNU Parallel uses separators to determine where two record split.
 \subsection{Header}
-If the input data has a header, the header can be repeated for each job by matching the header with --header. If headers start with '\#':
+If the input data has a header, the header can be repeated for each job by matching the header with \cmdoption{--header}. If headers start with \cmdoption{\#}.\\
+\example{split the ouput of samtools view but re-use the headers (starting with @) before piping and counting}
 \begin{lstlisting}
 view -h path/big.bam   | parallel --header '(@.*\n)*' --pipe 'samtools view -f4 -Sc - ' 2> /dev/null 
 \end{lstlisting}
@@ -1881,14 +2016,14 @@ GNU Parallel is often called as:
 \begin{lstlisting}
   cat input_file | parallel command
 \end{lstlisting}
-With --shebang the input\_file and parallel can be combined into the same script.
-
+With \cmdoption{--shebang} the input\_file and parallel can be combined into the same script.\\
 UNIX-scripts start with a shebang line like:
 \begin{lstlisting}
 #!/bin/bash
 \end{lstlisting}
 
-GNU Parallel can do that, too. With --shebang the arguments can be listed in the file. The parallel command is the first line of the script:
+GNU Parallel can do that, too. With \cmdoption{--shebang} the arguments can be listed in the file. The parallel command is the first line of the script.\\
+\example{index a set of sorted BAM files using samtools index and  \cmdoption{--shebang}}
 \begin{lstlisting}
 #!/usr/local/bin/parallel --shebang --verbose -r samtools index
 examples/sorted_ex1a.bam
@@ -1913,21 +2048,10 @@ samtools index examples/sorted_ex1f-rmdupse.bam
 samtools index examples/sorted_toy.ba
 \end{lstlisting}
 
-\subsection{Parallelizing existing scripts}
-GNU Parallel is often called as:
-\begin{lstlisting}
-$ cat input_file | parallel command
-$ parallel command ::: foo bar
-\end{lstlisting}
-If command is a script parallel can be combined into a single file so:
-\begin{lstlisting}
-  cat input_file | command
-  command foo bar
-\end{lstlisting}
 \section{References}
-
 \begin{itemize}
-\item{}
+\item O. Tange (2011): GNU Parallel - The Command-Line Power Tool, ;login: The USENIX Magazine, February 2011:42-47.
+\item \href{http://www.biostars.org/p/63816/}{Biostars.org : Tool: GNU Parallel - parallelize serial command line programs without changing them}
 \end{itemize}
 
 \end{document}

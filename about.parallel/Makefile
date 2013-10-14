@@ -8,7 +8,5 @@ parallel01.pdf : parallel01.tex
  
 
 
-
-
 clean:
-	rm -f $(foreach P,aux log out pdf idx, parallel01.${P}) *~
+	rm -f $(foreach P,aux log out pdf idx bib, parallel01.${P}) *~

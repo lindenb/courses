@@ -1,0 +1,168 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{indentfirst}
+\usepackage{makeidx}
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
+
+\makeindex
+
+\newcommand{\ruby}{\huge{Ruby}}
+
+\newcommand{\csection}{\huge{C}.\\}
+
+\lstset{language=ruby,frame=single,backgroundcolor=\color{yellow},numbers=left,breaklines=true,breakautoindent=true,basicstyle=\small}
+\date{\today}
+\title{Ruby, my notebook.\\\includegraphics[scale=1.0,width=64px,height=64px]{ruby64.png}}
+\author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\\url{http://plindenbaum.blogspot.com} }
+
+
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\section{General}
+\subsection{NULL}
+\begin{lstlisting}
+nil
+\end{lstlisting}
+
+\subsection{Global variable}
+\begin{lstlisting}
+$var1 = "Hello"
+\end{lstlisting}
+\subsection{Instance variable}
+\begin{lstlisting}
+@var2 = "World"
+\end{lstlisting}
+
+\subsection{Class variable}
+\begin{lstlisting}
+@@var3 = "blabala"
+\end{lstlisting}
+
+\subsection{String shortcuts}
+\begin{lstlisting}
+$var1 = "Hello"
+puts "#$var1, World!"
+\end{lstlisting}
+
+\subsection{Function}
+\begin{lstlisting}
+def say_hello(name)
+	result = "Hello, " + name
+	return result
+end
+puts say_hello("World")
+\end{lstlisting}
+or
+\begin{lstlisting}
+$var1 = "Hello"
+def say_hello(name)
+	result = "#$var1, #{name}"
+	return result
+end
+puts say_hello("World")
+\end{lstlisting}
+
+\subsection{Arrays}
+
+\begin{lstlisting}
+a = [ TRUE, 'GAATTC', "GGATCC", 0.5]
+a[0]
+=> true
+> puts "EcorRI cuts #{a[1]}"
+=> EcorRI cuts GAATTC
+a[3] = nil
+a
+=> [true, "GAATTC", "GGATCC", nil]
+\end{lstlisting}
+
+or using '\%w'
+\begin{lstlisting}
+ %w{ EcoRI BamHI PstI NotchI }
+=> ["EcoRI", "BamHI", "PstI", "NotI"]
+\end{lstlisting}
+
+\subsection{Associative Arrays}
+\begin{lstlisting}
+> map={ 'EcoRI' => 'GAATTC', 'BamHI' => 'GGATACC', 'PstI' => 'CGATCG' }
+=> {"EcoRI"=>"GAATTC", "BamHI"=>"GGATACC", "PstI"=>"CGATCG"}
+
+> puts map["EcoRI"]
+=> GAATTC
+
+> puts "Enzyme is #{map['EcoRI']}"
+=> Enzyme is GAATTC
+\end{lstlisting}
+
+or
+
+\begin{lstlisting}
+> m=Hash.new()
+=> {}
+> m['EcoRI']="GAATTC";
+> puts m['BamHI']
+=> nil
+> puts m['EcoRI']
+GAATTC
+\end{lstlisting}
+
+
+\subsection{If-Then-Else}
+\begin{lstlisting}
+enz="EcoRI"
+
+if enz=="BamHI"
+	print "GGATCC"
+elsif enz=="EcoRI"
+	print "GAATTC"
+else
+	puts "Another enzyme"
+end
+
+=> GAATTC=> nil
+\end{lstlisting}
+
+\subsection{While loop}
+\begin{lstlisting}
+seq="";
+while seq.length < 100
+	seq += "A"
+end
+print seq
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=> nil
+\end{lstlisting}
+or
+\begin{lstlisting}
+seq=""
+seq += "A"   while seq.length < 100
+puts seq
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+=> nil
+\end{lstlisting}
+
+\subsection{Regex}
+\begin{lstlisting}
+s="ATGACTACGATC"
+
+if s =~ /[ATGC]+/
+	puts "Acid Nucleic"
+else
+	puts "Not a DNA"
+end
+
+=> Acid Nucleic
+\end{lstlisting}
+
+
+\end{document}

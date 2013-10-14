@@ -104,10 +104,17 @@ AAA
 mv path/{*.tex,*.cpp} WS/
 \end{lstlisting}
 
+\subsection{How to pipe stdout while keeping it on screen ?}
+http://stackoverflow.com/questions/5677201
+\begin{lstlisting}
+echo 'ee' | tee /dev/tty | foo
+\end{lstlisting}
+
 \subsection{speed up sort}
 \begin{lstlisting}
 export LC_ALL=C
 \end{lstlisting}
+
 
 \subsection{Adding message when logging a server}
 modify: /etc/motd
@@ -156,6 +163,19 @@ mkdir VIRTUAL
 sshfs  LOGIN@HOST:/data/users/me VIRTUAL
 \end{lstlisting}
 
+
+\section{Repeat previous command, change one term}
+via \url{https://twitter.com/genetics\_blog/status/389765670336212992}
+\begin{lstlisting}
+#dry-run
+$ make -n target
+
+# remove the -n
+$ ^-n^
+\end{lstlisting}
+
+
+
 \section{HTML/Mozilla}
 \subsection{multiple file input in Firefox 3.6}
 \url{http://hacks.mozilla.org/2009/12/multiple-file-input-in-firefox-3-6/}
@@ -185,6 +205,8 @@ You've cloned a repo but you want to update the data from your colleague's origi
 $ git remote add parent "https://github.com/michaelbarton/bioinformatics-career-survey.git"
 $ git pull parent master
 \end{lstlisting}
+
+
 \section{Javascript}
 \paragraph{Mozilla/Xul interpreter:}
 \begin{lstlisting}

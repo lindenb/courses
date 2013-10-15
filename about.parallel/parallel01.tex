@@ -17,8 +17,8 @@
 
 \lstset{language=bash,frame=single,backgroundcolor=\color{yellow},numbers=left,breaklines=true,breakautoindent=true,basicstyle=\tiny}
 \date{\today}
-\title{GNU Parallel for Bioinformatics}
-\author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\\url{http://plindenbaum.blogspot.com} }
+\title{\includegraphics[scale=1.0,width=300px,height=191px]{jeter01.png}\\GNU Parallel for Bioinformatics.}
+\author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\\url{http://plindenbaum.blogspot.com}}
 
 
 \newcommand{\example}[1]{
@@ -34,7 +34,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-This document follows Ole Tange's \prl{} tutorial \url{http://www.gnu.org/software/parallel/parallel_tutorial.html}.
+This document follows Ole Tange's \prl{} tutorial \url{http://www.gnu.org/software/parallel/parallel_tutorial.html}.\\The sources of this document are available at \url{https://github.com/lindenb/courses/tree/master/about.parallel}
 \end{abstract}
 
 \tableofcontents
@@ -108,6 +108,11 @@ or , without '-a -'
 $ find dir1 -name "*.bam" | grep sorted |\
 	parallel   'samtools index '
 \end{lstlisting}
+
+
+Ole Tange: "The \cmdoption{-a -} construct is unnatural to me. It makes sense when you have
+multiple \cmdoption{-a} but if it is the only one, leave it out. That will also make
+it easier for people who are used to xargs."
 
 \subsection{Multiple input source}
 
@@ -187,6 +192,7 @@ C c
 \end{lstlisting}
 
 
+
 \subsubsection{STDIN can be one of the input sources using '-'}
 \example{Print the combinations of one file of nucleotides and stdin }
 \begin{lstlisting}
@@ -213,6 +219,8 @@ C t
 C g
 C c
 \end{lstlisting}
+
+
 
 \subsubsection{Instead of -a files can be given after \cmdoption{::::}}
 \example{Print the combinations of two files of nucleotides. }
@@ -421,7 +429,7 @@ output:
 
 \subsubsection{No command means arguments are commands}
 
-If no command is given after parallel the arguments themselves are treated as commands:
+If no command is given after \prl{} the arguments themselves are treated as commands:
 \example{Get the file type and list a directory and print the workind directory}
 \begin{lstlisting}
 parallel ::: 'ls -la  toy*' 'file toy.bam' pwd
@@ -772,7 +780,7 @@ $ ls -la examples/*.sam
 
 
 \subsection{Header defined replacement strings}
-With --header GNU Parallel will use the first value of the input source as the name of the replacement string. Only the non-modified version '\{\}' is supported.\\
+With \cmdoption{--header} GNU \prl{} will use the first value of the input source as the name of the replacement string. Only the non-modified version '\{\}' is supported.\\
 \example{global alignment of oligonucleotides with primer3/ntdpal}
 \begin{lstlisting}
 $ parallel --header : primer3-2.3.5/src/ntdpal {FORWARD} {REVERSE} g \
@@ -790,7 +798,7 @@ output:
 \end{lstlisting}
 
 \subsection{More than one argument}
-With \texttt{'--xargs'} will GNU Parallel fit as many arguments as possible on a single line:
+With \texttt{'--xargs'} will GNU \prl{} fit as many arguments as possible on a single line:
 \begin{lstlisting}
 $ seq 1 100000 | parallel --xargs echo  | wc -l
 5
@@ -1105,7 +1113,7 @@ bwa aln -f 01_F_.fastq.sai toy.fa ./01_F_.fastq.gz
 [main] Real time: 0.012 sec; CPU: 0.012 sec
 \end{lstlisting}
 
-\subsection{GNU Parallel will postpone the output until the command completes}
+\subsection{GNU \prl{} will postpone the output until the command completes}
 \example{Align the FASTQs forward with bwa aln, wait a few seconds and then align the FASTQs reverse }
 \begin{lstlisting}
 $ parallel -j 3 --verbose 'bwa aln -f 0{}_F.fastq.sai toy.fa 0{}_F_.fastq.gz ; sleep {} ; bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz ' ::: 1 2 3 4 5
@@ -1307,7 +1315,7 @@ ACCCGCTCTTTGCCACTGATC
 
 
 \subsubsection{Saving output into files}
-GNU Parallel can save the output of each job into files.\\
+GNU \prl{} can save the output of each job into files.\\
 \example{Align two sets of oligos using primer3/ntdpal, save the result in a structured output}
 \begin{lstlisting}
 $ parallel --files --verbose primer3-2.3.5/src/ntdpal {1} {2} g \
@@ -1339,7 +1347,7 @@ $ head /tmp/eLAmSSq0DY.par /tmp/Yv7YvDPzzw.par /tmp/mea6UUq1Li.par /tmp/VLbG2gkq
 |ATAGCATCGA|  |ATAGCATCGAG| g score=10.00 len=10 |0,0|1,1|2,2|3,3|4,4|5,5|6,6|7,7|8,8|9,9|
 \end{lstlisting}
 
-By default GNU Parallel will cache the output in files in '/tmp'. This can be changed by setting \cmdoption{\$TMPDIR} or \cmdoption{--tmpdir}.\\
+By default GNU \prl{} will cache the output in files in '/tmp'. This can be changed by setting \cmdoption{\$TMPDIR} or \cmdoption{--tmpdir}.\\
 \example{Align two sets of oligos using primer3/ntdpal, save the result in a structured output}
 \begin{lstlisting}
 $ parallel --files --verbose --tmpdir . primer3-2.3.5/src/ntdpal {1} {2} g \
@@ -1494,7 +1502,7 @@ sorted_toy.bam
 %%Or give multiple argument in one go to open multiple files:
 
 \subsection{Timing}
-Some jobs do heavy I/O when they start. To avoid a thundering herd GNU Parallel can delay starting new jobs. \cmdoption{--delay X} will make sure there is at least X seconds between each start.\\
+Some jobs do heavy I/O when they start. To avoid a thundering herd GNU \prl{} can delay starting new jobs. \cmdoption{--delay X} will make sure there is at least X seconds between each start.\\
 \example{sort a set of BAMS, using two parallel jobs, wait 0.2 seconds between each jobs}
 \begin{lstlisting}
 ls *.bam | parallel -j 2 --verbose --delay 2.0 samtools sort {} sorted_{.}
@@ -1519,7 +1527,7 @@ samtools index ex1f-rmdupse_sorted.bam
 samtools index /home/lindenb/tmp/BIGBAM/sorted_.bam #no bam.bai
 \end{lstlisting}
 
-Based on the runtime of completed jobs GNU Parallel can estimate the total runtime with \cmdoption{--eta}.\\
+Based on the runtime of completed jobs GNU \prl{} can estimate the total runtime with \cmdoption{--eta}.\\
 \example{index a set of sorted BAMS, print an estimation of the total runtime}
 \begin{lstlisting}
 $ ls ex1f-rmdupse_sorted.bam BIGBAM/sorted_.bam ex1a_sorted.bam |\
@@ -1541,7 +1549,7 @@ ETA: 28s 0left 19.00avg  local:0/3/100%/19.0s
 
 
 \subsection{Progress}
-GNU Parallel can give progress information with \cmdoption{--progress}.\\
+GNU \prl{} can give progress information with \cmdoption{--progress}.\\
 \example{index a set of sorted BAMS, print the progress}
 \begin{lstlisting}
 $ ls *_sorted.bam BIGBAM/sorted_.bam  |\
@@ -1593,7 +1601,7 @@ Seq	Host	Starttime	Runtime	Send	Receive	Exitval	Signal	Command
 8	:	1381155638.258	0.003	0	0	0	0	samtools index toy_sorted.bam
 7	:	1381155638.255	6.188	0	0	-1	15	samtools index BIGBAM/sorted_.bam
 \end{lstlisting}
-With a joblog GNU Parallel can be stopped and later pickup where it left off. It it important that the input of the completed jobs is unchanged.
+With a joblog GNU \prl{} can be stopped and later pickup where it left off. It it important that the input of the completed jobs is unchanged.
 \begin{lstlisting}
 $ parallel --joblog log.txt  bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz  ::: 1 2
 $ cat log.txt
@@ -1601,7 +1609,7 @@ Seq	Host	Starttime	Runtime	Send	Receive	Exitval	Signal	Command
 1	:	1381156165.018	0.012	0	0	0	0	bwa aln -f 01_R.fastq.sai toy.fa 01_R_.fastq.gz
 2	:	1381156165.028	0.016	0	0	0	0	bwa aln -f 02_R.fastq.sai toy.fa 02_R_.fastq.gz
 \end{lstlisting}
-With a joblog GNU Parallel can be stopped and later pickup where it left off. It it important that the input of the completed jobs is unchanged.
+With a joblog GNU \prl{} can be stopped and later pickup where it left off. It it important that the input of the completed jobs is unchanged.
 \example{Resume the previous command: create a BAM  for the remaining files  DOESNTEXIST 4 5, 'Starttime' doesn't change for 1 and 2 }
 \begin{lstlisting}
 $  parallel --resume --joblog log.txt  \
@@ -1617,7 +1625,7 @@ Seq	Host	Starttime	Runtime	Send	Receive	Exitval	Signal	Command
 4	:	1381156215.791	0.139	0	0	0	6	bwa aln -f 0DOESNTEXIST_R.fastq.sai toy.fa 0DOESNTEXIST_R_.fastq.gz
 \end{lstlisting}
 
-With \cmdoption{--resume-failed GNU Parallel will re-run the jobs that failed}
+With \cmdoption{--resume-failed GNU \prl{} will re-run the jobs that failed}
 \example{Align some FASTQs with 'bwa aln', but a FASTQ doesn't exist}
 \begin{lstlisting}
 $ parallel --resume-failed --verbose --joblog log.txt  bwa aln -f 0{}_R.fastq.sai toy.fa 0{}_R_.fastq.gz  ::: 1 2 3 DOESNTEXIST 4 5
@@ -1732,7 +1740,7 @@ The special \texttt{--sshloginfile '..'} reads from \texttt{~/.parallel/sshlogin
 %%
 
 \subsection{Transferring files}
-GNU Parallel can transfer the files to be processed to the remote host. It does that using rsync.
+GNU \prl{} can transfer the files to be processed to the remote host. It does that using rsync.
 \example{copy the BAMs on the remote server}
 \begin{lstlisting}
 $ parallel -S user@host --transfer file ::: *.bam
@@ -1776,7 +1784,7 @@ $ parallel -S user@host --trc {/.}_s.bam samtools sort {} {/.}_s ::: ex1f.bam  e
 \end{lstlisting}
 
 
-Some jobs need a common database for all jobs. GNU Parallel can transfer that using \cmdoption{--basefile} which will transfer the file before the first job.\\
+Some jobs need a common database for all jobs. GNU \prl{} can transfer that using \cmdoption{--basefile} which will transfer the file before the first job.\\
 \example{transfert the file  ex1.fa on a remote server, grep three oligos}
 \begin{lstlisting}
 $ parallel -S user@host --basefile ex1.fa grep -inH {} ex1.fa  :::  GCCTGGCT CCAGCT ATCACC
@@ -1828,7 +1836,7 @@ $ parallel --workdir /home/user/tmp -S user@host --trc {/.}_s.bam  pwd "&&" samt
 
 
 \subsection{Avoid overloading sshd}
-If many jobs are started on the same server, sshd can be overloaded. GNU Parallel can insert a delay between each job run on the same server.\\
+If many jobs are started on the same server, sshd can be overloaded. GNU \prl{} can insert a delay between each job run on the same server.\\
 \example{copy the BAMs on the remote server, sort the BAMs with samtools, fetch the sorted bam, cleanup on server side. Take five seconds between each call to sshd}
 \begin{lstlisting}
 $ parallel -S user@host --sshdelay 5 --trc {/.}_s.bam  date "&&"samtools sort {} {/.}_s ::: ex1f.bam  ex1.bam toy.bam
@@ -1843,7 +1851,7 @@ $ parallel -S user@host --controlmaster  --trc {/.}_s.bam  samtools sort {} {/.}
 \end{lstlisting}
 
 \subsection{Ignore hosts that are down}
-In clusters with many hosts a few of the are often down. GNU Parallel can ignore those hosts. In this case the host nowhere.com is down.\\
+In clusters with many hosts a few of the are often down. GNU \prl{} can ignore those hosts. In this case the host nowhere.com is down.\\
 \example{print combinations of bases on a remote set of servers even if one server is down}
 \begin{lstlisting}
 $ parallel --filter-hosts  -S user@host,user@nowhere.com echo ::: A T G  ::: A T G 
@@ -1863,7 +1871,7 @@ G G
 
 %\subsection{Running the same commands on all hosts}
 \subsection{Transfer environment variables and functions}
-Using \cmdoption{--env} GNU Parallel can transfer an environment variable to the remote system.\\
+Using \cmdoption{--env} GNU \prl{} can transfer an environment variable to the remote system.\\
 \example{export the REFERENCE variable and extract some subsequences from the FASTA file}
 \begin{lstlisting}
 $ export REFERENCE=/path/to/human_g1k_v37.fasta
@@ -1896,7 +1904,7 @@ output
 |ATCGATGACTAG|  |TGACGACTG| g score=5.00 len=9 |1,0|3,1|4,2|5,3|6,4|7,5|8,6|9,7|11,8|
 \end{lstlisting}
 
-GNU Parallel can copy all defined variables and functions to the remote system. It just need to record which ones to ignore in \cmdoption{~/.parallel/ignored\_vars}. Do that by running this once:
+GNU \prl{} can copy all defined variables and functions to the remote system. It just need to record which ones to ignore in \cmdoption{~/.parallel/ignored\_vars}. Do that by running this once:
 \begin{lstlisting}
 $ parallel --record-env
 
@@ -1917,7 +1925,7 @@ Now all new variables and functions defined will be copied when using  \cmdoptio
 
 \section{--pipe}
 \subsection{Chunk size}
-By default GNU Parallel will start an instance of command\_B, read a chunk of about 1 MB, and pass that to the instance. Then start another instance, read another chunk, and pass that to the second instance.\\
+By default GNU \prl{} will start an instance of command\_B, read a chunk of about 1 MB, and pass that to the instance. Then start another instance, read another chunk, and pass that to the second instance.\\
 \example{count some chunks of SAM records}
 \begin{lstlisting}
 $ samtools view  file.bam | parallel --pipe wc -l | head
@@ -1949,7 +1957,7 @@ $ samtools view  file.bam | parallel--block 2M  --pipe wc -l | head
 \end{lstlisting}
 %GNU Parallel treats each line as a record. If the order of record is unimportant (e.g. you need all lines processed, but you do not care which is processed first), then you can use --round-robin. Without --round-robin GNU Parallel will start a command per block; with --round-robin only the requested number of jobs will be started (--jobs). The records will then be distributed between the running jobs
 \subsection{Records}
-Using \cmdoption{-N400} GNU Parallel will read 400 records at a time.\\
+Using \cmdoption{-N400} GNU \prl{} will read 400 records at a time.\\
 \begin{lstlisting}
 $ gunzip -c  examples/0*.fastq.gz | parallel --pipe -N400 "paste -- - - - - | cut -f 2 | sort | uniq -dc " 
       2 AATTGGGGAAAACCTCTTTAGTCTTGCTAGAGATTTAGACATCTAAATGAAAGAGGCTCAAAGAATGCCA
@@ -2022,7 +2030,7 @@ UNIX-scripts start with a shebang line like:
 #!/bin/bash
 \end{lstlisting}
 
-GNU Parallel can do that, too. With \cmdoption{--shebang} the arguments can be listed in the file. The parallel command is the first line of the script.\\
+GNU \prl{} can do that, too. With \cmdoption{--shebang} the arguments can be listed in the file. The parallel command is the first line of the script.\\
 \example{index a set of sorted BAM files using samtools index and  \cmdoption{--shebang}}
 \begin{lstlisting}
 #!/usr/local/bin/parallel --shebang --verbose -r samtools index

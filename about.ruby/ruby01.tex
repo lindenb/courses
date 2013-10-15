@@ -50,6 +50,20 @@ $var1 = "Hello"
 @@var3 = "blabala"
 \end{lstlisting}
 
+\subsection{Integer}
+\subsubsection{times}
+\begin{lstlisting}
+10.times { print "CA" }
+=>CACACACACACACACACACA
+\end{lstlisting}
+\subsubsection{upto}
+\begin{lstlisting}
+5.upto(7) {|i| puts "i=#{i};"}
+i=5;
+i=6;
+i=7;
+\end{lstlisting}
+
 \subsection{String shortcuts}
 \begin{lstlisting}
 $var1 = "Hello"
@@ -152,6 +166,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 \end{lstlisting}
 
 \subsection{Regex}
+test regex
 \begin{lstlisting}
 s="ATGACTACGATC"
 
@@ -163,6 +178,119 @@ end
 
 => Acid Nucleic
 \end{lstlisting}
+
+replace first occurence of regex:
+\begin{lstlisting}
+puts "GAATCGTACGATCGCTAGA".sub(/T/,"U")
+=> GAAUCGTACGATCGCTAGA
+\end{lstlisting}
+replace all occurences of regex:
+\begin{lstlisting}
+puts "GAATCGTACGATCGCTAGA".gsub(/T/,"U")
+=> GAAUCGUACGAUCGCUAGA
+\end{lstlisting}
+\subsection{Yield statement}
+
+\begin{lstlisting}
+def print_seq
+	puts "<Sequence>"
+	yield
+	puts "</Sequence>"
+end
+print_seq { puts "GAAATTTATAC" }
+
+=> <Sequence>
+GAAATTTATAC
+</Sequence>
+\end{lstlisting}
+
+\begin{lstlisting}
+def print_enz
+	puts "<enzymes>"
+	yield("EcoRI","GAATTC")
+	yield("BamHI","GGATCC")
+	puts "</enzymes>"
+end
+print_enz {|name,site| puts "<site name=\"#{name}\">#{site}</site>" }
+print_enz {|name,site| puts "<enzyme><name>#{name}</name><site>#{site}</site></enzyme>" }
+
+=> <enzymes>
+<site name="EcoRI">GAATTC</site>
+<site name="BamHI">GGATCC</site>
+</enzymes>
+
+<enzymes>
+<enzyme><name>EcoRI</name><site>GAATTC</site></enzyme>
+<enzyme><name>BamHI</name><site>GGATCC</site></enzyme>
+</enzymes>
+\end{lstlisting}
+
+\subsubsection{ 'each'}
+\begin{lstlisting}
+%w( EcorRI  BamHI PstI NotI).each {|name| puts name }
+=>
+EcorRI
+BamHI
+PstI
+NotI
+\end{lstlisting}
+
+\subsection{IO}
+\subsubsection{Reading}
+\begin{lstlisting}
+line=gets
+puts line
+\end{lstlisting}
+
+\subsection{Class}
+\begin{lstlisting}
+class GeneticCode
+	def initialize(name,ncbiString)
+		@name=name
+		@ncbiString=ncbiString
+	end
+end
+
+std = GeneticCode.new(
+	"standard",
+	"FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
+	)
+\end{lstlisting}
+\subsubsection{inspect}
+\begin{lstlisting}
+std = GeneticCode.new(
+	"standard",
+	"FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
+	)
+
+puts std.inspect
+=>#<GeneticCode:0xb77b0a04 @ncbiString="FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG", @name="standard">
+\end{lstlisting}
+
+
+\subsubsection{to\_s}
+\begin{lstlisting}
+class GeneticCode
+	def initialize(name,ncbiString)
+		@name=name
+		@ncbiString=ncbiString
+	end
+	
+	def to_s
+		"Genetic code #@name"
+	end
+end
+
+std = GeneticCode.new(
+	"standard",
+	"FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
+	)
+
+puts std
+
+=> "Genetic code standard"
+\end{lstlisting}
+
 
 
 \end{document}

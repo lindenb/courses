@@ -290,7 +290,91 @@ puts std
 
 => "Genetic code standard"
 \end{lstlisting}
+\subsubsection{Sub-Classing}
+\begin{lstlisting}
+class GeneticCode
+	def initialize(name,ncbiString)
+		@name=name
+		@ncbiString=ncbiString
+	end
+	
+	def to_s
+		"Genetic code #@name"
+	end
+end
 
+class MitochondrialCode < GeneticCode
+	def initialize()
+		super("Mitochondrial",
+		"FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS**VVVVAAAADDEEGGGG"
+		)
+		@url="http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi#SG2"
+	end
+end
+g = MitochondrialCode.new
+
+puts g
+=> "Genetic code Mitochondrial"
+\end{lstlisting}
+\subsubsection{Calling 'super' in subclass}
+\begin{lstlisting}
+(...)
+class MitochondrialCode < GeneticCode
+(...)
+	def to_s
+		"I am "+ super
+	end
+end
+g = MitochondrialCode.new
+puts g
+=>I am Genetic code Mitochondrial
+\end{lstlisting}
+
+\subsubsection{accessing field}
+\begin{lstlisting}
+class GeneticCode
+	def initialize(ncbiString)
+		@ncbiString=ncbiString
+	end
+end
+
+g = GeneticCode.new("FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG")
+
+puts g.ncbiString
+=> -:9: undefined method `ncbiString' for #<GeneticCode:0xb7461ad8> (NoMethodError)
+\end{lstlisting}
+now, define a getter:
+
+\begin{lstlisting}
+class GeneticCode
+	def initialize(ncbiString)
+		@ncbiString=ncbiString
+	end
+	
+	def ncbiString
+		@ncbiString
+	end 
+end
+g = GeneticCode.new("FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG")
+puts g.ncbiString
+=> FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG
+\end{lstlisting}
+
+shortcut with 'attr\_reader'
+\begin{lstlisting}
+class GeneticCode
+	attr_reader :name, :ncbiString
+
+	def initialize(name,ncbiString)
+		@name=name
+		@ncbiString=ncbiString
+	end
+end
+
+g = GeneticCode.new("Standard","FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG")
+puts g.ncbiString
+=>FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG
+\end{lstlisting}
 
 
 \end{document}

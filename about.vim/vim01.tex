@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{indentfirst}
+\usepackage{makeidx}
+\usepackage{keystroke}
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
+
+\makeindex
+
+
+
+\newcommand{\ctrl}[1]{Ctrl-#1}
+\newcommand{\vikeystroke}[2]{ #1 : #2
+
+}
+
+\setlength\parindent{0px} %% http://tex.stackexchange.com/questions/27802/set-noindent-for-entire-file
+\lstset{language=bash,frame=single,backgroundcolor=\color{yellow},numbers=left,breaklines=true,breakautoindent=true,basicstyle=\small}
+\date{\today}
+\title{VIM, my notebook.\\\includegraphics[scale=1.0,width=128px,height=128px]{vim128.png}}
+\author{Pierre Lindenbaum\\\href{https://twitter.com/yokofakun}{@yokofakun}\\\url{http://plindenbaum.blogspot.com} }
+
+
+
+\begin{document}
+\maketitle
+\Huge
+\vikeystroke{\keystroke{k}}{left}
+\vikeystroke{\keystroke{j}}{down}
+\vikeystroke{\keystroke{l}}{right}
+\vikeystroke{\keystroke{h}}{left}
+\vikeystroke{\keystroke{10j}}{go down by 10 lines}
+
+
+\vikeystroke{\keystroke{0}}{start of line}
+\vikeystroke{\keystroke{\$}}{end of line}
+\vikeystroke{\keystroke{\textasciicircum}}{first non whitespace of line}
+\vikeystroke{\keystroke{g\_}}{last non whitespace of line}
+\end{document}
+
+
+

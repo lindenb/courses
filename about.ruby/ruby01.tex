@@ -31,10 +31,15 @@
 \tableofcontents
 
 \section{General}
-\subsection{NULL}
-\begin{lstlisting}
-nil
-\end{lstlisting}
+
+\begin{tabular}{ r || l }
+Java & Ruby \\
+\hline                        
+this & self \\
+null & nil \\
+.getClass & class \\
+Integer.parseInt(s) & Integer(s) \\
+\end{tabular}
 
 \subsection{Global variable}
 \begin{lstlisting}
@@ -50,7 +55,7 @@ $var1 = "Hello"
 @@var3 = "blabala"
 \end{lstlisting}
 
-\subsection{Integer}
+\subsection{Numbers}
 \subsubsection{times}
 \begin{lstlisting}
 10.times { print "CA" }
@@ -64,10 +69,90 @@ i=6;
 i=7;
 \end{lstlisting}
 
-\subsection{String shortcuts}
+downto
+\begin{lstlisting}
+100.downto(98) {|i| puts "i=#{i};"}
+i=100;
+i=99;
+i=98;
+\end{lstlisting}
+
+step
+\begin{lstlisting}
+1.step(10,2) {|i| puts "i=#{i};"}
+i=1;
+i=3;
+i=5;
+i=7;
+i=9;
+\end{lstlisting}
+
+\begin{lstlisting}
+99.downto(95) {|i| puts "i=#{i};"}
+i=99;
+i=98;
+i=97;
+i=96;
+i=95;
+\end{lstlisting}
+
+
+
+\subsection{String}
+shortcuts
 \begin{lstlisting}
 $var1 = "Hello"
 puts "#$var1, World!"
+\end{lstlisting}
+
+\begin{lstlisting}
+puts %q/hello world with ' and " /
+puts %Q/hello world with ' and " /
+
+=>
+hello world with ' and " 
+hello world with ' and " 
+\end{lstlisting}
+
+here document
+\begin{lstlisting}
+puts <<STOP_HERE
+You say "Good Bye"
+I say 'hello'
+STOP_HERE
+=>
+You say "Good Bye"
+I say 'hello'
+\end{lstlisting}
+
+chomp
+\begin{lstlisting}
+"hello".chomp            #=> "hello"
+"hello\n".chomp          #=> "hello"
+"hello\r\n".chomp        #=> "hello"
+\end{lstlisting}
+chop
+\begin{lstlisting}
+"string\r\n".chop   #=> "string"
+"string\n\r".chop   #=> "string\n"
+"string\n".chop     #=> "string"
+"string".chop       #=> "strin"
+"x".chop.chop       #=> ""
+\end{lstlisting}
+chr
+\begin{lstlisting}
+a = "abcde"
+a.chr    #=> "a"
+\end{lstlisting}
+clear
+\begin{lstlisting}
+a = "abcde"
+a.clear    #=> ""
+\end{lstlisting}
+split
+\begin{lstlisting}
+name,site = "EcoRI,GAATTC".split(/[,]/)
+puts "#{name}=#{site}" #=> EcoRI=GAATTC
 \end{lstlisting}
 
 \subsection{Function}
@@ -88,48 +173,6 @@ end
 puts say_hello("World")
 \end{lstlisting}
 
-\subsection{Arrays}
-
-\begin{lstlisting}
-a = [ TRUE, 'GAATTC', "GGATCC", 0.5]
-a[0]
-=> true
-> puts "EcorRI cuts #{a[1]}"
-=> EcorRI cuts GAATTC
-a[3] = nil
-a
-=> [true, "GAATTC", "GGATCC", nil]
-\end{lstlisting}
-
-or using '\%w'
-\begin{lstlisting}
- %w{ EcoRI BamHI PstI NotchI }
-=> ["EcoRI", "BamHI", "PstI", "NotI"]
-\end{lstlisting}
-
-\subsection{Associative Arrays}
-\begin{lstlisting}
-> map={ 'EcoRI' => 'GAATTC', 'BamHI' => 'GGATACC', 'PstI' => 'CGATCG' }
-=> {"EcoRI"=>"GAATTC", "BamHI"=>"GGATACC", "PstI"=>"CGATCG"}
-
-> puts map["EcoRI"]
-=> GAATTC
-
-> puts "Enzyme is #{map['EcoRI']}"
-=> Enzyme is GAATTC
-\end{lstlisting}
-
-or
-
-\begin{lstlisting}
-> m=Hash.new()
-=> {}
-> m['EcoRI']="GAATTC";
-> puts m['BamHI']
-=> nil
-> puts m['EcoRI']
-GAATTC
-\end{lstlisting}
 
 
 \subsection{If-Then-Else}
@@ -330,7 +373,7 @@ puts g
 =>I am Genetic code Mitochondrial
 \end{lstlisting}
 
-\subsubsection{accessing field}
+\subsubsection{accessing fields}
 \begin{lstlisting}
 class GeneticCode
 	def initialize(ncbiString)
@@ -377,4 +420,447 @@ puts g.ncbiString
 \end{lstlisting}
 
 
+defining a setter:
+\begin{lstlisting}
+class Sample
+	def name
+		@name
+	end
+	
+	def name=(name)
+		@name=name
+	end
+end
+s = Sample.new
+s.name="Blood01"
+puts "Sample name is #{s.name} "
+=> Sample name is Blood01
+\end{lstlisting}
+\subsubsection{static class variables}
+\begin{lstlisting}
+class Sample
+	@@id_generator=0
+	def initialize
+		## @@id_generator++ doesn't work (?)
+		@@id_generator+=1
+		@id=@@id_generator
+	end
+	
+	def id
+		@id
+	end
+end
+s = Sample.new
+puts "Sample ID is #{s.id} "
+s = Sample.new
+puts "Sample ID is #{s.id} "
+
+=>
+Sample ID is 1 
+Sample ID is 2 
+\end{lstlisting}
+
+\subsubsection{static class Method}
+\begin{lstlisting}
+class Sample
+	@@id_generator=0
+	
+	def Sample.newId
+		@@id_generator+=1
+	end
+	
+	def initialize
+		@id=Sample.newId
+	end
+	
+	def id
+		@id
+	end
+end
+s = Sample.new
+puts "Sample ID is #{s.id} "
+s = Sample.new
+puts "Sample ID is #{s.id} "
+
+puts "Another ID is #{Sample.newId} "
+
+=>
+Sample ID is 1 
+Sample ID is 2 
+Another ID is 3 
+\end{lstlisting}
+
+\subsubsection{final / constant field}
+\begin{lstlisting}
+class Sample
+	DEFAULT_ID_GENERATOR=100
+	@@id_generator=DEFAULT_ID_GENERATOR
+	
+	def Sample.newId
+		@@id_generator+=1
+		##DEFAULT_ID_GENERATOR=0 would fail:  dynamic constant assignment
+	end
+	
+	def initialize
+		@id=Sample.newId
+	end
+	
+	def id
+		@id
+	end
+end
+s = Sample.new
+puts "Sample ID is #{s.id} "
+s = Sample.new
+puts "Sample ID is #{s.id} "
+
+puts "Another ID is #{Sample.newId} "
+
+=>
+Sample ID is 101 
+Sample ID is 102 
+Another ID is 103 
+\end{lstlisting}
+
+\subsubsection{Private Constructor with private\_class\_method}
+\begin{lstlisting}
+class Genotype
+	private_class_method :new
+	attr_reader :a1,:a2
+	
+	def initialize(a,b)
+		@a1=(a<b ? a : b)
+		@a2=(a<b ? b : a)
+	end
+	
+	def Genotype.newInstance(a,b)
+		new(a,b)
+	end
+end
+g = Genotype.newInstance("C","A")
+puts "#{g.a1}/#{g.a2} "
+
+## g= Genotype.new("C","A")  <- FAIL private method `new' called for Genotype:Class (NoMethodError)
+
+=>
+A/C
+\end{lstlisting}
+
+\subsubsection{private/protected/public}
+\begin{lstlisting}
+class A
+	public
+	
+		def f1
+			1
+		end
+	
+	protected
+	
+		def f2
+			2
+		end
+		
+	private
+	
+		def f3
+	
+		end
+end
+
+
+i = A.new
+puts i.f1  #1
+# puts i.f2 FAILS protected method `f2' called for #<A1:0xb73f5798> (NoMethodError)
+# puts i.f3 FAILS private method `f3' called for #<A1:0xb73a2750> (NoMethodError)
+
+class B < A
+	public
+		def f4
+			f2
+		end
+	
+	
+		def f5
+			f3
+		end
+end
+
+i = B.new
+puts i.f4 # 2
+puts i.f5 # nil!
+\end{lstlisting}
+or using methods:
+\begin{lstlisting}
+class A
+	def f1
+		1
+	end
+
+	def f2
+		2
+	end
+
+	def f3
+
+	end
+
+	public :f1
+	protected :f2
+	private :f3
+end
+
+
+i = A.new
+puts i.f1 # => 1
+puts i.f2 # => protected method `f2' called for #<A:0xb743c698> (NoMethodError)
+\end{lstlisting}
+
+\subsubsection{Freezing objects}
+\begin{lstlisting}
+class Sample
+	def name
+		@name
+	end
+	
+	def name=(name)
+		@name=name
+	end
+end
+s = Sample.new
+s.name="Blood01"
+
+puts "Sample name is #{s.name} "
+
+s.freeze
+s.name="Blood02" => ERROR can't modify frozen object (TypeError)
+\end{lstlisting}
+
+\subsection{Collections}
+
+\subsubsection{Arrays}
+
+\begin{lstlisting}
+a = [ TRUE, 'GAATTC', "GGATCC", 0.5]
+a[0]
+=> true
+> puts "EcorRI cuts #{a[1]}"
+=> EcorRI cuts GAATTC
+a[3] = nil
+a
+=> [true, "GAATTC", "GGATCC", nil]
+\end{lstlisting}
+
+or using '\%w'
+\begin{lstlisting}
+ %w{ EcoRI BamHI PstI NotchI }
+=> ["EcoRI", "BamHI", "PstI", "NotI"]
+\end{lstlisting}
+
+or using Array.new
+\begin{lstlisting}
+a=Array.new
+a[0]="EcorRI"
+a[10]="BamH1"
+
+puts a
+=> 
+
+EcorRI
+nil
+nil
+nil
+nil
+nil
+nil
+nil
+nil
+nil
+BamH1
+\end{lstlisting}
+
+length:
+\begin{lstlisting}
+a=Array.new
+a[0]="EcorRI"
+a[1]="BamH1"
+a[2]="Pst1"
+puts a.length # => 3
+a[10]="NotI"
+puts a.length # => 11
+\end{lstlisting}
+negative index:
+\begin{lstlisting}
+a=Array.new
+a[0]="EcorRI"
+a[1]="BamH1"
+a[2]="Pst1"
+puts a[-1]
+=>PstI
+\end{lstlisting}
+
+sub-list with [ index , count ]
+\begin{lstlisting}
+a = %w{ PstI EcoRI BamHI NotI HindIII SmaI XbaI }
+puts a[3,2]
+=>  NotI HindIII
+puts a[-5,2]
+=> BamHI NotI
+\end{lstlisting}
+
+sub-list with [ start..end ] (inclusive) or [ start...end ] (exclusive)
+\begin{lstlisting}
+a = %w{ PstI EcoRI BamHI NotI HindIII SmaI XbaI }
+puts a[0..3] #=> PstI EcoRI BamHI NotI 
+puts a[0...3] #=> PstI EcoRI BamHI 
+puts a[1..1]  #=> EcoRI
+puts a[1...1] #=> (empty)
+puts a[-1..2]  #=> (empty)
+puts a[-3..-2] #=> HindIII SmaI
+\end{lstlisting}
+
+\begin{tabular}{ r || l }
+Java & Ruby \\
+\hline                        
+add & push \\
+length & length \\
+removeLast & pop \\
+removeFirst & shift \\
+get(index) & [index] \\
+\end{tabular}
+
+Iterations on arrays:
+\begin{lstlisting}
+$a = %w{ PstI EcoRI BamHI NotI HindIII SmaI XbaI }
+
+def findEnzymeIndexByName(name)
+	for i in 0 ... $a.length
+		return i if($a[i]==name) 
+	end
+	-1;
+end
+
+puts findEnzymeIndexByName("SmaI") #=> 5
+puts findEnzymeIndexByName("zzzzz") #=> -1
+\end{lstlisting}
+
+
+with blocks
+\begin{lstlisting}
+$a = %w{ PstI EcoRI BamHI NotI HindIII SmaI XbaI }
+
+def findEnzymeIndexByRegex(pattern)
+	$a.find {|enzname| enzname =~ pattern }
+end
+
+puts findEnzymeIndexByRegex(/.*II/) #=> HindIII
+puts findEnzymeIndexByRegex(/.*V/)  #=> nil
+\end{lstlisting}
+
+collect
+
+\begin{lstlisting}
+a = %w{ PstI EcoRI BamHI NotI HindIII SmaI XbaI }
+
+def findEnzymeIndexByRegex(pattern)
+	$a.find {|enzname| enzname =~ pattern }
+end
+
+puts a.collect {|enzname| enzname =~ /aI/ }
+=>
+nil
+nil
+nil
+nil
+nil
+2
+2
+\end{lstlisting}
+
+inject
+\begin{lstlisting}
+a = %w{ PstI EcoRI BamHI NotI HindIII SmaI XbaI }
+puts a.inject("LIST IS ") {|s,enzname| s+= " [#{enzname}]" }
+#=>LIST IS  [PstI] [EcoRI] [BamHI] [NotI] [HindIII] [SmaI] [XbaI]
+\end{lstlisting}
+
+
+
+
+
+\subsubsection{Associative Arrays}
+\begin{lstlisting}
+> map={ 'EcoRI' => 'GAATTC', 'BamHI' => 'GGATACC', 'PstI' => 'CGATCG' }
+=> {"EcoRI"=>"GAATTC", "BamHI"=>"GGATACC", "PstI"=>"CGATCG"}
+
+> puts map["EcoRI"]
+=> GAATTC
+
+> puts "Enzyme is #{map['EcoRI']}"
+=> Enzyme is GAATTC
+\end{lstlisting}
+
+or
+
+\begin{lstlisting}
+> m=Hash.new()
+=> {}
+> m['EcoRI']="GAATTC";
+> puts m['BamHI']
+=> nil
+> puts m['EcoRI']
+GAATTC
+\end{lstlisting}
+
+length
+\begin{lstlisting}
+m={ 'EcoRI' => 'GAATTC', 'BamHI' => 'GGATACC', 'PstI' => 'CGATCG' }
+puts m.length #  => 3
+\end{lstlisting}
+
+
+foreach
+\begin{lstlisting}
+m ={ 'EcoRI' => 'GAATTC', 'BamHI' => 'GGATACC', 'PstI' => 'CGATCG' }
+m.each {|name,site| puts "#{name} cuts #{site}"}
+BamHI cuts GGATACC
+EcoRI cuts GAATTC
+PstI cuts CGATCG
+\end{lstlisting}
+
+\subsection{I/O}
+\begin{lstlisting}
+f = File.open("jeter.rb")
+f.each do |s|
+puts s
+end
+f.close
+=> (print self)
+\end{lstlisting}
+
+\subsection{Blocks}
+\begin{lstlisting}
+class EnzymeLabel
+	def initialize(name,&fun)
+		@name=name
+		@fun=fun
+	end
+	
+	def label
+		@fun.call(self)
+	end
+	
+end
+
+label=EnzymeLabel.new("EcoRI") { " cuts GAATTC"  }
+puts label.label #=>  cuts GAATTC
+
+label=EnzymeLabel.new("EcoRI") { " coupe G^AATTC"  }
+puts label.label #=>  coupe G^AATTC
+\end{lstlisting}
+
+
 \end{document}
+
+
+

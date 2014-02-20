@@ -48,11 +48,11 @@
 \end{frame}
 
 \begin{frame}
-\remoteimage{jeter1.jpg}{http://www.seqwright.com/images/IlluminaHighSeq2000.JPG}{}
+\remoteimage{jeter_gene2bio1.jpg}{http://www.seqwright.com/images/IlluminaHighSeq2000.JPG}{}
 \end{frame}
 
 \begin{frame}
-\remoteimage{jeter2.png}{http://www.genoseq.ucla.edu/images/9/92/Miseq-personal-sequencer.png}{scale=0.5}
+\remoteimage{jeter_gene2bio2.png}{http://www.genoseq.ucla.edu/images/9/92/Miseq-personal-sequencer.png}{scale=0.5}
 \end{frame}
 
 \begin{frame}
@@ -88,7 +88,7 @@ ${CASAVADIR}/bin/configureBclToFastq.pl \
 
 
 \begin{frame}
-\remoteimage{jeter4.jpg}{http://www.bioinfo.uh.edu/Slim_Filter/images/FASTQ_pic.jpg}{scale=0.8}
+\remoteimage{jeter_gene2bio4.jpg}{http://www.bioinfo.uh.edu/Slim_Filter/images/FASTQ_pic.jpg}{scale=0.8}
 \end{frame}
 
 \begin{frame}
@@ -118,9 +118,12 @@ V2528_CAGATC_L004_R2_012.fastq.gz
  \end{lstlisting}
 \end{frame}
 
+%%BEGIN(fastqpreproc)
 \hugeslide{FASTQ preprocessing.}
+%%END(fastqpreproc)
 
 
+%%BEGIN(cutadapt)
 \begin{frame}[fragile]
 \centeredtitle{Remove adapter sequences}
  \begin{lstlisting}[language=bash]
@@ -130,16 +133,21 @@ cutadapt \
    -o input_preproc.fastq
  \end{lstlisting}
 \end{frame}
+%%END(cutadapt)
 
+%%BEGIN(refgenome)
 \hugeslide{Reference}
+%%END(refgenome)
 
+%%BEGIN(refgenomeused)
 \begin{frame}[fragile]
 \em{"The version used by the 1000 genomes project is recommended. The mitochondrial genome in the g1k version is the most widely used rCRS. The chromosomes and contigs are concatenated, so it is less likely to make mistakes."}\\
 
 \url{http://www.biostars.org/p/1796/#4360}
 \end{frame}
+%%END(refgenomeused)
 
-
+%%BEGIN(refgenomeindex)
 \begin{frame}[fragile]
 \centeredtitle{Indexing the Reference}
  \begin{lstlisting}[language=bash]
@@ -147,17 +155,24 @@ bwa index -a bwtsw reference.fa
 samtools faidx reference.fa
  \end{lstlisting}
 \end{frame}
+%%END(refgenomeindex)
 
+%%BEGIN(aligntitle)
 \hugeslide{Align}
+%%END(aligntitle)
 
+%%BEGIN(bwatitle)
 \hugeslide{bwa}
+%%END(bwatitle)
 
 
-
+%%BEGIN(bwaaln1)
 \begin{frame}
 \graphviz{jeter8}{'digraph G{SAMPLE1_FASTQ1_1 -> SAMPLE1_ALIGN1_1;}'}{scale=0.5}
 \end{frame}
+%%END(bwaaln1)
 
+%%BEGIN(bwaaln2)
 \begin{frame}[fragile]
 \centeredtitle{Align one FASTQ}
  \begin{lstlisting}[language=bash]
@@ -167,11 +182,15 @@ bwa aln -q 15 -t 2 \
   Sample1_CGATGT_L001_R1_001.fastq.gz
  \end{lstlisting}
 \end{frame}
+%%END(bwaaln2)
 
+%%BEGIN(bwasampe1)
 \begin{frame}
 \graphviz{jeter5}{'digraph G{SAMPLE1_FASTQ1_1 -> SAMPLE1_ALIGN1_1;SAMPLE1_FASTQ1_2 -> SAMPLE1_ALIGN1_2;SAMPLE1_ALIGN1_1 -> SAMPLE1_BAM_1;SAMPLE1_ALIGN1_2 -> SAMPLE1_BAM_1;}'}{scale=0.4}
 \end{frame}
+%%END(bwasampe1)
 
+%%BEGIN(bwasampe2)
 \begin{frame}[fragile]
 \centeredtitle{compute the Paired-end Alignments}
 \begin{lstlisting}[language=bash]
@@ -186,10 +205,14 @@ samtools  view -S -b \
    	-T human_g1k_v37.fasta -
  \end{lstlisting}
 \end{frame}
+%%END(bwasampe2)
 
+
+%%BEGIN(bamtitle)
 \begin{frame}[fragile]
-\remoteimage{jeter9.jpg}{http://4closurefraud.org/wp-content/uploads/2010/05/bam.jpg}{}
+\remoteimage{jeter_gene2bio9.jpg}{http://4closurefraud.org/wp-content/uploads/2010/05/bam.jpg}{}
 \end{frame}
+%%END(bamtitle)
 
 \begin{frame}[fragile]
 \centeredtitle{Inside a BAM file}
@@ -210,29 +233,31 @@ samtools  view -S -b \
 \end{frame}
 
 \begin{frame}[fragile]
-\remoteimage{jeter18.jpg}{http://upload.wikimedia.org/wikipedia/en/f/f4/The_Scream.jpg}{scale=0.2}
+\remoteimage{jeter_gene2bio18.jpg}{http://upload.wikimedia.org/wikipedia/en/f/f4/The_Scream.jpg}{scale=0.2}
 \end{frame}
 
 
 \begin{frame}[fragile]
-\remoteimage{jeter17.jpg}{http://man.cx/___img/man1/samtools1.png}{scale=0.5}
+\remoteimage{jeter_gene2bio17.jpg}{http://man.cx/___img/man1/samtools1.png}{scale=0.5}
 \end{frame}
 
 
 \begin{frame}[fragile]
-\remoteimage{jeter10.jpg}{https://docs.uabgrid.uab.edu/w/images/f/f1/SamBamFileFormatFlags.jpg}{scale=0.7}
+\remoteimage{jeter_gene2bio10.jpg}{https://docs.uabgrid.uab.edu/w/images/f/f1/SamBamFileFormatFlags.jpg}{scale=0.7}
 \end{frame}
 
 \begin{frame}[fragile]
-\remoteimage{jeter15.jpg}{http://ppotato.files.wordpress.com/2010/08/sam_output2.png}{scale=0.3}
+\remoteimage{jeter_gene2bio15.jpg}{http://ppotato.files.wordpress.com/2010/08/sam_output2.png}{scale=0.3}
 \end{frame}
 
-
+%%BEGIN(mergebams1)
 \begin{frame}
 \graphviz{jeter6}{'digraph G{ SAMPLE1_FASTQ1_1 -> SAMPLE1_ALIGN1_1; SAMPLE1_FASTQ1_2 -> SAMPLE1_ALIGN1_2; SAMPLE1_ALIGN1_1 -> SAMPLE1_BAM_1; SAMPLE1_ALIGN1_2 -> SAMPLE1_BAM_1; SAMPLE1_BAM_1 -> SAMPLE1_BAM;   SAMPLE1_FASTQ2_1 -> SAMPLE1_ALIGN2_1; SAMPLE1_FASTQ2_2 -> SAMPLE1_ALIGN2_2; SAMPLE1_ALIGN2_1 -> SAMPLE1_BAM_2; SAMPLE1_ALIGN2_2 -> SAMPLE1_BAM_2; SAMPLE1_BAM_2 -> SAMPLE1_BAM; }'}{scale=0.25}
 \end{frame}
+%%END(mergebams1)
 
 
+%%BEGIN(mergebams2)
 \begin{frame}[fragile]
 \centeredtitle{Merge the BAM files for one individual}
  \begin{lstlisting}[language=bash]
@@ -242,14 +267,20 @@ java -jar MergeSamFiles.jar \
    I=Sample1_pair2_sorted.bam 
  \end{lstlisting}
 \end{frame}
+%%END(mergebams2)
 
 
+%%BEGIN(titlebamindexing)
 \hugeslide{BAM Indexing}
+%%END(titlebamindexing)
+
 \hugeslide{BGZF}
 
+%%BEGIN(gatkrealign1)
 \hugeslide{IndelRealigner.\\Performs local realignment of reads based on misalignments due to the presence of indels.}
+%%END(gatkrealign1)
 
-
+%%BEGIN(gatkrealign2)
 \begin{frame}[fragile]
 \centeredtitle{RealignerTargetCreator}
 Determining (small) suspicious intervals which are likely in need of realignment.
@@ -263,7 +294,9 @@ java -jar GenomeAnalysisTK.jar  \
   --known:vcfinput,VCF Mills_and_1000G_gold_standard.indels.b37.vcf.gz
  \end{lstlisting}
 \end{frame}
+%%END(gatkrealign2)
 
+%%BEGIN(gatkrealign3)
 \begin{frame}[fragile]
 \centeredtitle{Call IndelRealigner}
  \begin{lstlisting}[language=bash,breaklines=true]
@@ -276,27 +309,39 @@ java -jar GenomeAnalysisTK.jar  \
    --knownAlleles:vcfinput,VCF Mills_and_1000G_gold_standard.indels.b37.vcf.gz
  \end{lstlisting}
 \end{frame}
+%%END(gatkrealign3)
 
+%%BEGIN(rmdup1)
 \hugeslide{Remove Duplicates}
+%%END(rmdup1)
 
+%%BEGIN(rmdup2)
 \begin{frame}[fragile]
-\remoteimage{jeter11.png}{http://www.clcbio.com/wp-content/uploads/2012/09/duplicate1_large.png}{scale=0.5}
+\remoteimage{jeter_gene2bio11.png}{http://www.clcbio.com/wp-content/uploads/2012/09/duplicate1_large.png}{scale=0.5}
 \end{frame}
+%%END(rmdup2)
 
 
+%%BEGIN(recal1)
 \hugeslide{Base Quality Score Recalibration}
+%%END(recal1)
 
+%%BEGIN(recal2)
 \begin{frame}[fragile]
 \begin{center}
 "The tools in this package recalibrate base quality scores of sequencing-by-synthesis reads in an aligned BAM file. After recalibration, the quality scores in the QUAL field in each read in the output BAM are more accurate in that the reported quality score is closer to its actual probability of mismatching the reference genome."
 \end{center}
 \end{frame}
+%%END(recal2)
 
-
+%%BEGIN(recal3)
 \begin{frame}[fragile]
-\remoteimage{jeter12.png}{http://cdn.vanillaforums.com/gatk.vanillaforums.com/FileUpload/d0/d306c3a2d28693598398b8c5443157.png}{scale=0.4}
+\remoteimage{jeter_gene2bio12.png}{http://cdn.vanillaforums.com/gatk.vanillaforums.com/FileUpload/d0/d306c3a2d28693598398b8c5443157.png}{scale=0.4}
 \end{frame}
+%%END(recal3)
 
+
+%%BEGIN(recal4)
 \begin{frame}[fragile]
 \centeredtitle{First pass of the base quality score recalibration}
  \begin{lstlisting}[language=bash]
@@ -314,7 +359,9 @@ java -jar GenomeAnalysisTK.jar  \
    -cov ContextCovariate
  \end{lstlisting}
 \end{frame}
+%%END(recal4)
 
+%%BEGIN(recal5)
 \begin{frame}[fragile]
 \centeredtitle{create a recalibrated BAM}
  \begin{lstlisting}[language=bash]
@@ -328,19 +375,24 @@ java -jar GenomeAnalysisTK.jar  \
    -l INFO
  \end{lstlisting}
 \end{frame}
+%%END(recal5)
 
-
+%%BEGIN(allelecallingtitle)
 \hugeslide{Allele Calling}
+%%END(allelecallingtitle)
 
 
+%%BEGIN(allelecalling1)
 \begin{frame}
 \graphviz{jeter7}{'digraph G{ SAMPLE1_FASTQ1_1 -> SAMPLE1_ALIGN1_1; SAMPLE1_FASTQ1_2 -> SAMPLE1_ALIGN1_2; SAMPLE1_ALIGN1_1 -> SAMPLE1_BAM_1; SAMPLE1_ALIGN1_2 -> SAMPLE1_BAM_1; SAMPLE1_BAM_1 -> SAMPLE1_BAM;   SAMPLE1_FASTQ2_1 -> SAMPLE1_ALIGN2_1; SAMPLE1_FASTQ2_2 -> SAMPLE1_ALIGN2_2; SAMPLE1_ALIGN2_1 -> SAMPLE1_BAM_2; SAMPLE1_ALIGN2_2 -> SAMPLE1_BAM_2; SAMPLE1_BAM_2 -> SAMPLE1_BAM; SAMPLE1_BAM -> VCF;  SAMPLE2_FASTQ1_1 -> SAMPLE2_ALIGN1_1; SAMPLE2_FASTQ1_2 -> SAMPLE2_ALIGN1_2; SAMPLE2_ALIGN1_1 -> SAMPLE2_BAM_1; SAMPLE2_ALIGN1_2 -> SAMPLE2_BAM_1; SAMPLE2_BAM_1 -> SAMPLE2_BAM;   SAMPLE2_FASTQ2_1 -> SAMPLE2_ALIGN2_1; SAMPLE2_FASTQ2_2 -> SAMPLE2_ALIGN2_2; SAMPLE2_ALIGN2_1 -> SAMPLE2_BAM_2; SAMPLE2_ALIGN2_2 -> SAMPLE2_BAM_2; SAMPLE2_BAM_2 -> SAMPLE2_BAM; SAMPLE2_BAM -> VCF;}'}{scale=0.12}
 \end{frame}
+%%END(allelecalling1)
 
-
-
+%%BEGIN(gatkunifiedgenotyper1)
 \hugeslide{Unified Genotyper}
+%%END(gatkunifiedgenotyper1)
 
+%%BEGIN(gatkunifiedgenotyper2)
 \begin{frame}[fragile]
 \centeredtitle{Run GATK UnifiedGenotyper}
 \begin{lstlisting}[language=bash]
@@ -354,9 +406,13 @@ java -jar GenomeAnalysisTK.jar  \
    -o Sample1_variations.gatk.vcf
 \end{lstlisting}
 \end{frame}
+%%END(gatkunifiedgenotyper2)
 
+%%BEGIN(mpileup1)
 \hugeslide{SAMTools mpileup}
+%%END(mpileup1)
 
+%%BEGIN(mpileup2)
 \begin{frame}[fragile]
 \centeredtitle{Run Samtools mpileup}
 \begin{lstlisting}[language=bash]
@@ -368,17 +424,27 @@ samtools  mpileup  -uD \
 bcftools view -vcg - |\
 \end{lstlisting}
 \end{frame}
+%%END(mpileup2)
 
+%%BEGIN(vcftitle)
 \hugeslide{VCF}
+%%END(vcftitle)
 
+%%BEGIN(vcfformat1)
 \begin{frame}[fragile]
-\remoteimage{jeter13.png}{http://bioinf.comav.upv.es/_images/vcf_format.png}{scale=0.2}
+\remoteimage{jeter_gene2bio13.png}{http://bioinf.comav.upv.es/_images/vcf_format.png}{scale=0.2}
 \end{frame}
+%%END(vcfformat1)
 
+%%BEGIN(annotations1)
 \hugeslide{Annotations}
+%%END(annotations1)
 
+%%BEGIN(snpefftitle01)
 \hugeslide{SnpEff}
+%%END(snpefftitle01)
 
+%%BEGIN(snpefftitle02)
 \begin{frame}[fragile]
 \begin{lstlisting}[language=bash]
 gunzip -c variations.vcf.gz |\
@@ -386,8 +452,9 @@ java -jar snpEff.jar eff \
    -i vcf -o vcf hg19
 \end{lstlisting}
 \end{frame}
+%%END(snpefftitle02)
 
-
+%%BEGIN(snpefftitle03)
 \begin{frame}[fragile]
 \begin{lstlisting}[breaklines=true]
 EFF=NON_SYNONYMOUS_CODING(MODERATE|MISSENSE|Gaa/Aaa|E/K|CDC25C|protein_coding|CODING|ENST00000514017|exon_5_137622186_137622319),
@@ -401,10 +468,14 @@ SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000514
 SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000534892|exon_5_137622186_137622319)
 \end{lstlisting}
 \end{frame}
+%%END(snpefftitle03)
 
-\remoteimage{jeter14.png}{http://www.berndtlab.pitt.edu/media/images/VEP.png}{}
 
+%%BEGIN(vep01)
+\remoteimage{jeter_gene2bio14.png}{http://www.berndtlab.pitt.edu/media/images/VEP.png}{}
+%%END(vep01)
 
+%%BEGIN(vep02)
 \begin{frame}[fragile]
 \begin{lstlisting}[breaklines=true]
 11_224088_C/A    11:224088   A  ENSG00000142082  ENST00000525319  Transcript         NON_SYNONYMOUS_CODING   742  716  239  T/N  aCc/aAc  -  SIFT=deleterious(0);PolyPhen=unknown(0)
@@ -414,17 +485,30 @@ SYNONYMOUS_CODING(LOW|SILENT|caG/caA|Q|CDC25C|protein_coding|CODING|ENST00000534
 22_16084370_G/A  22:16084370 A  -                ENSR00000615113  RegulatoryFeature  REGULATORY_REGION       -    -    -    -    -        -  -
 \end{lstlisting}
 \end{frame}
+%%END(vep02)
 
-
+%%BEGIN(customannottitles)
 \hugeslide{Custom annotations}
+%%END(customannottitles)
 
+%%BEGIN(customannot1KG)
 \hugeslide{1000 genomes}
+%%END(customannot1KG)
+
+%%BEGIN(customannotdbsnp)
 \hugeslide{dbsnp137}
+%%END(customannotdbsnp)
+
+%%BEGIN(customannotevs)
 \hugeslide{Exome Variant Server}
+%%END(customannotevs)
+
+%%BEGIN(customannotsegdup)
 \hugeslide{Segmental duplication}
+%%END(customannotsegdup)
 
 \begin{frame}
-\remoteimage{jeter100.jpg}{https://pbs.twimg.com/media/A9v2MKXCAAA8hmJ.jpg}{scale=0.4}
+\remoteimage{jeter_gene2bio100.jpg}{https://pbs.twimg.com/media/A9v2MKXCAAA8hmJ.jpg}{scale=0.4}
 \end{frame}
 
 

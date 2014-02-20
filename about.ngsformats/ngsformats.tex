@@ -22,7 +22,6 @@
 \end{center}
 }
 
-
 \newcommand{\graphviz}[3]{
 \IfFileExists{#1}{}{\immediate\write18{echo #2 | dot -o"#1.png" -Tpng}}
 \begin{center}
@@ -44,7 +43,7 @@
 
 
 \newcommand{\inkscape}[2]{
-\IfFileExists{jeter_svg_#1.png}{}{\immediate\write18{inkscape -z --export-png=jeter_svg_#1.png #1.svg}}
+\IfFileExists{jeter_svg_#1.png}{}{\immediate\write18{inkscape -z --export-png=jeter_svg_#1.png ../img/svg/#1.svg}}
 \begin{center}
 \includegraphics[#2]{jeter_svg_#1.png}
 \end{center}
@@ -81,28 +80,37 @@ Understand how people have solved their BIG data problems.
 \remoteimage{jeter04.jpg}{http://i.imgur.com/oB8O2lC.jpg}{scale=0.25}
 \end{frame}
 
+%%BEGIN(graphsample2var)
 \begin{frame} 
 \graphviz{jeterdot02}{'digraph G{Individual -> Variations ;}'}{scale=0.5}
 \end{frame}
+%%END(graphsample2var)
 
+%%BEGIN(graphsequencer2vcf)
 \begin{frame} 
 \graphviz{jeterdot01}{'digraph G{SEQUENCER -> FASTQ -> SAM -> BAM -> VCF ;}'}{scale=0.5}
 \end{frame}
+%%END(graphsequencer2vcf)
 
+%%BEGIN(gephigraph)
 \begin{frame}[fragile]
 \frametitle{Well, that's a little more complicated ...}
 \remoteimage{jeter05.jpg}{https://pbs.twimg.com/media/A9v2MKXCAAA8hmJ.jpg}{scale=0.3}
 \end{frame}
+%%END(gephigraph)
 
-
+%%BEGIN(titlefastq)
 \hugeslide{FASTQ} 
+%%END(titlefastq)
 
+%%BEGIN(deffastq)
 \begin{frame} 
 \frametitle{FASTQ}
 \begin{center}
 FASTQ:  text-based format for storing both a DNA sequence and its corresponding quality scores
 \end{center}
 \end{frame}
+%%END(deffastq)
 
 \begin{frame} 
 \frametitle{FASTQ}
@@ -247,16 +255,20 @@ aaatgagccaggtgtggtggtgcac          CCAGCTACGTAGTAGGCTGAGGTGGGAGGATCGCTTAAACCCGGC
 \end{frame}
 
 
-
+%%BEGIN(samtitle)
 \hugeslide{SAM}
+%%END(samtitle)
 
+%%BEGIN(samformat1)
 \begin{frame}[fragile]
 \frametitle{SAM Format}
 \begin{center}
 "SAM (Sequence Alignment/Map) format is a generic format for storing large nucleotide sequence alignments"
 \end{center}
 \end{frame}
+%%END(samformat1)
 
+%%BEGIN(samformat2)
 \begin{frame}[fragile]
 \frametitle{SAM Format}
 \begin{itemize}
@@ -267,11 +279,11 @@ aaatgagccaggtgtggtggtgcac          CCAGCTACGTAGTAGGCTGAGGTGGGAGGATCGCTTAAACCCGGC
 \item Allows the file to be indexed by genomic position to efficiently retrieve all reads aligning to a locus. 
 \end{itemize}
 \end{frame}
+%%END(samformat2)
 
 
 
-
-
+%%BEGIN(samformat3)
 \begin{frame}[fragile]
 \frametitle{SAM Format}
 \framesubtitle{Structure}
@@ -294,9 +306,10 @@ aaatgagccaggtgtggtggtgcac          CCAGCTACGTAGTAGGCTGAGGTGGGAGGATCGCTTAAACCCGGC
   - READ4 -> group2
   - (...)
 \end{verbatim}
-
 \end{frame}
+%%END(samformat3)
 
+%%BEGIN(samformatheader1)
 \hugeslide{SAM Header Section}
 
 \begin{frame}[fragile]
@@ -315,7 +328,9 @@ r001 83 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
 \end{verbatim}
 \end{framed}
 \end{frame}
+%%END(samformatheader1)
 
+%%BEGIN(samformatheader2)
 \begin{frame}[fragile]
 \frametitle{SAM Header}
 \begin{framed}\tiny
@@ -331,10 +346,14 @@ r001 83 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
 \end{verbatim}
 \end{framed}
 \end{frame}
+%%END(samformatheader2)
 
-
+%%BEGIN(titlesamalignsection)
 \hugeslide{SAM Alignment Section}
+%%END(titlesamalignsection)
 
+
+%%BEGIN(titlesamalignex1)
 \begin{frame}[fragile]
 \frametitle{SAM Example}
 \framesubtitle{Simple example}
@@ -363,15 +382,17 @@ IL31_4368:1:1:998:19914	141	*	0	0	*	*	0	0	GAATGAAAGCAGAGACCCTGATCGAGCCCCAGAAAGAT
 \end{verbatim}
 \end{framed}
 \end{frame}
+%%END(titlesamalignex1)
 
 
-
+%%BEGIN(titlesamalignex2)
 \begin{frame}[fragile]
 \frametitle{SAM Example}
 \framesubtitle{Sorted SAM}
 One row is one read, NOT one fragment.
 \begin{framed}\tiny
 \begin{verbatim}
+
 
 
 IL31_4368:1:107:15207:19097	163	chr1	17	0	54M	=	21	58	CCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAAC	EEECECA<?BE@?<B?DBBD=EBEEA=D<E=::;;@@D@;DD@A4>;8?=6>@C	XT:A:R	NM:i:0	SM:i:0	AM:i:0	X0:i:10	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:54
@@ -386,7 +407,10 @@ IL31_4368:1:54:13142:21400	83	chr1	44	0	54M	=	37	-61	AACCCTAACCCTAACCCTAACCCTAAC
 \end{verbatim}
 \end{framed}
 \end{frame}
+%%END(titlesamalignex2)
 
+
+%%BEGIN(samspec1)
 \begin{frame}[fragile]
 \frametitle{SAM Specifications}
 \framesubtitle{Record Column}
@@ -412,7 +436,10 @@ IL31_4368:1:54:13142:21400	83	chr1	44	0	54M	=	37	-61	AACCCTAACCCTAACCCTAACCCTAAC
 \end{tabular}
 \end{center}
 \end{frame}
+%%END(samspec1)
 
+
+%%BEGIN(samspec2)
 \begin{frame}[fragile]
 \frametitle{SAM Specifications}
 \framesubtitle{Record Column}
@@ -437,11 +464,11 @@ IL31_4368:1:54:13142:21400	83	chr1	44	0	54M	=	37	-61	AACCCTAACCCTAACCCTAACCCTAAC
 \end{tabular}
 \end{center}
 \end{frame}
+%%END(samspec2)
 
 
 
-
-
+%%BEGIN(samflags1)
 \begin{frame} 
 \frametitle{SAM FLAGS}
 $\square$ read paired.\\
@@ -456,21 +483,25 @@ $\square$ not primary alignment.\\
 $\square$ read fails platform/vendor quality checks.\\
 $\square$ read is PCR or optical duplicate
 \end{frame}
+%%END(samflags1)
 
 
-
+%%BEGIN(samflags2)
 \begin{frame}[fragile]
 \frametitle{SAM FLAGS}
 \remoteimage{jeter03.png}{https://upload.wikimedia.org/wikibooks/en/f/f5/Byte45.png}{scale=0.7}
 \end{frame}
+%%END(samflags2)
 
-
+%%BEGIN(samflags_all_svgs)
 
 \begin{frame} 
 \frametitle{SAM FLAGS}
 \framesubtitle{Read Paired}
 \inkscape{samflags0x1}{scale=0.35}
 \end{frame}
+
+
 
 \begin{frame} 
 \frametitle{SAM FLAGS}
@@ -535,9 +566,9 @@ $\square$ read is PCR or optical duplicate
 \framesubtitle{read is PCR or optical duplicate}
 \inkscape{samflags0x400}{scale=0.35}
 \end{frame}
+%%END(samflags_all_svgs)
 
-
-
+%%BEGIN(samcigar_all)
 \begin{frame} 
 \frametitle{SAM CIGAR}
 The CIGAR string is a sequence of of base lengths and the associated operation. They are used to indicate things like which bases align (either a match/mismatch) with the reference, are deleted from the reference, and are insertions that are not in the reference. 
@@ -591,7 +622,10 @@ or
 CIGAR: 3=1I3=1D2=1X2=
 \end{verbatim}
 \end{frame}
+%%END(samcigar_all)
 
+
+%%BEGIN(samopttags)
 
 \begin{frame}[fragile]
 \frametitle{SAM Fomat}
@@ -625,9 +659,10 @@ H &	hex string\\
 \end{itemize}
 \end{frame}
 
+%%END(samopttags)
 
 
-
+%%BEGIN(samsort)
 \begin{frame}[fragile]
 \frametitle{SAM Example}
 \framesubtitle{Sorted SAM}
@@ -646,25 +681,34 @@ IL31_4368:1:54:13142:21400	83	chr1	44	0	54M	=	37	-61	AACCCTAACCCTAACCCTAACCCTAAC
 \end{verbatim}
 \end{framed}
 \end{frame}
+%%END(samsort)
 
-
+%%BEGIN(bamtitle)
 \hugeslide{BAM}
+%%END(bamtitle)
 
+
+%%BEGIN(bgzfformat)
 \begin{frame} 
 \frametitle{BGZF Format}
 The SAM/BAM file format (Sequence Alignment/Map) comes in a plain text format (SAM), and a compressed binary format (BAM). The latter uses a
 modified form of gzip compression called BGZF (Blocked GNU Zip Format), which can be applied to any file format to provide compression with efficient random access
 \end{frame}
+%%END(bgzfformat)
 
-
+%%BEGIN(vcftitle)
 \hugeslide{VCF\\Variant Call Format}
+%%END(vcftitle)
 
+%%BEGIN(vcfformatdef)
 \begin{frame} 
 \frametitle{VCF Format}
 VCF is a text file format (most likely stored in a compressed manner). It contains meta-information lines, a header line, and then data lines each containing information about a position in the genome.
 \end{frame}
+%%END(vcfformatdef)
 
 
+%%BEGIN(vcfformatex1)
 \begin{frame}[fragile]
 \frametitle{VCF}
 \framesubtitle{Example}
@@ -694,7 +738,9 @@ VCF is a text file format (most likely stored in a compressed manner). It contai
 20     1234567 microsat1 GTCT   G,GTACT 50   PASS   NS=3;DP=9;AA=G                    GT:GQ:DP    0/1:35:4       0/2:17:2       1/1:40:3
 \end{lstlisting}
 \end{frame}
+%%END(vcfformatex1)
 
+%%BEGIN(vcfformatcolumns)
 \begin{frame}[fragile]
 \frametitle{VCF}
 \framesubtitle{Column}
@@ -715,8 +761,9 @@ VCF is a text file format (most likely stored in a compressed manner). It contai
 \end{itemize}
 (...)
 \end{frame}
+%%END(vcfformatcolumns)
 
-
+%%BEGIN(vcfformatinfo)
 \begin{frame}[fragile]
 \frametitle{VCF}
 \framesubtitle{INFO}
@@ -735,8 +782,9 @@ INFO                              FORMAT      NA00001        NA00002        NA00
 20     17330   .         T      A       3    q10    %\color{red}{NS=3}%;DP=11;AF=0.017               GT:GQ:DP:HQ 0|0:49:3:58,50 0|1:3:5:65,3   0/0:41:3
 \end{lstlisting}
 \end{frame}
+%%END(vcfformatinfo)
 
-
+%%BEGIN(vcfformatfilter)
 \begin{frame}[fragile]
 \frametitle{VCF}
 \framesubtitle{FILTERs}
@@ -756,8 +804,9 @@ FILTERs that have been applied to the data should be described as follows:
 20     1110696 rs6040355 A      G,T     67   PASS   NS=2;DP=10;AF=0.333,0.667;AA=T;DB GT:GQ:DP:HQ 1|2:21:6:23,27 2|1:2:0:18,2   2/2:35:4
 \end{lstlisting}
 \end{frame}
+%%END(vcfformatfilter)
 
-
+%%BEGIN(vcfformatFORMAT)
 \begin{frame}[fragile]
 \frametitle{VCF}
 \framesubtitle{FORMAT}
@@ -778,8 +827,11 @@ Genotype fields specified in the FORMAT field should be described as follows:
 20     1234567 microsat1 GTCT   G,GTACT 50   PASS   NS=3;DP=9;AA=G                    %\color{red}{GT}%:GQ:DP    0/1:35:4       %\color{red}{0/2}%:17:2       1/1:40:3
 \end{lstlisting}
 \end{frame}
+%%END(vcfformatFORMAT)
 
+%%BEGIN(tabixtitle)
 \hugeslide{Tabix}
+%%END(tabixtitle)
 
 \begin{frame} 
 \frametitle{Binning}

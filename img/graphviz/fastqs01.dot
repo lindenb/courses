@@ -1,0 +1,21 @@
+digraph G{
+fastq1[label="part.0001.fastq"];
+fastq2[label="part.0002.fastq"];
+fastq3[label="part.0003.fastq"];
+fastq4[label="part.0004.fastq"];
+bam1[label="part.0001.bam"];
+bam2[label="part.0002.bam"];
+bam3[label="part.0003.bam"];
+bam4[label="part.0004.bam"];
+merged[label="merged.bam"];
+
+fastq1 -> bam1;
+fastq2 -> bam2;
+fastq3 -> bam3;
+fastq4 -> bam4;
+
+bam1-> merged;
+bam2-> merged;
+bam3-> merged;
+bam4-> merged;
+}

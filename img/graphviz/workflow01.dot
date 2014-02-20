@@ -1,0 +1,14 @@
+digraph G{
+align1[label="bwa aln"];
+align2[label="bwa sampe"];
+align3[label="bwa mem"];
+Reads -> cutadatpt;
+cutadatpt -> align1 -> align2;
+cutadatpt -> align3;
+align2 -> markdup;
+align3 -> markdup;
+markdup -> realign; 
+realign -> recalibrate;
+recalibrate -> calling;
+calling -> annotation;
+}

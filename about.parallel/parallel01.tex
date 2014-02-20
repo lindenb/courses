@@ -2056,6 +2056,15 @@ samtools index examples/sorted_ex1f-rmdupse.bam
 samtools index examples/sorted_toy.ba
 \end{lstlisting}
 
+\section{Examples}
+Executing a Picard program for a set of BAMs
+
+\begin{lstlisting}
+$ find -name "*.bam" |\
+   parallel java -jar MeanQualityByCycle.jar \
+   I={} CHART={.}.pdf O={.}.out R=ref.fasta AS=true
+\end{lstlisting}
+
 \section{References}
 \begin{itemize}
 \item O. Tange (2011): GNU Parallel - The Command-Line Power Tool, ;login: The USENIX Magazine, February 2011:42-47.

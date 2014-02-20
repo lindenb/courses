@@ -207,6 +207,11 @@ $ git pull parent master
 \end{lstlisting}
 
 
+How do I edit an incorrect commit message in Git? ( http://stackoverflow.com/questions/179123 )
+\begin{lstlisting}
+git commit --amend -m "New commit message"
+\end{lstlisting}
+
 \section{Javascript}
 \paragraph{Mozilla/Xul interpreter:}
 \begin{lstlisting}
@@ -219,7 +224,7 @@ usage: xpcshell [-g gredir] [-r manifest]... [-PsSwWxCij] [-v version] [-f scrip
 %%\url{http://dev.eclipse.org/viewcvs/viewvc.cgi/org.eclipse.emf/org.eclipse.emf/plugins/org.eclipse.emf.ecore/model/Ecore.xsd?view=co\&root=Modeling_Project} .
 
 \section{Apache2}
-%allowing public_html:
+\subsection{allow public\_html}
 %via: http://kimbriggs.com/computers/computer-notes/linux-notes/apache2-public_html-virtual-directories.file
 
 \begin{lstlisting}
@@ -239,6 +244,49 @@ and append:
 Options ExecCGI
 SetHandler cgi-script
 </Directory>
+\end{lstlisting}
+
+\section{Mediawiki}
+\subsection{use a SQLITE engine in public\_html}
+\begin{lstlisting}
+sudo nano /etc/apache2/mods-available/php5.conf
+\end{lstlisting}
+and comment out a line php_admin_value engine Off
+
+\begin{lstlisting}
+$ sudo apt-get install php5-sqlite
+$ cd ~/public_html//mediawiki-1.22.0
+$ mkdir data
+$ php maintenance/install.php \
+	--dbtype sqlite \
+	--dbpath ~/public_html/mediawiki-1.22.0/data \
+	--pass mypassword \
+	lindenb lindenb
+\end{lstlisting}
+
+edit LocalSettings.php
+
+change
+\begin{lstlisting}
+$wgScriptPath = "/wiki";
+$wgLogo             = "/wiki/skins/common/images/wiki.png";
+\end{lstlisting}
+to
+\begin{lstlisting}
+$wgScriptPath = "/~lindenb/mediawiki-1.22.0/wiki";
+$wgLogo             = "/~lindenb/mediawiki-1.22.0/wiki/skins/common/images/wiki.png";
+\end{lstlisting}
+
+
+allow redwrite  for CSS:
+\begin{lstlisting}
+$ sudo ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
+$ sudo /etc/init.d/apache2 restart
+\subsection{Show errors}
+edit LocalSettings.php and add
+\begin{lstlisting}
+error_reporting( -1 );
+ini_set( 'display_errors', 1 );
 \end{lstlisting}
 
 

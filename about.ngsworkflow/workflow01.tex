@@ -112,6 +112,8 @@
 \grabpartgenetobio{refgenome}
 \grabpartgenetobio{refgenomeused}
 \grabpartgenetobio{refgenomeindex}
+\hugeslide{GRCH38}
+
 
 \grabpartgenetobio{bwatitle}
 \grabpartgenetobio{bwaaln1}
@@ -136,7 +138,11 @@
 \grabpartformats{samflags_all_svgs}
 \grabpartformats{samcigar_all}
 \grabpartformats{samopttags}
+
+\hugeslide{Sorting}
 \grabpartformats{samsort}
+
+
 \grabpartgenetobio{bamtitle}
 \grabpartformats{bgzfformat}
 
@@ -151,6 +157,16 @@
 \grabpartgenetobio{rmdup1}
 \grabpartgenetobio{rmdup2}
 \grabpartgenetobio{gatkrealign1}
+\begin{frame}[fragile]
+\centeredtitle{Fix Indels for Samtools mpileup}
+\begin{lstlisting}
+REF    ATGCAAAAAAAAAAAAATGC
+READ1    GCA-AAAAAAAAAAATG
+READ2    GCAA-AAAAAAAAAATG
+READ3    GCAAA-AAAAAAAAATG
+\end{lstlisting}
+\end{frame}
+
 \grabpartgenetobio{gatkrealign2}
 \grabpartgenetobio{gatkrealign3}
 
@@ -159,13 +175,50 @@
 \grabpartgenetobio{recal3}
 \grabpartgenetobio{recal4}
 \grabpartgenetobio{recal5}
+
+
 \grabpartgenetobio{allelecallingtitle}
+
+
+%%BEGIN(vcfformat1)
+\begin{frame}[fragile]
+\remoteimage{jeter_tview.png}{http://samtools.sourceforge.net/images/seq2-156.png}{scale=0.5}
+\end{frame}
+%%END(vcfformat1)
+
+\begin{frame} 
+\frametitle{Calling}
+\graphviz{jeterdotcalling}{'digraph G{BAM->Caller;REF->Caller;Caller->VCF;}'}{scale=0.5}
+\end{frame}
+
+\begin{frame}
+\graphviz{jetervcfuni}{'digraph G{ SAMPLE1_FASTQ1_1 -> SAMPLE1_ALIGN1_1; SAMPLE1_FASTQ1_2 -> SAMPLE1_ALIGN1_2; SAMPLE1_ALIGN1_1 -> SAMPLE1_BAM_1; SAMPLE1_ALIGN1_2 -> SAMPLE1_BAM_1; SAMPLE1_BAM_1 -> SAMPLE1_BAM;   SAMPLE1_FASTQ2_1 -> SAMPLE1_ALIGN2_1; SAMPLE1_FASTQ2_2 -> SAMPLE1_ALIGN2_2; SAMPLE1_ALIGN2_1 -> SAMPLE1_BAM_2; SAMPLE1_ALIGN2_2 -> SAMPLE1_BAM_2; SAMPLE1_BAM_2 -> SAMPLE1_BAM; SAMPLE1_BAM -> VCF1;  SAMPLE2_FASTQ1_1 -> SAMPLE2_ALIGN1_1; SAMPLE2_FASTQ1_2 -> SAMPLE2_ALIGN1_2; SAMPLE2_ALIGN1_1 -> SAMPLE2_BAM_1; SAMPLE2_ALIGN1_2 -> SAMPLE2_BAM_1; SAMPLE2_BAM_1 -> SAMPLE2_BAM;   SAMPLE2_FASTQ2_1 -> SAMPLE2_ALIGN2_1; SAMPLE2_FASTQ2_2 -> SAMPLE2_ALIGN2_2; SAMPLE2_ALIGN2_1 -> SAMPLE2_BAM_2; SAMPLE2_ALIGN2_2 -> SAMPLE2_BAM_2; SAMPLE2_BAM_2 -> SAMPLE2_BAM; SAMPLE2_BAM -> VCF2;}'}{scale=0.12}
+\end{frame}
+
 \grabpartgenetobio{allelecalling1}
 \grabpartgenetobio{gatkunifiedgenotyper1}
 \grabpartgenetobio{gatkunifiedgenotyper2}
 \grabpartgenetobio{mpileup1}
 \grabpartgenetobio{mpileup2}
 
+\begin{frame}[fragile]
+\centeredtitle{Fix Indels for Samtools mpileup}
+\begin{lstlisting}
+chr1	20	ATATATATATG / ATATATATATGC
+\end{lstlisting}
+
+\begin{lstlisting}
+chr1	30	G/GC
+\end{lstlisting}
+
+\end{frame}
+
+\hugeslide{GATK HapCaller}
+\hugeslide{Freebayes}
+\hugeslide{Varscan2}
+
+\grabpartgenetobio{vcftitle}
+\grabpartgenetobio{vcfformat1}
 \grabpartformats{vcftitle}
 \grabpartformats{vcfformatdef}
 \grabpartformats{vcfformatex1}
@@ -176,19 +229,27 @@
 \grabpartformats{tabixtitle}
 
 
-\grabpartgenetobio{vcftitle}
-\grabpartgenetobio{vcfformat1}
+
 \grabpartgenetobio{annotations1}
+
+
+
+
 \grabpartgenetobio{snpefftitle01}
 \grabpartgenetobio{snpefftitle02}
 \grabpartgenetobio{snpefftitle03}
-
+\hugeslide{VEP (Ensembl)}
 \grabpartgenetobio{vep02}
 \grabpartgenetobio{customannottitles}
+\hugeslide{Restiction sites}
+\hugeslide{Jaspar}
+\hugeslide{Poly-X}
 \grabpartgenetobio{customannot1KG}
 \grabpartgenetobio{customannotdbsnp}
 \grabpartgenetobio{customannotevs}
 \grabpartgenetobio{customannotsegdup}
+\hugeslide{Score GERP}
+\hugeslide{Gatk variant filtration}
 
 
 \grabpartformats{gephigraph}

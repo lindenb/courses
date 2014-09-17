@@ -88,7 +88,7 @@ Understand how people have solved their BIG data problems.
 
 %%BEGIN(graphsequencer2vcf)
 \begin{frame} 
-\graphviz{jeterdot01}{'digraph G{SEQUENCER -> FASTQ -> SAM -> BAM -> VCF ;}'}{scale=0.5}
+\graphviz{jeterdot01}{'digraph G{SEQUENCER -> FASTQ -> SAM -> BAM -> VCF ;REFERENCE->SAM;}'}{scale=0.5}
 \end{frame}
 %%END(graphsequencer2vcf)
 
@@ -481,7 +481,8 @@ $\square$ first in pair.\\
 $\square$ second in pair.\\
 $\square$ not primary alignment.\\
 $\square$ read fails platform/vendor quality checks.\\
-$\square$ read is PCR or optical duplicate
+$\square$ read is PCR or optical duplicate.\\
+$\square$ supplementary alignment
 \end{frame}
 %%END(samflags1)
 
@@ -507,6 +508,12 @@ $\square$ read is PCR or optical duplicate
 \frametitle{SAM FLAGS}
 \framesubtitle{Read mapped in proper pair}
 \inkscape{samflags0x2}{scale=0.35}
+\end{frame}
+
+
+\begin{frame} 
+\frametitle{Read mapped in proper pair}
+\inkscape{bwamemsampe}{scale=0.35}
 \end{frame}
 
 \begin{frame} 
@@ -566,6 +573,13 @@ $\square$ read is PCR or optical duplicate
 \framesubtitle{read is PCR or optical duplicate}
 \inkscape{samflags0x400}{scale=0.35}
 \end{frame}
+
+\begin{frame} 
+\frametitle{SAM FLAGS}
+\framesubtitle{supplementary alignment}
+\inkscape{samflags0x800}{scale=0.35}
+\end{frame}
+
 %%END(samflags_all_svgs)
 
 %%BEGIN(samcigar_all)
@@ -595,6 +609,8 @@ The CIGAR string is a sequence of of base lengths and the associated operation. 
   \end{center}
 \end{frame}
 
+
+
 \begin{frame} [fragile]
 \frametitle{SAM Cigar}
 \url{http://genome.sph.umich.edu/wiki/SAM}
@@ -622,6 +638,24 @@ or
 CIGAR: 3=1I3=1D2=1X2=
 \end{verbatim}
 \end{frame}
+
+
+
+\begin{frame} 
+\frametitle{SAM Cigar}
+\framesubtitle{Soft Clip}
+\inkscape{softclip}{scale=0.35}
+\end{frame}
+
+
+\begin{frame} 
+\frametitle{SAM Cigar}
+\framesubtitle{Hard Clip}
+\inkscape{hardclip}{scale=0.35}
+\end{frame}
+
+
+
 %%END(samcigar_all)
 
 
@@ -695,6 +729,17 @@ The SAM/BAM file format (Sequence Alignment/Map) comes in a plain text format (S
 modified form of gzip compression called BGZF (Blocked GNU Zip Format), which can be applied to any file format to provide compression with efficient random access
 \end{frame}
 %%END(bgzfformat)
+
+
+\begin{frame} 
+\frametitle{BAM INDEX}
+\inkscape{bgzipbam}{scale=0.35}
+\end{frame}
+
+
+%%BEGIN(vcftitle)
+\hugeslide{CRAM}
+%%END(vcftitle)
 
 %%BEGIN(vcftitle)
 \hugeslide{VCF\\Variant Call Format}
@@ -836,6 +881,12 @@ Genotype fields specified in the FORMAT field should be described as follows:
 \begin{frame} 
 \frametitle{Binning}
 \remoteimage{jeter02.gif}{http://genome.cshlp.org/content/12/6/996/F7.medium.gif}{scale=0.7}
+\end{frame}
+
+
+\begin{frame} 
+\frametitle{Tabix INDEX}
+\inkscape{tabixvcf}{scale=0.35}
 \end{frame}
 
 \begin{frame}[fragile]

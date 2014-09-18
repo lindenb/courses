@@ -335,6 +335,15 @@ The output provided by the E-Utilities is in XML format\\
 \end{center}
 \end{frame}
 
+
+\begin{frame}
+\frametitle{Entrez Direct}
+\begin{center}
+\url{http://www.ncbi.nlm.nih.gov/books/NBK179288/}
+"Entrez Direct (EDirect) is an advanced method for accessing the NCBI's set of interconnected databases (publication, sequence, structure, gene, variation, expression, etc.) from a UNIX terminal window. Functions take search terms from command-line arguments. Individual operations are combined to build multi-step queries. Record retrieval and formatting normally complete the process."
+\end{center}
+\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% EINFO
@@ -1786,6 +1795,30 @@ VAKRKMLGNIKFIGELGKLGIVSETILHRCILQLLEKKRRRRSRGDTAEDIECLCQIMRTCGRILDSDKGRGLMDQYFKR
       <Hsp_midline>++P +    +++ +DI+    E+ W P S  +R A   +        S+   +FR+VR ILNKLTP+ F +L   +  + ++++  LKGVI LIFEKA+ EP +S  YA +C+ L         K    E       F  LLL++C+ EFE      E FE +    DE    EE         E
  R +A+R+ LGNIKFIGEL KL +++E I+H C+++LL        +    E +ECLC+++ T G+ LD +K +  MDQYF +M  + + +    RI+FML+DV++LR   WVPR+    +GP  I+QI  + E</Hsp_midline>
     </Hsp>
+(...)
+\end{lstlisting}
+\end{frame}
+
+
+\hugeslide{NCBI URL-API Blast}
+
+\begin{frame}[fragile]
+\frametitle{NCBI URL-API Blast}
+
+http://www.ncbi.nlm.nih.gov/blast/Doc/urlapi.html
+
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+$ curl "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD=Put&QUERY=PAERLMERKADIE&DATABASE=nr&PROGRAM=blastp&FILTER=L&HITLIST_SZE=500"
+\end{lstlisting}
+\begin{lstlisting}[language=html,breaklines=false]
+(...)
+ 
+<!--QBlastInfoBegin
+    RID = 1NRYGX9K014
+    RTOE = 29
+QBlastInfoEnd
+-->
+
 (...)
 \end{lstlisting}
 \end{frame}

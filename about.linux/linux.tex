@@ -24,6 +24,25 @@
 \end{figure}
 \end{frame}
 
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{The terminal}\\
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{The shell: BASH is running}\\
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{Unix keeps files arranged in a hierarchical structure}\\
+  \end{center}
+\end{frame}
+
+
 \begin{frame}
 \begin{figure}
 \includegraphics[scale=.23]{linux02.ps}
@@ -93,6 +112,13 @@ Go to my previous directory
 $ cd /
 \end{lstlisting}
 
+\end{frame}
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{Completion}\\
+  \end{center}
 \end{frame}
 
 
@@ -169,6 +195,10 @@ $ cd my\ results
 \end{lstlisting}
   
 \end{frame}
+
+
+
+
 
 \begin{frame}[fragile]
  \begin{center}
@@ -248,6 +278,25 @@ $ ls -la /home/
 \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{stdin, stderr, stdout}\\
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{Redirection}\\
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{Pipe}\\
+  \end{center}
+\end{frame}
 
 \begin{frame}[fragile]
  \begin{center}
@@ -559,6 +608,43 @@ $  curl "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/ALL.wgs.phase
 
 \begin{frame}[fragile]
  \begin{center}
+    \huge{R}\\
+    \end{center}
+\begin{lstlisting}
+SampleID	Dye	Concentration1l	Concentration2	rapp	Qt	AS	Vol
+E1-4	Cy5	3,52	203,79	2,25	6,1	17,3	4,05
+E1-5	Cy3	3,14	174,16	2,22	5,2	18	4,74
+E2-4	Cy3	1,64	101,18	2,25	3	16,2	8,15
+E2-5	Cy3	3,41	213,74	2,26	6,4	16	3,86
+E3-4	Cy3	3,11	184,15	2,22	5,5	16,9	4,48
+E3-5	Cy5	3,58	189,31	2,24	5,7	18,9	4,36
+mean(samples$Concentration2)
+\end{lstlisting}
+\begin{lstlisting}[language=R]
+    samples <- read.table("samples2.txt",
+    	dec=",",
+    	header=TRUE)
+mean(samples$Concentration2)
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{bash Scripting}\\
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{chmod+x and shebang}\\
+  \end{center}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+ \begin{center}
     \huge{bash script}\\
     \end{center}
 \begin{lstlisting}[language=bash]
@@ -568,6 +654,69 @@ echo "World" > world.txt
 cat hello.txt world.txt > hellodworld.txt
 \end{lstlisting}
 \end{frame}
+
+
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{make}\\
+    \end{center}
+\begin{lstlisting}[language=bash]
+#!/bin/bash 
+function quit {
+   exit
+}  
+function e {
+    echo $1 
+}  
+e Hello
+e World
+quit
+echo foo 
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{Simple math}\\
+    \end{center}
+\begin{lstlisting}[language=bash]
+echo $((1+1)) 
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{Simple math}\\
+    \end{center}
+\begin{lstlisting}[language=bash]
+#!/bin/bash
+for i in 1 2 3 4 5 6; do
+    echo item: $i
+done
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{While read}\\
+    \end{center}
+\begin{lstlisting}[language=bash]
+#!/bin/bash
+cat file.txt | while read L; do
+    echo $L
+done
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{Make Scripting}\\
+  \end{center}
+\end{frame}
+
 
 \begin{frame}[fragile]
  \begin{center}
@@ -588,6 +737,10 @@ clean:
 \end{frame}
 
 
+\begin{frame}[fragile]
+See  also: 
+http://korflab.ucdavis.edu/Unix\_and\_Perl/current.html
+\end{frame}
 
 \end{document}
 

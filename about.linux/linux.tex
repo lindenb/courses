@@ -4,7 +4,7 @@
 \usepackage{graphicx}
 
 \usepackage{listings}
-\lstset{frame=single,backgroundcolor=\color{lightgray}}
+\lstset{frame=single,backgroundcolor=\color{lightgray},breaklines=true}
 \usetheme{Warsaw}
 
   \title{Introduction to Linux}
@@ -461,8 +461,15 @@ $ cut -c1-10 file1
     \huge{sort}\\
     \end{center}
 \begin{lstlisting}[language=bash]
-
+$ sort file 
 \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{nano}\\
+    \end{center}
 \end{frame}
 
 
@@ -471,7 +478,9 @@ $ cut -c1-10 file1
     \huge{uniq}\\
     \end{center}
 \begin{lstlisting}[language=bash]
-
+$ sort file | uniq
+$ sort file | uniq -u
+$ sort file | uniq -d
 \end{lstlisting}
 \end{frame}
 
@@ -481,7 +490,7 @@ $ cut -c1-10 file1
     \huge{wc}\\
     \end{center}
 \begin{lstlisting}[language=bash]
-
+$ wc file
 \end{lstlisting}
 \end{frame}
 
@@ -588,7 +597,7 @@ $ paste file1 file2 file3 file4
  \begin{center}
     \huge{curl}\\
     \end{center}
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[language=bash,breaklines=true]
 $  curl "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/ALL.wgs.phase1_release_v3.20101123.snps_indels_sv.sites.vcf.gz" |\
    gunzip -c | head
    
@@ -602,6 +611,76 @@ $  curl "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/ALL.wgs.phase
 ##INFO=<ID=CIPOS,Number=2,Type=Integer,Description="Confidence interval around POS for imprecise variants">
 ##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the variant described in this record">
 ##INFO=<ID=HOMLEN,Number=.,Type=Integer,Description="Length of base pair identical micro-homology at event breakpoints">
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{curl + NCBI}\\
+    \end{center}
+\begin{lstlisting}[language=bash]
+$ curl -sg 'http://www.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=watson[AU]+crick[AU]+1953[Date+-+Publication]'  
+<?xml version="1.0" encoding="UTF-8"?>
+<eSearchResult>
+  <Count>3</Count>
+  <RetMax>3</RetMax>
+  <RetStart>0</RetStart>
+  <IdList>
+    <Id>13063483</Id>
+    <Id>13054692</Id>
+    <Id>13168976</Id>
+  </IdList>
+ \end{lstlisting}
+\end{frame} 
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{curl + NCBI}\\
+    \end{center}
+\begin{lstlisting}[language=bash,breaklines=true]
+$ curl -sg 'http://www.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=13063483,13054692,13168976&retmode=xml' |\
+grep ArticleTitle
+
+<ArticleTitle>Genetical implications of the structure of deoxyribonucleic acid.</ArticleTitle>
+<ArticleTitle>Molecular structure of nucleic acids; a structure for deoxyribose nucleic acid.</ArticleTitle>
+<ArticleTitle>The structure of DNA.</ArticleTitle>
+ \end{lstlisting}
+\end{frame} 
+
+\begin{frame}[fragile]
+\begin{center}
+    \huge{sqlite3}\\
+    \end{center}
+\begin{lstlisting}[language=bash]  
+$ sqlite3 test.sqlite3
+SQLite version 3.7.9 2011-11-01 00:52:41
+Enter ".help" for instructions
+Enter SQL statements terminated with a ";"
+sqlite> create table Person(name text);
+sqlite> insert into Person(name) values('Pierre');
+sqlite> insert into Person(name) values('Paul');
+sqlite> insert into Person(name) values('Jacques');
+sqlite> select name from Person;
+Pierre
+Paul
+Jacques
+\end{lstlisting}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+\begin{center}
+    \huge{mysql}\\
+    \end{center}
+\begin{lstlisting}[language=bash,breaklines=true]  
+$ mysql --user=genome --host=genome-mysql.cse.ucsc.edu -D hg19 -e 'select chrom,chromStart,chromEnd,Observed from snp141 where name="rs25"'
++-------+------------+----------+----------+
+| chrom | chromStart | chromEnd | Observed |
++-------+------------+----------+----------+
+| chr7  |   11584141 | 11584142 | A/G      |
++-------+------------+----------+----------+
 \end{lstlisting}
 \end{frame}
 
@@ -626,6 +705,18 @@ mean(samples$Concentration2)
     	header=TRUE)
 mean(samples$Concentration2)
 \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{Install a program}\\
+  \end{center}
+\begin{lstlisting}[language=bash]
+curl -kL -o bwa-0.7.12.zip -L "https://github.com/lh3/bwa/archive/0.7.12.zip"
+unzip bwa-0.7.12.zip
+make -C bwa-0.7.12/
+\end{lstlisting}  
 \end{frame}
 
 

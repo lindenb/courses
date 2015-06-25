@@ -8,7 +8,7 @@
 \usetheme{Warsaw}
 
   \title{Introduction to Linux}
-  \author{Pierre Lindenbaum\\@yokofakun\\http://plindenbaum.blogspot.com}\institute{Institut du Thorax. Nantes. France}
+  \author{\href{https://twitter.com/yokofakun}{@yokofakun}\\\url{http://plindenbaum.blogspot.com}\\UMR 1087 - Institut du Thorax. Nantes. France}
 
 \begin{document}
 
@@ -289,6 +289,39 @@ $ ls -la /home/
  \begin{center}
     \huge{Redirection}\\
   \end{center}
+\begin{lstlisting}[language=bash]
+$ echo "Hello" > file1.txt
+$ echo "Hello" > file1.txt
+$ echo "Hello" > file1.txt
+$ cat file1.txt 
+Hello
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash]
+$ echo "Hello" >> file2.txt
+$ echo "Hello" >> file2.txt
+$ echo "Hello" >> file2.txt
+$ cat file2.txt 
+Hello
+Hello
+Hello
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{Reading}\\
+  \end{center}
+\begin{lstlisting}[language=bash]
+$ grep Hello << BARBAPAPA
+> Hello
+> Hello
+> world
+> BARBAPAPA
+Hello
+Hello
+\end{lstlisting}
 \end{frame}
 
 
@@ -296,6 +329,18 @@ $ ls -la /home/
  \begin{center}
     \huge{Pipe}\\
   \end{center}
+\begin{lstlisting}[language=bash]
+$ gunzip -c input.vcf.gz | grep -v '#' | cut -f 1,2,3 | tr "\t" "." | sed 's/chr//' | sort -t '.'  -k2,2rn | uniq  | cat -n
+
+     1	1.871334.rs4072383
+     2	1.870903.rs13303094
+     3	1.866511.rs71576583
+     4	1.866319.rs9988021
+     5	1.861630.rs2879816
+     6	1.861008.rs28521172
+     7	1.762273.rs3115849
+
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -649,6 +694,55 @@ grep ArticleTitle
 \end{frame} 
 
 \begin{frame}[fragile]
+ \begin{center}
+    \huge{script}\\
+    \end{center}
+\begin{lstlisting}[language=bash,breaklines=true]
+$ script myfile.txt
+Script started, file is myfile.txt
+$ echo "Hello"
+Hello
+$ exit
+Script done, file is myfile.txt
+$ cat myfile.txt 
+
+> Script started on Thu 25 Jun 2015 11:50:43 AM CEST
+> $ echo "Hello"
+> Hello
+> $ exit
+> Script done on Thu 25 Jun 2015 11:50:52 AM CEST
+
+ \end{lstlisting}
+\end{frame} 
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{bc}\\
+  \end{center}
+\begin{lstlisting}[language=bash]
+$ echo "(13.3*2)/2.3" | bc
+11
+$ echo "(13.3*2)/2.3" | bc -l
+11.56521739130434782608
+\end{lstlisting}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{chown/chmod/chgrp}\\
+    \end{center}
+\begin{lstlisting}[language=bash,breaklines=true]
+chown pierre file.txt
+chgrp bioinformatics file.txt
+chmod u+rw file.txt
+chmod g+r file.txt
+\end{lstlisting}
+\end{frame} 
+
+\begin{frame}[fragile]
 \begin{center}
     \huge{sqlite3}\\
     \end{center}
@@ -707,6 +801,53 @@ mean(samples$Concentration2)
 \end{lstlisting}
 \end{frame}
 
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{'git'}\\
+    \end{center}
+\begin{lstlisting}[basicstyle=\tiny]
+mkdir test
+cd test
+git init
+Initialized empty Git repository in test/.git/
+$ git add  file.txt
+$ git commit -m "Added one file"
+[master (root-commit) 4954d33] Added one file
+$ echo "World" >> file.txt
+$ git diff
+diff --git a/file.txt b/file.txt
+@@ -1 +1,2 @@
+ Hello
++World
+$ git add  file.txt
+$ git commit -m "added hello"
+$ git log file.txt
+(...)
+$ git rm file.txt
+$ git checkout file.txt
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{'LaTeX'}\\
+  \end{center}
+\begin{verbatim}
+\documentclass{article}
+\title{My Thesis}
+\author{Pierre}
+\date{September 2015}
+\begin{document}
+   \maketitle
+   Hello world!
+\end{document}
+\end{verbatim}
+
+\begin{lstlisting}[language=bash]
+pdflatex input.tex
+\end{lstlisting}  
+\end{frame}
 
 \begin{frame}[fragile]
  \begin{center}
@@ -830,7 +971,12 @@ clean:
 
 \begin{frame}[fragile]
 See  also: 
-http://korflab.ucdavis.edu/Unix\_and\_Perl/current.html
+\begin{itemize}
+\item \url{http://korflab.ucdavis.edu/Unix\_and\_Perl/current.html}
+\item \url{http://unix.stackexchange.com/}
+\item \url{http://stackoverflow.com/}
+\item \url{https://www.biostars.org/}
+\end{itemize}
 \end{frame}
 
 \end{document}

@@ -549,6 +549,20 @@ awk -F '	' '($1=="chr1" && int($2)>10 && int($2)<100)' file.vcf
 \end{lstlisting}
 \end{frame}
 
+
+\begin{frame}[fragile]
+ \begin{center}
+    \huge{awk for printing}\\
+    \end{center}
+\begin{lstlisting}[language=bash]
+$ echo -e "chr1\t20\t30\nchr1\t10\t20" |\
+   awk -F'\t' '{printf("%s:%s-%d\n",$1,$2 -1 ,$3 + 4);}'
+  
+chr1:19-34
+chr1:9-24
+\end{lstlisting}
+\end{frame}
+
 \begin{frame}[fragile]
  \begin{center}
     \huge{join}\\

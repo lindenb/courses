@@ -77,6 +77,7 @@ What will be covered today? :
 \frametitle{CURL}
 \begin{lstlisting}[language=bash]
 curl "http://en.wikipedia.org/wiki/Main_page"
+wget -O - "http://en.wikipedia.org/wiki/Main_page"
 \end{lstlisting}
 \end{frame}
 
@@ -91,6 +92,11 @@ curl "http://en.wikipedia.org/wiki/Main_page"
 \remoteimage{jeter03.png}{https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/XSLT_en.svg/231px-XSLT_en.svg.png}{scale=0.4}
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{XSLT}
+\remoteimage{jeter03.png}{https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/XSLT_en.svg/231px-XSLT_en.svg.png}{scale=0.4}
+\end{frame}
+
 
 \begin{frame}[fragile]
 \frametitle{XSLTPROC}
@@ -98,6 +104,12 @@ curl "http://en.wikipedia.org/wiki/Main_page"
 xsltproc stylesheet.xsl file.xml > result.xml
 \end{lstlisting}
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{JSON}
+\remoteimage{jeter05.png}{http://bioinfo.lifl.fr/norine/ws/images/id_json.png}{scale=0.4}
+\end{frame}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -110,7 +122,7 @@ xsltproc stylesheet.xsl file.xml > result.xml
 \begin{frame}[fragile]
 \frametitle{Formats}
 \framesubtitle{Genbank}
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=25&rettype=gb}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=25&rettype=gb}
 \begin{lstlisting}[basicstyle=\tiny,breaklines=false]
 LOCUS       X53813                   422 bp    DNA     linear   MAM 22-JUN-1992
 DEFINITION  Blue Whale heavy satellite DNA.
@@ -153,7 +165,7 @@ ORIGIN
 \end{frame}
 
 \begin{frame}[fragile]
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=25}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=25}
 \frametitle{Formats}
 \framesubtitle{ASN.1}
 \begin{lstlisting}[basicstyle=\tiny,breaklines=false]
@@ -249,7 +261,7 @@ Convert data between ASN.1, XML and JSON formats.\\
 \begin{frame}[fragile]
 \frametitle{Formats}
 \framesubtitle{XML}
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=25&retmode=xml}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=25&retmode=xml}
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
 <?xml version="1.0"?>
  <!DOCTYPE GBSet PUBLIC "-//NCBI//NCBI GBSeq/EN" "http://www.ncbi.nlm.nih.gov/dtd/NCBI_GBSeq.dtd">
@@ -328,10 +340,17 @@ actyla; Cetacea; Mysticeti; Balaenopteridae; Balaenoptera</GBSeq_taxonomy>
 
 
 \begin{frame}
+\frametitle{GI}
+\begin{center}
+\url{http://www.ncbi.nlm.nih.gov/news/03-02-2016-phase-out-of-GI-numbers/} : "NCBI is phasing out sequence GIs - use Accession.Version instead!"
+\end{center}
+\end{frame}
+
+\begin{frame}
 \frametitle{E-Utilities}
 \begin{center}
 Set of seven server-side programs that provide a stable interface to the search, retrieval, and linking functions of the Entrez system, using a fixed URL syntax.\\
-The output provided by the E-Utilities is in XML format\\
+The output provided by the E-Utilities is in XML format, sometimes JSON, (...)\\
 \end{center}
 \end{frame}
 
@@ -364,7 +383,7 @@ Provides statistics for a single database, including lists of indexing fields an
 \frametitle{EInfo}
 Base URL:
 \small
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi}
 \end{frame}
 
 
@@ -373,11 +392,10 @@ Base URL:
 \frametitle{EInfo}
 \framesubtitle{XML Ouput}
 
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi}
 
 \small
 \begin{lstlisting}[language=xml]
-<!DOCTYPE eInfoResult PUBLIC "-//NLM//DTD eInfoResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd">
 <eInfoResult>
   <DbList>
     <DbName>pubmed</DbName>
@@ -402,22 +420,49 @@ Base URL:
 \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{EInfo}
+\framesubtitle{JSON Ouput}
+
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?retmode=json}
+
+\small
+\begin{lstlisting}
+{
+    "header": {
+        "type": "einfo",
+        "version": "0.3"
+    },
+    "einforesult": {
+        "dblist": [
+            "pubmed",
+            "protein",
+            "nuccore",
+       		(...)
+            "unigene",
+            "gencoll",
+            "gtr"
+        ]
+    }
+}
+\end{lstlisting}
+\end{frame}
+
 
 \begin{frame}[fragile]
 \frametitle{EInfo}
 Return statistics for a given Entrez database:\\
 \small
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?db=DbName}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?db=DbName}
 \end{frame}
 
 
 \begin{frame}[fragile]
 \frametitle{EInfo}
 \framesubtitle{Statistics for Pubmed}
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?db=pubmed}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?db=pubmed}
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
 <?xml version="1.0"?>
-<!DOCTYPE eInfoResult PUBLIC "-//NLM//DTD eInfoResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd">
 <eInfoResult>
   <DbInfo>
     <DbName>pubmed</DbName>
@@ -447,36 +492,49 @@ Return statistics for a given Entrez database:\\
 \begin{frame}[fragile]
 \frametitle{EInfo}
 \framesubtitle{Statistics for Pubmed}
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?db=pubmed}
-\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/einfo.fcgi?db=pubmed&retmode=json}
+\begin{lstlisting}[basicstyle=\tiny,breaklines=false]
+{
+    "header": {
+        "type": "einfo",
+        "version": "0.3"
+    },
+    "einforesult": {
+        "dbinfo": {
+            "dbname": "pubmed",
+            "menuname": "PubMed",
+            "description": "PubMed bibliographic record",
+            "dbbuild": "Build160921-2207m.6",
+            "count": "26470199",
+            "lastupdate": "2016/09/22 16:32",
+            "fieldlist": [
+                {
+                    "name": "ALL",
+                    "fullname": "All Fields",
+                    "description": "All terms from all searchable fields",
+                    "termcount": "179424126",
+                    "isdate": "N",
+                    "isnumerical": "N",
+                    "singletoken": "N",
+                    "hierarchy": "N",
+                    "ishidden": "N"
+                },
+                {
+                    "name": "UID",
+                    "fullname": "UID",
+                    "description": "Unique number assigned to publication",
 (...)
-      <Link>
-        <Name>pubmed_taxonomy_entrez</Name>
-        <Menu>Taxonomy via GenBank</Menu>
-        <Description>Taxonomy records associated with the current articles through taxonomic information on related molecular database records (Nucleotide, Protein, Gene, SNP, Structu
-re).</Description>
-        <DbTo>taxonomy</DbTo>
-      </Link>
-      <Link>
-        <Name>pubmed_unigene</Name>
-        <Menu>UniGene Links</Menu>
-        <Description>UniGene clusters of expressed sequences that are associated with the current articles through references on the clustered sequence records and related Gene record
-s.</Description>
-        <DbTo>unigene</DbTo>
-      </Link>
-      <Link>
-        <Name>pubmed_unists</Name>
-        <Menu>UniSTS Links</Menu>
-        <Description>Genetic, physical, and sequence mapping reagents in the UniSTS database associated with the current articles through references on sequence tagged site (STS) subm
-issions as well as automated searching of PubMed abstracts and full-text PubMed Central articles for marker names.</Description>
-        <DbTo>unists</DbTo>
-      </Link>
-    </LinkList>
-  </DbInfo>
-</eInfoResult>
 \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{EInfo}
+\framesubtitle{With entrez-direct}
+\begin{lstlisting}[basicstyle=\tiny,breaklines=false]
+$  einfo  -dbs
+$  einfo  -db pubmed
+\end{lstlisting}
+\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -498,7 +556,7 @@ Provides the number of records retrieved in all Entrez databases by a single tex
 \frametitle{GQuery}
 \framesubtitle{Example}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-$ curl  "http://eutils.ncbi.nlm.nih.gov/gquery?term=tyrannosaurus%20rex&retmode=xml"
+$ curl  "https://eutils.ncbi.nlm.nih.gov/gquery?term=tyrannosaurus%20rex&retmode=xml"
 \end{lstlisting}
 
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=true,escapechar=\%]
@@ -522,7 +580,7 @@ $ curl  "http://eutils.ncbi.nlm.nih.gov/gquery?term=tyrannosaurus%20rex&retmode=
 \begin{frame}[fragile]
 \frametitle{GQuery}
 \framesubtitle{Transforming to HTML using XSLT}
-The XSLT stylesheet.
+The XSLT stylesheet. \url{https://raw.githubusercontent.com/lindenb/courses/master/about.ncbi/gquery2html.xsl}
 \lstinputlisting[language=xml,basicstyle=\tiny,breaklines=true,numbers=left]{gquery2html.xsl}
 \end{frame}
 
@@ -530,7 +588,7 @@ The XSLT stylesheet.
 \frametitle{GQuery}
 \framesubtitle{Transforming to HTML}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
- $ curl "http://eutils.ncbi.nlm.nih.gov/gquery?term=tyrannosaurus%20rex&retmode=xml" |\
+ $ curl "https://eutils.ncbi.nlm.nih.gov/gquery?term=tyrannosaurus%20rex&retmode=xml" |\
  xsltproc gquery2html.xsl  -
 \end{lstlisting}
 
@@ -546,21 +604,21 @@ The XSLT stylesheet.
       </tr>
       <tr>
         <td>
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed?cmd=search&amp;term=tyrannosaurus+rex">pubmed</a>
+          <a href="https://www.ncbi.nlm.nih.gov/pubmed?cmd=search&amp;term=tyrannosaurus+rex">pubmed</a>
         </td>
         <td>41</td>
         <td>Ok</td>
       </tr>
       <tr>
         <td>
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed?cmd=search&amp;term=tyrannosaurus+rex">pmc</a>
+          <a href="https://www.ncbi.nlm.nih.gov/pmc?cmd=search&amp;term=tyrannosaurus+rex">pmc</a>
         </td>
         <td>160</td>
         <td>Ok</td>
       </tr>
       <tr>
         <td>
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed?cmd=search&amp;term=tyrannosaurus+rex">mesh</a>
+          <a href="https://www.ncbi.nlm.nih.gov/mesh?cmd=search&amp;term=tyrannosaurus+rex">mesh</a>
         </td>
         <td>15</td>
 \end{lstlisting}
@@ -591,14 +649,14 @@ The XSLT stylesheet.
 \frametitle{ESearch}
 \framesubtitle{Syntax}
 Base URL
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{ESearch}
 \framesubtitle{Searching for 'Mammuthus primigenius' }
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
-curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D" |\
+curl  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D" |\
 xmllint --format -
 \end{lstlisting}
 
@@ -649,11 +707,74 @@ xmllint --format -
 \end{lstlisting}
 \end{frame}
 
+
+\begin{frame}[fragile]
+\frametitle{ESearch}
+\framesubtitle{Searching for 'Mammuthus primigenius' (JSON) }
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+ curl  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&retmode=json"
+\end{lstlisting}
+
+\begin{lstlisting}[basicstyle=\tiny,breaklines=false]
+{
+    "header": {
+        "type": "esearch",
+        "version": "0.3"
+    },
+    "esearchresult": {
+        "count": "811",
+        "retmax": "20",
+        "retstart": "0",
+        "idlist": [
+            "1059791223",
+            "198241525",
+            "198241523",
+            "198241521",
+            "198241519",
+            "198241517",
+            "198241515",
+            "198241513",
+            "198241511",
+            "198241509",
+            "198241507",
+            "198241505",
+            "198241503",
+            "198241501",
+            "198241499",
+            "198241497",
+            "198241495",
+            "198241493",
+            "198241491",
+            "198241489"
+        ],
+        "translationset": [
+            {
+                "from": "\"Mammuthus primigenius\"[ORGN]",
+                "to": "\"Mammuthus primigenius\"[Organism]"
+            }
+        ],
+        "translationstack": [
+            {
+                "term": "\"Mammuthus primigenius\"[Organism]",
+                "field": "Organism",
+                "count": "811",
+                "explode": "Y"
+            },
+            "GROUP"
+        ],
+        "querytranslation": "\"Mammuthus primigenius\"[Organism]"
+    }
+}
+
+\end{lstlisting}
+\end{frame}
+
+
 \begin{frame}[fragile]
 \frametitle{ESearch}
 \framesubtitle{the retmax parameter }
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
-curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&retmax=2" |\
+curl  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&retmax=2" |\
 xmllint --format -
 \end{lstlisting}
 
@@ -691,7 +812,7 @@ xmllint --format -
 \frametitle{ESearch}
 \framesubtitle{the retstart parameter }
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
-curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&retmax=3&retstart=100" |\
+curl  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&retmax=3&retstart=100" |\
 xmllint --format -
 \end{lstlisting}
 
@@ -729,7 +850,7 @@ xmllint --format -
 \frametitle{ESearch}
 \framesubtitle{rettype=retcount  }
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
-curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&rettype=count" |\
+curl  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&rettype=count" |\
 xmllint --format -
 \end{lstlisting}
 
@@ -737,6 +858,39 @@ xmllint --format -
 <eSearchResult>
   <Count>684</Count>
 </eSearchResult>
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{ESearch}
+\framesubtitle{sort=Date Released  }
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=%22Mammuthus%20primigenius%22%5BORGN%5D&sort=Date+Released"
+xmllint --format -
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml,breaklines=false]
+<eSearchResult><Count>811</Count><RetMax>20</RetMax><RetStart>0</RetStart><IdList>
+<Id>1033204644</Id>
+<Id>1033204658</Id>
+<Id>1033204672</Id>
+<Id>1033204686</Id>
+<Id>1033204729</Id>
+<Id>1033204771</Id>
+<Id>1033204785</Id>
+<Id>1033204799</Id>
+<Id>1033204813</Id>
+<Id>1033204827</Id>
+<Id>1033204871</Id>
+<Id>1033205124</Id>
+<Id>1033205194</Id>
+<Id>1033205208</Id>
+<Id>1033205222</Id>
+<Id>1033205236</Id>
+<Id>1033205264</Id>
+<Id>1033205390</Id>
+(...)
 \end{lstlisting}
 \end{frame}
 
@@ -761,7 +915,7 @@ xmllint --format -
 \frametitle{ESummary}
 \framesubtitle{Syntax}
 Base URL:
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=(DB)\&id=(TERM)}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=(DB)\&id=(TERM)}
 \end{frame}
 
 
@@ -769,7 +923,7 @@ Base URL:
 \frametitle{ESummary}
 \framesubtitle{Retrieve nucleotide gi=507866428}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
-$ curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nucleotide&id=507866428"
+$ curl  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nucleotide&id=507866428"
 \end{lstlisting}
 
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
@@ -793,11 +947,51 @@ $ curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nucleotid
 \end{lstlisting}
 \end{frame}
 
+
+\begin{frame}[fragile]
+\frametitle{ESummary}
+\framesubtitle{Retrieve nucleotide gi=507866428 in JSON}
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
+$ curl  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nucleotide&id=507866428&retmode=json"
+\end{lstlisting}
+
+\begin{lstlisting}[basicstyle=\tiny,breaklines=false]
+{
+    "header": {
+        "type": "esummary",
+        "version": "0.3"
+    },
+    "result": {
+        "uids": [
+            "507866428"
+        ],
+        "507866428": {
+            "uid": "507866428",
+            "caption": "KC524742",
+            "title": "Mammuthus primigenius isolate CME2005/915 myoglobin (Mb) gene, partial cds",
+            "extra": "gi|507866428|gb|KC524742.1|",
+            "gi": 507866428,
+            "createdate": "2013/06/15",
+            "updatedate": "2013/06/21",
+            "flags": "",
+            "taxid": 37349,
+            "slen": 9042,
+            "biomol": "genomic",
+            "moltype": "dna",
+            "topology": "linear",
+            "sourcedb": "insd",
+            "segsetsize": "",
+            "projectid": "0",
+(...)
+\end{lstlisting}
+\end{frame}
+
+
 \begin{frame}[fragile]
 \frametitle{ESummary}
 \framesubtitle{Retrieve snp rs25}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
-$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=snp&id=25"
+$ curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=snp&id=25"
 \end{lstlisting}
 
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
@@ -853,7 +1047,7 @@ $ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=snp&id=25"
 \frametitle{ESummary}
 \framesubtitle{Retrieve pubmed pmid=7939126}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
-$ curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=7939126"
+$ curl  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=7939126"
 \end{lstlisting}
 
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
@@ -926,7 +1120,7 @@ $ curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id
 \frametitle{EFetch}
 \framesubtitle{Syntax}
 Base URL:
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=(db)\&id=(ID)}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=(db)\&id=(ID)}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -934,7 +1128,7 @@ Base URL:
 \framesubtitle{Retrieve nucleotide gi=507866428 as ASN.1}
 
 Default 
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
 Seq-entry ::= set {
   class nuc-prot ,
@@ -963,7 +1157,7 @@ Seq-entry ::= set {
 \begin{frame}[fragile]
 \frametitle{EFetch}
 \framesubtitle{Retrieve nucleotide gi=507866428 as Fasta}
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&rettype=fasta}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&rettype=fasta}
 \begin{lstlisting}[basicstyle=\tiny,breaklines=true]
 >gi|507866428|gb|KC524742.1| Mammuthus primigenius isolate CME2005/915 myoglobin (Mb) gene, partial cds
 GCACTTGCTTTTTTTGTCTTCTTCAGACCACGACATGGGACTCAGCGACGGGGAATGGGAGTTGGTGTTG
@@ -981,7 +1175,7 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 \begin{frame}[fragile]
 \frametitle{EFetch}
 \framesubtitle{Retrieve nucleotide gi=507866428 as TinySeq}
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&rettype=fasta&retmode=xml}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&rettype=fasta&retmode=xml}
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
 <?xml version="1.0"?>
  <!DOCTYPE TSeqSet PUBLIC "-//NCBI//NCBI TSeq/EN" 
@@ -1004,7 +1198,7 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 \begin{frame}[fragile]
 \frametitle{EFetch}
 \framesubtitle{Retrieve nucleotide gi=507866428 as Genbank-xml}
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&retmode=xml}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&retmode=xml}
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
 <GBSeq>
   <GBSeq_locus>KC524742</GBSeq_locus>
@@ -1031,7 +1225,7 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 \begin{frame}[fragile]
 \frametitle{EFetch}
 \framesubtitle{Retrieve nucleotide gi=507866428 as Genbank}
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&rettype=gb}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=507866428&rettype=gb}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=false]
 LOCUS       KC524742                9042 bp    DNA     linear   MAM 21-JUN-2013
 DEFINITION  Mammuthus primigenius isolate CME2005/915 myoglobin (Mb) gene,
@@ -1080,7 +1274,7 @@ FEATURES             Location/Qualifiers
 \begin{frame}[fragile]
 \frametitle{EFetch}
 \framesubtitle{Efetch works with the ACCESSION NUMBERS}
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=KC524742&rettype=gb}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=KC524742&rettype=gb}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=false]
 LOCUS       KC524742                9042 bp    DNA     linear   MAM 21-JUN-2013
 DEFINITION  Mammuthus primigenius isolate CME2005/915 myoglobin (Mb) gene,
@@ -1137,7 +1331,7 @@ Web environment string returned from a previous ESearch, EPost or ELink call. Wh
 \framesubtitle{Using the WebEnv parameter.}
 Searching extinct species in the NCBI taxonomy ('extinct[PROP]') 
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?!\color{red}{usehistory=y}!&db=taxonomy&term=extinct%5BPROP%5D"
+curl  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?!\color{red}{usehistory=y}!&db=taxonomy&term=extinct%5BPROP%5D"
 \end{lstlisting}
 
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false,escapechar=\%]
@@ -1191,7 +1385,7 @@ curl  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?!\color{red}{us
 Fetch the extinct species in the NCBI taxonomy ('extinct[PROP]') using the WebEnv parameter.
 
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&!\color{red}{query\_key=1\&WebEnv=NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538}!&retmode=xml" 
+$ curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&!\color{red}{query\_key=1\&WebEnv=NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538}!&retmode=xml" 
 \end{lstlisting}
 
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false,escapechar=\%]
@@ -1217,50 +1411,59 @@ $ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&!\c
 \end{lstlisting}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hugeslide{EPOST}
+
 \begin{frame}[fragile]
 \frametitle{EPost}
-\lstinputlisting[language=xml,basicstyle=\tiny,breaklines=true,numbers=left]{ncbi2epost.xsl}
+\begin{itemize}
+\item Uploads a list of UIDs to the Entrez History server
+\item Appends a list of UIDs to an existing set of UID lists attached to a Web Environment
+\end{itemize}
+\end{frame}
+
+%%\begin{frame}[fragile]
+%%\frametitle{EPost}
+%%\lstinputlisting[language=xml,basicstyle=\tiny,breaklines=true,numbers=left]{ncbi2epost.xsl}
+%%\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{EPost}
+\framesubtitle{Post gi to epost}
+Get a list of gis of extincts animals:
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+ wget  -O - 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&term=extinct[PROP]&retmax=1000' |\
+ 	xmllint -format -  |\
+ 	grep '<Id>' |\
+ 	cut -d '<' -f 2 |\
+ 	cut -d '>' -f 2|\
+ 	tr "\n" ","
+\end{lstlisting}
+output:
+\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
+1860150,1860149,1849957,1825730,1825729,1636722,1607772,1607771,1607767,1607757,1607756,1597978,1582057,1566623,1563127,1563126,1563125,1563124,1563123,1563122,1563121,1563120,1560315,1560314,1543223,1542494,1542469,1530197,1524889,1523245,1513476,1513474,1503129,1453604,1425170,1415635,1295174,1225531,1225530,1211276,1211275,1027716,948961,943952,867394,867393,748142,748141,741158,703576,703571,703559,693865,686441,665113,659069,656807,647691,647690,643746,643745,643744,643742,577682,572106,572105,572104,572099,572098,570943,570942,570941,551196,544298,523825,523824,523822,523821,523820,518692,518691,518689,475185,436495,436494,436493,436488,402889,399386,399178,386524,379504,363580,363579,363578,363571,339614,339612,339609,330944,330640,330639,330638,330637,330636,328612,314500,307641,304335,272462,268291,251263,251094,251093,239970,239969,237965,230980,230979,227166,227165,223567,222863,222862,216182,216181,201717,201716,192211,188536,187135,187134,187133,187132,187131,187118,184920,180214,180178,180177,180176,180175,180174,173935,166505,148923,147494,147466,147464,136416,136415,126594,126429,115942,107030,103864,94623,92649,92648,89252,89250,63631,63221,54568,54500,54497,54366,54365,48784,46906,39097,39053,39051,37349,37348,37185,27445,27444,20678,13266,13140,9619,9275,9274,9273,8818,8817,8815,8813,8812,8811,8810,8367,3409
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{EPost}
 \framesubtitle{Post gi to epost}
-Transforms the result of EFetch to a Bash script calling curl+Epost.
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&!\color{red}{query\_key=1\&WebEnv=NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538}!&retmode=xml" |\
-!\color{red}{xsltproc --stringparam WebEnv NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538 ncbi2epost.xsl}! -
+wget -O - 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/epost.fcgi?db=taxonomy&WebEnd=NCID_1_15435144_130.14.22.215_9001_1474637318_669113391_0MetA0_S_MegaStore_F_1&id=1860150,1860149,1849957,1825730,1825729,1636722,1607772..."
 \end{lstlisting}
 
-Output of XSLTproc
-\begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=true,escapechar=\%]
-curl -d @-  "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/epost.fcgi" <<EOF
-db=taxonomy&WebEnv=NCID_1_75550312_130.14.18.34_9001_1375948145_325582538&id=1225531,1225530,1211276,1211275,1027716,948961,943952,867394,867393,748142,748141,741158,703576,703571,703559,693865,686441,665113,659069,656807,647691,647690,643746,643745,643744,643742,577682,572106,572105,572104,572099,572098,570943,570942,570941,551196,544298,523825,523824,523822,523821,523820,518692,518691,518689,475185,436495,436494,436493,436488,402889,399386,399178,386524,379504,363580,363579,363578,363571,339614,339612,339609,328612,314500,307641,304335,272462,268291,251263,251094,251093,239970,239969,237965,230980,230979,227166,227165,223567,222863,222862,216182,216181,201717,201716,192211,188536,187135,187134,187133,187132,187131,187118,184920,180214,173935,148923,147494,147466,147464,136416,136415,126594,126429,115942,107030,103864,94623,92649,92648,89252,89250,63631,63221,54568,54500,54497,54366,54365,48784,46906,39097,39053,39051,37349,37348,37185,27445,27444,20678,13266,13140,9619,9275,9274,9273,8818,8817,8815,8813,8812,8811,8810,8367,3409,
-EOF
-\end{lstlisting}
-
-\end{frame}
-
-
-\begin{frame}[fragile]
-\frametitle{EPost}
-\framesubtitle{Post gi to epost}
-... the result is now piped into {\bf bash}
-\begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&!\color{red}{query\_key=1\&WebEnv=NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538}!&retmode=xml" |\
-!\color{red}{xsltproc --stringparam WebEnv NCID\_1\_75550312\_130.14.18.34\_9001\_1375948145\_325582538 ncbi2epost.xsl}! - |\
-!\color{red}{bash}
-\end{lstlisting}
-NCBI answer:
+Output:
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=true,escapechar=\%]
 <?xml version="1.0"?>
 <!DOCTYPE ePostResult PUBLIC "-//NLM//DTD ePostResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/ePost_020511.dtd">
 <ePostResult>
-	<QueryKey>2</QueryKey>
-	<WebEnv>NCID_1_75550312_130.14.18.34_9001_1375948145_325582538</WebEnv>
+	<QueryKey>1</QueryKey>
+	<WebEnv>NCID_1_15467192_130.14.22.215_9001_1474637456_570452194_0MetA0_S_MegaStore_F_1</WebEnv>
 </ePostResult>
 \end{lstlisting}
-
 \end{frame}
+
+
 
 \begin{frame}[fragile]
 \frametitle{EPost}
@@ -1268,7 +1471,7 @@ NCBI answer:
 Search {\bf Homo Sapiens} in {\bf WebEnv} ?
 
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&term=!\color{red}{Homo\%20Sapiens}!&usehistory=y&WebEnv=NCID_1_75550312_130.14.18.34_9001_1375948145_325582538&query_key=2"
+curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&term=!\color{red}{Homo\%20Sapiens}!&usehistory=y&WebEnv=NCID_1_75550312_130.14.18.34_9001_1375948145_325582538&query_key=1"
 \end{lstlisting}
 
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=true,escapechar=\%]
@@ -1301,7 +1504,7 @@ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&t
 \framesubtitle{Searching in the WebEnv}
 Search {\bf Tyranosaurus} in {\bf WebEnv} ?
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-$ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&term=!\color{red}{Tyrannosaurus}!&usehistory=y&WebEnv=NCID_1_75550312_130.14.18.34_9001_1375948145_325582538&query_key=2"
+$ curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&term=!\color{red}{Tyrannosaurus}!&usehistory=y&WebEnv=NCID_1_75550312_130.14.18.34_9001_1375948145_325582538&query_key=1"
 \end{lstlisting}
 
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=true,escapechar=\%]
@@ -1329,8 +1532,27 @@ $ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy
 </eSearchResult>
 \end{lstlisting}
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hugeslide{EDirect: combining tools}
 
+\begin{frame}[fragile]
+\frametitle{Piping Edirect}
+\begin{lstlisting}
+esearch -db taxonomy -query "Tyrannosaurus"  | efetch -format xml
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Piping Edirect}
+\begin{lstlisting}
+esearch -db pubmed -query "Tyrannosaurus" |\
+efilter -mindate 2005 |\
+efetch -format docsum |\
+xtract -pattern DocumentSummary \
+	-element MedlineCitation/PMID \
+	-element Id SortFirstAuthor
+\end{lstlisting}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -1357,7 +1579,7 @@ $ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy
 \frametitle{Elink}
 Base URL:
 \small
-\url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi}
+\url{https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi}
 \end{frame}
 
 
@@ -1365,7 +1587,7 @@ Base URL:
 \frametitle{ELink}
 \framesubtitle{Searching the pubmed records associated to sequence gi:507866428}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nucleotide&db=pubmed&id=507866428&cmd=neighbor_score
+https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nucleotide&db=pubmed&id=507866428&cmd=neighbor_score
 \end{lstlisting}
 
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=true,escapechar=\%]
@@ -1389,7 +1611,7 @@ http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nucleotide&db=pub
 \end{lstlisting}
 
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-$ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=23766330&rettype=medline&retmode=text"
+$ curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=23766330&rettype=medline&retmode=text"
 PMID- 23766330
 TI  - Evolution of mammalian diving capacity traced by myoglobin net surface charge.
 PG  - 1234192
@@ -1413,7 +1635,7 @@ Using the stylesheet \url{https://github.com/lindenb/xslt-sandbox/blob/master/st
 
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
 xsltproc <(curl  "https://raw.github.com/lindenb/xslt-sandbox/master/stylesheets/bio/ncbi/gb2svg.xsl") \
-	"http://www.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=14971102&retmode=xml&rettype=gbc"
+	"https://www.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=14971102&retmode=xml&rettype=gbc"
 \end{lstlisting}
 \end{frame}
 
@@ -1436,8 +1658,8 @@ xsltproc <(curl  "https://raw.github.com/lindenb/xslt-sandbox/master/stylesheets
 \frametitle{Efetch}
 \framesubtitle{Transforming to R}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-$ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Tyrannosaurus&usehistory=true" | xmllint --format -
-$ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&usehistory=true&WebEnv=NCID_1_52434791_130.14.22.215_9001_1375957034_1619786167&query_key=1&retmode=xml"
+$ curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Tyrannosaurus&usehistory=true" | xmllint --format -
+$ curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&usehistory=true&WebEnv=NCID_1_52434791_130.14.22.215_9001_1375957034_1619786167&query_key=1&retmode=xml"
 \end{lstlisting}
 \end{frame}
 
@@ -1453,7 +1675,7 @@ $ curl -s "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&us
 \framesubtitle{Transforming to R}
 
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&usehistory=true&WebEnv=NCID_1_52434791_130.14.22.215_9001_1375957034_1619786167&query_key=1&retmode=xml" |\
+$ curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&usehistory=true&WebEnv=NCID_1_52434791_130.14.22.215_9001_1375957034_1619786167&query_key=1&retmode=xml" |\
 xsltproc pubmed2rstats.xsl -
 \end{lstlisting}
 
@@ -1485,7 +1707,7 @@ dev.off()
 \framesubtitle{Transforming to R}
 
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true,escapechar=\!]
-$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&usehistory=true&WebEnv=NCID_1_52434791_130.14.22.215_9001_1375957034_1619786167&query_key=1&retmode=xml" |\
+$ curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&usehistory=true&WebEnv=NCID_1_52434791_130.14.22.215_9001_1375957034_1619786167&query_key=1&retmode=xml" |\
 xsltproc pubmed2rstats.xsl - |\
 R --no-save
 \end{lstlisting}
@@ -1501,14 +1723,14 @@ R --no-save
 \begin{frame}[fragile]
 \frametitle{Using the XML schema}
 \framesubtitle{XML Schema for dbSNP}
-\url{ftp://ftp.ncbi.nlm.nih.gov/snp/specs/docsum_3.3.xsd}
+\url{ftp://ftp.ncbi.nlm.nih.gov/snp/specs/docsum_3.4.xsd}
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.ncbi.nlm.nih.gov/SNP/docsum" targetNamespace="http://www.ncbi.nlm.nih.gov/SNP/docsum" el
 ementFormDefault="qualified" attributeFormDefault="unqualified">
   <xsd:element name="ExchangeSet">
     <xsd:annotation>
-      <xsd:documentation>Set of dbSNP refSNP docsums, version 3.2</xsd:documentation>
+      <xsd:documentation>Set of dbSNP refSNP docsums, version 3.4</xsd:documentation>
     </xsd:annotation>
     <xsd:complexType>
       <xsd:sequence>
@@ -1540,23 +1762,23 @@ ementFormDefault="qualified" attributeFormDefault="unqualified">
 \framesubtitle{Compiling the XML Schema for dbSNP with XJC}
 
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=false]
-$ xjc -d . "ftp://ftp.ncbi.nlm.nih.gov/snp/specs/docsum_3.3.xsd"
+$ xjc -d . "ftp://ftp.ncbi.nlm.nih.gov/snp/specs/docsum_3.4.xsd"
 parsing a schema...
 compiling a schema...
-gov/nih/nlm/ncbi/snp/docsum/Assay.java
-gov/nih/nlm/ncbi/snp/docsum/Assembly.java
-gov/nih/nlm/ncbi/snp/docsum/BaseURL.java
-gov/nih/nlm/ncbi/snp/docsum/Component.java
-gov/nih/nlm/ncbi/snp/docsum/ExchangeSet.java
-gov/nih/nlm/ncbi/snp/docsum/FxnSet.java
-gov/nih/nlm/ncbi/snp/docsum/MapLoc.java
-gov/nih/nlm/ncbi/snp/docsum/ObjectFactory.java
-gov/nih/nlm/ncbi/snp/docsum/PrimarySequence.java
-gov/nih/nlm/ncbi/snp/docsum/Rs.java
-gov/nih/nlm/ncbi/snp/docsum/RsLinkout.java
-gov/nih/nlm/ncbi/snp/docsum/RsStruct.java
-gov/nih/nlm/ncbi/snp/docsum/Ss.java
-gov/nih/nlm/ncbi/snp/docsum/package-info.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/Assay.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/Assembly.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/BaseURL.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/Component.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/ExchangeSet.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/FxnSet.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/MapLoc.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/ObjectFactory.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/PrimarySequence.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/Rs.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/RsLinkout.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/RsStruct.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/Ss.java
+https/www_ncbi_nlm_nih_gov/snp/docsum/package-info.java
 \end{lstlisting}
 \end{frame}
 
@@ -1573,7 +1795,7 @@ Search the non-genomic rs\# in dbSNP.
 \framesubtitle{Compiling the XML Schema for dbSNP with XJC}
 compile...
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=false]
-$ javac ParseDbSnp.java gov/nih/nlm/ncbi/snp/docsum/*.java
+$  javac ParseDbSnp.java https/www_ncbi_nlm_nih_gov/snp/docsum/*.java
 \end{lstlisting}
 and run...
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=false]
@@ -1610,7 +1832,7 @@ rs946 cDNA
 \begin{frame}[fragile]
 \frametitle{NCBI EBot}
 \framesubtitle{URL}
-\url{http://www.ncbi.nlm.nih.gov/Class/PowerTools/eutils/ebot/ebot.cgi}
+\url{https://www.ncbi.nlm.nih.gov/Class/PowerTools/eutils/ebot/ebot.cgi}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -1628,7 +1850,7 @@ use Net::FTP;
 
 my $delay = 0;
 my $maxdelay = 3;
-my $base = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
+my $base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
 
 
 $params{email} = "nobody@nowhere.com";
@@ -1727,7 +1949,7 @@ $ blastp -help
 \frametitle{Standalone Blast}
 \framesubtitle{Blast human EIF4G1 gi:187956781 }
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
-$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&rettype=fasta&id=187956781" |\
+$ curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&rettype=fasta&id=187956781" |\
  blastp -db protein.fa
 \end{lstlisting}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=false]
@@ -1767,7 +1989,7 @@ Sbjct  134   NFEPKKALIESQKGQSTFTFLLLSKCRDEFENRSKASEAFENQ----DELGPEEE-----  184
 \frametitle{Standalone Blast}
 \framesubtitle{Blast human EIF4G1 gi:187956781 , ouput XML}
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
-$ curl "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&rettype=fasta&id=187956781" |\
+$ curl "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&rettype=fasta&id=187956781" |\
  blastp -db protein.fa  -outfmt  5
 \end{lstlisting}
 \begin{lstlisting}[language=xml,basicstyle=\tiny,breaklines=false]
@@ -1805,10 +2027,10 @@ VAKRKMLGNIKFIGELGKLGIVSETILHRCILQLLEKKRRRRSRGDTAEDIECLCQIMRTCGRILDSDKGRGLMDQYFKR
 \begin{frame}[fragile]
 \frametitle{NCBI URL-API Blast}
 
-http://www.ncbi.nlm.nih.gov/blast/Doc/urlapi.html
+https://www.ncbi.nlm.nih.gov/blast/Doc/urlapi.html
 
 \begin{lstlisting}[language=bash,basicstyle=\tiny,breaklines=true]
-$ curl "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD=Put&QUERY=PAERLMERKADIE&DATABASE=nr&PROGRAM=blastp&FILTER=L&HITLIST_SZE=500"
+$ curl "https://www.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD=Put&QUERY=PAERLMERKADIE&DATABASE=nr&PROGRAM=blastp&FILTER=L&HITLIST_SZE=500"
 \end{lstlisting}
 \begin{lstlisting}[language=html,breaklines=false]
 (...)

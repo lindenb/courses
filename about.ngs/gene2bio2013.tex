@@ -7,7 +7,7 @@
 
 
 \newcommand{\remoteimage}[3]{
-\IfFileExists{#1}{}{\immediate\write18{curl -o "#1" "#2"}}
+\IfFileExists{#1}{}{\immediate\write18{echo "#2" && curl  -o "#1" "#2"}}
 \begin{center}
 \includegraphics[#3]{#1}
 \end{center}

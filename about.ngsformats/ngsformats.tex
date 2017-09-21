@@ -49,8 +49,14 @@
 \end{center}
 }
 
+\date{21 Sept. 2017}
 \title{Next Generation Sequencing\\File Formats.}
 \author{Pierre Lindenbaum\\\href{mailto:plindenbaum@yahoo.fr}{pierre.lindenbaum@univ-nantes.fr}\\\institute{INSERM U1087. Institut du Thorax. Nantes. France}}
+
+\setbeamertemplate{sidebar right}{}
+\setbeamertemplate{footline}{%
+\hfill\usebeamertemplate***{navigation symbols}
+\hspace{1cm}\insertframenumber{}/\inserttotalframenumber}
 
 \begin{document}
 
@@ -967,17 +973,16 @@ import java.io.File;
 import net.sf.samtools.*;
 public class CountMapped {
   public static void main(String[] args) {
-    long n = 0L;
-    File f = new File(args[0]);
+    File file = new File(args[0]);
     SamReader sam = SamReaderFactory.
-		makeDefault().open(f);
+		makeDefault().open(file);
     SAMRecordIterator iter = sam.iterator();
-    System.out.println( iter.stream().
+    System.out.println(
+          iter.stream().
     	  filter(R->!R.getReadUnmapped()).
     	  count()
     	);
     iter.close(); sam.close();
-    System.out.println(n);
     }
 }
 \end{lstlisting}

@@ -1488,7 +1488,7 @@ curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&
     <TermSet>
       <Term>homo sapiens[All Names]</Term>
       <Field>All Names</Field>
-      <Count>1</Count>
+      <Count>0</Count>
       <Explode>N</Explode>
     </TermSet>
     <OP>AND</OP>
@@ -1538,7 +1538,8 @@ $ curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonom
 \begin{frame}[fragile]
 \frametitle{Piping Edirect}
 \begin{lstlisting}
-esearch -db taxonomy -query "Tyrannosaurus"  | efetch -format xml
+esearch -db taxonomy -query "Tyrannosaurus"  |\
+efetch -format xml
 \end{lstlisting}
 \end{frame}
 

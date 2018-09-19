@@ -1,9 +1,10 @@
-\documentclass{beamer}
+\documentclass[xcolor=table]{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{amssymb}
+\usepackage{adjustbox}
 \usepackage{framed}
 \usepackage{epstopdf}
 
@@ -49,7 +50,7 @@
 \end{center}
 }
 
-\date{21 Sept. 2017}
+\date{20 Sept. 2018}
 \title{Next Generation Sequencing\\File Formats.}
 \author{Pierre Lindenbaum\\\href{mailto:plindenbaum@yahoo.fr}{pierre.lindenbaum@univ-nantes.fr}\\\institute{INSERM U1087. Institut du Thorax. Nantes. France}}
 
@@ -321,6 +322,9 @@ aaatgagccaggtgtggtggtgcac          CCAGCTACGTAGTAGGCTGAGGTGGGAGGATCGCTTAAACCCGGC
 \end{frame}
 
 
+%%END(samformatheader1)
+
+
 \begin{frame}[fragile]
 \frametitle{SAM Example}
 \framesubtitle{Simple example}
@@ -454,6 +458,25 @@ IL31_4368:1:54:13142:21400	83	chr1	44	0	54M	=	37	-61 (...)
 \end{frame}
 %%END(samspec1)
 
+\begin{frame}[fragile]
+\frametitle{SAM Example}
+\framesubtitle{SAM Body}
+
+\begin{table}[]
+\adjustbox{max height=\dimexpr\textheight-5.5cm\relax,
+           max width=\textwidth}{
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+\rowcolor[HTML]{C0C0C0} 
+\multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}\textbf{READNAME}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{FLAG}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{CHROM}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{POS}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{MAPQ}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{CIGAR}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{MATECHROM}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{MATE\_POS}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{TLEN}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{SEQ}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{QUALS}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{ATTRIBUTES}} \\ \hline
+{\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                          \\ \hline
+{\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                          \\ \hline
+{\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                          \\ \hline
+\end{tabular}
+}
+\end{table}
+
+\end{frame}
 
 %%BEGIN(samspec2)
 \begin{frame}[fragile]
@@ -742,6 +765,30 @@ IL31_4368:1:54:13142:21400	83	chr1	44	0	54M	=	37	-61	AACCCTAACCCTAACCCTAACCCTAAC
 %%END(bamtitle)
 
 
+
+\begin{frame}[fragile]
+\frametitle{BAM}
+\framesubtitle{Binary}
+\begin{lstlisting}[language=C]
+printf("171");// 3 bytes
+(...)
+int v=0;
+while((c=fgetc(stdin))!=EOF) v=v*10+(v-'0');
+\end{lstlisting}
+
+1 byte = 8 bits
+
+\begin{lstlisting}
+char c = 171;//'10101011'=2^7+2^5+2^3+2^1+2^0
+fwrite((void*)&c,sizeof(char),1,stdout);// 1 byte
+(...)
+fread((void*)&c,sizeof(char),1,stdin);// 1 byte
+\end{lstlisting}
+
+\end{frame}
+
+
+
 %%BEGIN(bgzfformat)
 \begin{frame} 
 \frametitle{BGZF Format}
@@ -839,6 +886,28 @@ VCF is a text file format (most likely stored in a compressed manner). It contai
 (...)
 \end{frame}
 %%END(vcfformatcolumns)
+
+
+\begin{frame}[fragile]
+\frametitle{VCF Example}
+\framesubtitle{VCF Body}
+
+\begin{table}[]
+\adjustbox{max height=\dimexpr\textheight-5.5cm\relax,
+           max width=\textwidth}{
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+\rowcolor[HTML]{C0C0C0} 
+\multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}\textbf{CHROM}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{POS}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{ID}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{REF}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{ALT}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{QUAL}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{FILTER}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{INFO}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{S1}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{S2}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{S3}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{S4}} \\ \hline
+{\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  \\ \hline
+{\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  \\ \hline
+{\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  \\ \hline
+\end{tabular}
+}
+\end{table}
+
+\end{frame}
+
 
 %%BEGIN(vcfformatinfo)
 \begin{frame}[fragile]

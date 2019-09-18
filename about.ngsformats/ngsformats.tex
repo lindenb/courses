@@ -50,9 +50,9 @@
 \end{center}
 }
 
-\date{20 Sept. 2018}
+\date{18 Sept. 2019}
 \title{Next Generation Sequencing\\File Formats.}
-\author{Pierre Lindenbaum\\\href{mailto:plindenbaum@yahoo.fr}{pierre.lindenbaum@univ-nantes.fr}\\\institute{INSERM U1087. Institut du Thorax. Nantes. France}}
+\author{Pierre Lindenbaum\\\href{mailto:pierre.lindenbaum@univ-nantes.fr}{pierre.lindenbaum@univ-nantes.fr}\\\institute{INSERM U1087. Institut du Thorax. Nantes. France}}
 
 \setbeamertemplate{sidebar right}{}
 \setbeamertemplate{footline}{%
@@ -731,7 +731,6 @@ H &	hex string\\
 \frametitle{SAM Fomat}
 \framesubtitle{optional TAGs}
 \begin{itemize}
-\item XT:A:U  - user defined tag called XT.  It holds a character.  The value associated with this tag is 'U'.
 \item NM:i:2  - predefined tag NM means: Edit distance to the reference (number of changes necessary to make this equal the reference, excluding clipping)
 \end{itemize}
 \end{frame}
@@ -812,11 +811,6 @@ modified form of gzip compression called BGZF (Blocked GNU Zip Format), which ca
 \begin{frame} 
 \frametitle{Other Sequencing technologies}
 \remoteimage{jeter07.jpg}{http://www.extremetech.com/wp-content/uploads/2013/03/minion-usb-dna-sequencer-640x353.jpg}{scale=0.5}
-\end{frame}
-
-\begin{frame} 
-\frametitle{HDF5}
-\remoteimage{jeter06.jpg}{http://neondataskills.org/images/HDf5/hdf5_structure4.jpg}{scale=0.25}
 \end{frame}
 
 
@@ -921,11 +915,11 @@ INFO fields should be described as follows
 
 \begin{lstlisting}[basicstyle=\tiny,breaklines=false,escapechar=\%]
 (...)
-##INFO=<ID= %\color{red}{NS}%,Number=1,Type=Integer,Description="Number of Samples With Data">
-(...)
-INFO                              FORMAT      NA00001        NA00002        NA00003
-20     14370   rs6054257 G      A       29   PASS   %\color{red}{NS=3}%;DP=14;AF=0.5;DB;H2           GT:GQ:DP:HQ 0|0:48:1:51,51 1|0:48:8:51,51 1/1:43:5:.,.
-20     17330   .         T      A       3    q10    %\color{red}{NS=3}%;DP=11;AF=0.017               GT:GQ:DP:HQ 0|0:49:3:58,50 0|1:3:5:65,3   0/0:41:3
+##INFO=<ID= %\color{red}{NS}%,Number=1,Type=Integer,Description="Num. Samples With Data">
+(...)                        
+(..)                    INFO (...)
+20 14370 . G  A  29 .   %\color{red}{NS=3}%;DP=14;AF=0.5;DB;H2 GT 0|0 1|0 1/1
+20 17330 . T  A  3  .   %\color{red}{NS=3}%;DP=11;AF=0.017     GT 0|0 0|1 0/0
 \end{lstlisting}
 \end{frame}
 %%END(vcfformatinfo)
@@ -944,10 +938,10 @@ FILTERs that have been applied to the data should be described as follows:
 ##FILTER=<%\color{red}{ID=q10}%,Description="Quality below 10">
 ##FILTER=<%\color{red}{ID=s50}%,Description="Less than 50 percent of samples have data">
 (...)
-#CHROM POS     ID        REF    ALT     QUAL FILTER (...)
-20     14370   rs6054257 G      A       29   PASS   (...)
-20     17330   .         T      A       3     %\color{red}{q10}%    (...)
-20     111069  rs6040355 A      G,T     67   PASS   (...)
+#CHROM POS     ID    REF    ALT     QUAL FILTER (...)
+20     14370   .     G      A       29   PASS   (...)
+20     17330   .     T      A       3     %\color{red}{q10}%    (...)
+20     111069  .     A      G,T     67   PASS   (...)
 \end{lstlisting}
 \end{frame}
 %%END(vcfformatfilter)
@@ -965,12 +959,12 @@ Genotype fields specified in the FORMAT field should be described as follows:
 (...)
 ##FORMAT=<%\color{red}{ID=GT}%,Number=1,Type=String,Description="Genotype">
 (...)
-#(...)FORMAT      NA00001        NA00002        NA00003
-(...) %\color{red}{GT}%:GQ:DP:HQ 0|0:48:1:51,51 %\color{red}{1/0}%:48:8:51,51 1/1:43:5:.,.
-(...) %\color{red}{GT}%:GQ:DP:HQ 0|0:49:3:58,50 %\color{red}{0/1}%:3:5:65,3   0/0:41:3
-(...) %\color{red}{GT}%:GQ:DP:HQ 1|2:21:6:23,27 %\color{red}{2/1}%:2:0:18,2   2/2:35:4
-(...) %\color{red}{GT}%:GQ:DP:HQ 0|0:54:7:56,60 %\color{red}{0/0}%:48:4:51,51 0/0:61:2
-(...) %\color{red}{GT}%:GQ:DP    0/1:35:4       %\color{red}{0/2}%:17:2       1/1:40:3
+#(...)REF ALT (...) FORMAT      NA00001        NA00002        NA00003
+(...) A   T   (...) %\color{red}{GT}%:GQ:DP:HQ 0|0:48:1:51,51 %\color{red}{1/0}%:48:8:51,51 1/1:43:5:.,.
+(...) T   G   (...) %\color{red}{GT}%:GQ:DP:HQ 0|0:49:3:58,50 %\color{red}{0/1}%:3:5:65,3   0/0:41:3
+(...) G   C,A (...) %\color{red}{GT}%:GQ:DP:HQ 1|2:21:6:23,27 %\color{red}{2/1}%:2:0:18,2   2/2:35:4
+(...) A   T   (...) %\color{red}{GT}%:GQ:DP:HQ 0|0:54:7:56,60 %\color{red}{0/0}%:48:4:51,51 0/0:61:2
+(...) G   C,T (...) %\color{red}{GT}%:GQ:DP    0/1:35:4       %\color{red}{0/2}%:17:2       1/1:40:3
 \end{lstlisting}
 \end{frame}
 %%END(vcfformatFORMAT)
@@ -995,6 +989,11 @@ Genotype fields specified in the FORMAT field should be described as follows:
 \begin{lstlisting}[language=bash]
 $ bgzip -f  file.vcf
 $ tabix -p vcf file.vcf.gz
+
+# or
+
+$ bcftools view -O z -o file.vcf.gz file.vcf
+$ bcftools index -t file.vcf.gz
 \end{lstlisting}
 \end{frame}
 
@@ -1009,7 +1008,7 @@ $ tabix  file.vcf.gz chr3:1235-456778
 \hugeslide{API}
 
 \begin{frame}[fragile]
-\frametitle{Reading SAM with the samtools C library}
+\frametitle{Reading SAM with the samtools C htslib library}
 
 \begin{lstlisting}[language=C]
 #include <stdlib.h>
@@ -1020,8 +1019,7 @@ int main(int argc, char *argv[]) {
   samfile_t* sam=samopen(argv[1], "rb", 0);
   bam1_t *b= bam_init1();
   long n=0L;
-  while(samread(sam, b) > 0)
-   {
+  while(samread(sam, b) > 0) {
    if(!(b->core.flag&BAM_FUNMAP)) ++n;
    }
   bam_destroy1(b);
@@ -1035,23 +1033,22 @@ int main(int argc, char *argv[]) {
 
 
 \begin{frame}[fragile]
-\frametitle{Reading SAM with the java picard library}
+\frametitle{Reading SAM with the java htsjdk library}
 
 \begin{lstlisting}[language=java]
 import java.io.File;
-import net.sf.samtools.*;
+import htsjdk.samtools.*;
 public class CountMapped {
   public static void main(String[] args) {
-    File file = new File(args[0]);
-    SamReader sam = SamReaderFactory.
-		makeDefault().open(file);
-    SAMRecordIterator iter = sam.iterator();
+    File htsFile = new File(args[0]);
+    try(SamReader sam = SamReaderFactory.
+		makeDefault().open(htsFile)) {
     System.out.println(
-          iter.stream().
+          sam.iterator().stream().
     	  filter(R->!R.getReadUnmapped()).
     	  count()
     	);
-    iter.close(); sam.close();
+    }
     }
 }
 \end{lstlisting}
@@ -1065,10 +1062,8 @@ public class CountMapped {
 \frametitle{Credits}
 \begin{itemize}
 \item Spec: \url{https://samtools.github.io/hts-specs/}
-\item Angus: \url{http://ged.msu.edu/angus/}
-\item Wikipedia: \url{https://en.wikibooks.org/wiki/C%2B%2B_Programming/Programming_Languages/C%2B%2B/Code/Statements/Variables}
+\item Angus: \url{https://angus.readthedocs.io/en/2019/}
 \item Abecasis Group Wiki: \url{http://genome.sph.umich.edu/wiki/SAM}
-\item Genome Research \url{http://genome.cshlp.org/content/12/6/996}
 \end{itemize}
 \end{frame}
 

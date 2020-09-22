@@ -22,5 +22,5 @@ $(BASENAME).pdf : $(BASENAME).tex
 	pdflatex --enable-write18 -interaction=errorstopmode -halt-on-error $<
 
 
-clean: 
+clean:
 	rm -f $(foreach SUF,dvi aux dvi.pdf log nav out ps pdf snm toc vrb, $(BASENAME).$(SUF) ) *~ $(TOREMOVE)

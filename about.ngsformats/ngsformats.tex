@@ -330,14 +330,13 @@ aaatgagccaggtgtggtggtgcac          CCAGCTACGTAGTAGGCTGAGGTGGGAGGATCGCTTAAACCCGGC
 \framesubtitle{Simple example}
 \begin{framed}\tiny
 \begin{verbatim}
-@HD VN:1.5 SO:coordinate
-@SQ SN:ref LN:45
-r001 163 ref 7 30 8M2I4M1D3M = 37 39 TTAGATAAAGGATACTG *
-r002 0 ref 9 30 3S6M1P1I4M * 0 0 AAAAGATAAGGATA *
-r003 0 ref 9 30 5S6M * 0 0 GCCTAAGCTAA * SA:Z:ref,29,-,6H5M,17,0;
-r004 0 ref 16 30 6M14N5M * 0 0 ATAGCTTCAGC *
-r003 2064 ref 29 17 6H5M * 0 0 TAGGC * SA:Z:ref,9,+,5S6M,30,1;
-r001 83 ref 37 30 9M = 7 -39 CAGCGGCAT * NM:i:1
+@HD	VN:1.5	SO:coordinate
+@SQ	SN:ref	LN:45
+@SQ	SN:ref2	LN:40
+@RG	ID:gid1	LB:S1	PL:illumina	SM:S1	PU:run1	CN:Nantes	DS:S1
+r001	163	ref	7	30	8M4I4M1D3M	=	37	39	TTAGATAAAGAGGATACTG	*	RG:Z:gid1	XX:B:S,12561,2,20,112
+r002	0	ref	9	30	1S2I6M1P1I1P1I4M2I	*	0	0	AAAAGATAAGGGATAAA	*	RG:Z:gid1
+r003	0	ref	9	30	5H6M	*	0	0	AGCTAA	*	RG:Z:gid1
 \end{verbatim}
 \end{framed}
 \end{frame}
@@ -421,7 +420,8 @@ fafbba63-37d6-45ec-8ef2-7aace6bedc64_Basecall_Alignment_template	2064	chr1	10610
 \begin{frame}[fragile]
 \frametitle{SAM Example}
 \framesubtitle{Sorted SAM}
-One row is one read, NOT one fragment.
+One row is one alignment, NOT one fragment.\\
+One row is one alignment, NOT one read.
 \begin{framed}\tiny
 \begin{verbatim}
 

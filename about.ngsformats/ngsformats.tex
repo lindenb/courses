@@ -50,7 +50,7 @@
 \end{center}
 }
 
-\date{18 Sept. 2019}
+\date{26 Sept. 2023}
 \title{Next Generation Sequencing\\File Formats.}
 \author{Pierre Lindenbaum\\\href{mailto:pierre.lindenbaum@univ-nantes.fr}{pierre.lindenbaum@univ-nantes.fr}\\\institute{INSERM U1087. Institut du Thorax. Nantes. France}}
 
@@ -422,22 +422,6 @@ fafbba63-37d6-45ec-8ef2-7aace6bedc64_Basecall_Alignment_template	2064	chr1	10610
 \framesubtitle{Sorted SAM}
 One row is one alignment, NOT one fragment.\\
 One row is one alignment, NOT one read.
-\begin{framed}\tiny
-\begin{verbatim}
-
-
-
-IL31_4368:1:107:15207:19097	163	chr1	17	0	54M	=	21	58 (...)
-IL31_4368:1:107:15207:19097	83	chr1	21	0	54M	=	17	-58 (...)
-
-IL31_4368:1:10:17817:9758	137	chr1	23	0	54M	=	23	0 (...)
-
-IL31_4368:1:54:13142:21400	163	chr1	37	0	54M	=	44	61 (...)
-IL31_4368:1:54:13142:21400	83	chr1	44	0	54M	=	37	-61 (...)
-
-
-\end{verbatim}
-\end{framed}
 \end{frame}
 %%END(titlesamalignex2)
 
@@ -776,6 +760,12 @@ IL31_4368:1:54:13142:21400	83	chr1	44	0	54M	=	37	-61	AACCCTAACCCTAACCCTAACCCTAAC
 %%END(bamtitle)
 
 
+\begin{frame} 
+\frametitle{BAM}
+\framesubtitle{binary}
+\inkscape{binary}{scale=0.8}
+\end{frame}
+
 
 
 \begin{frame}[fragile]
@@ -902,19 +892,20 @@ VCF is a text file format (most likely stored in a compressed manner). It contai
 \frametitle{VCF Example}
 \framesubtitle{VCF Body}
 
+
 \begin{table}[]
 \adjustbox{max height=\dimexpr\textheight-5.5cm\relax,
            max width=\textwidth}{
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
 \hline
-\rowcolor[HTML]{C0C0C0} 
-\multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}\textbf{CHROM}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{POS}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{ID}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{REF}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{ALT}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{QUAL}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{FILTER}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{INFO}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{S1}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{S2}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{S3}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{S4}} \\ \hline
-{\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  \\ \hline
-{\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  \\ \hline
-{\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                      & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  & {\color[HTML]{FFFFFF} }                                  \\ \hline
+\textbf{POS} & \textbf{ID} & \textbf{REF} & \textbf{ALT} & \textbf{QUAL} & \textbf{FILTER} & \textbf{INFO} & \textbf{FORMAT} & \textbf{S1} & \textbf{S2} & \textbf{S3} \\ \hline
+ &  &  &  &  &  &  &  &  &  &  \\ \hline
+ &  &  &  &  &  &  &  &  &  &  \\ \hline
+ &  &  &  &  &  &  &  &  &  &  \\ \hline
 \end{tabular}
 }
 \end{table}
+
 
 \end{frame}
 

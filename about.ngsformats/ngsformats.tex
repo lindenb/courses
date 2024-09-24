@@ -1,4 +1,6 @@
 \documentclass[xcolor=table]{beamer}
+\usepackage[table]{xcolor}
+\usepackage{multirow}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{graphicx}
@@ -50,7 +52,7 @@
 \end{center}
 }
 
-\date{26 Sept. 2023}
+\date{25 Sept. 2024}
 \title{Next Generation Sequencing\\File Formats.}
 \author{Pierre Lindenbaum\\\href{mailto:pierre.lindenbaum@univ-nantes.fr}{pierre.lindenbaum@univ-nantes.fr}\\\institute{INSERM U1087. Institut du Thorax. Nantes. France}}
 
@@ -377,27 +379,11 @@ r003	0	ref	9	30	5H6M	*	0	0	AGCTAA	*	RG:Z:gid1
 \frametitle{SAM Example}
 \framesubtitle{Simple example}
 \begin{framed}\tiny
-\begin{lstlisting}[language=bash,basicstyle=\tiny]
-IL31_4368:1:1:996:8507	77	*	0	0	*	*	0	0	NTGATAAAGTAATGACAAAATAATGACATTATTGTTACTATGGTTACTGTGGGA	(94**0-)*7=06>>><<<<<<22@>6;;;5;6:;63:4?-622647..-.5.%
-IL31_4368:1:1:996:8507	141	*	0	0	*	*	0	0	TCCCTTACCCCCAAGCTCCATACCCTCCTAATGCCCACACCTCTTACCTTAGGA	FFCEFFFEEFFFFFFFEFFEFFFEFCFC<EEFEFFFCEFF<;EEFF=FEE?FCE
-IL31_4368:1:1:996:21421	77	*	0	0	*	*	0	0	NAAGTTAATTCTTCATTGTCCATTCCTCTGAAATGATTCAGAAATACTGGTAGT	(**+*2396,@<+<:@@@;;5)<0)69606>4;5>;>6&<102)0*+8:&137;
-IL31_4368:1:1:996:21421	141	*	0	0	*	*	0	0	CAAAAACTTTCACTTTACCTGCCGGGTTTCCCAGTTTACATTCCACTGTTTGAC	>DBDDB,B9BAA4AAB7BB?7BBB=91;+*@;5<87+*=/*@@?9=73=.7)7*
-IL31_4368:1:1:997:10572	77	*	0	0	*	*	0	0	NAATGTATGTAGACCCTTCACATTCAAAGGCAAATACAATATCATCATGTCTTC	(/9**-0032>:>>9>4@@=>??@@:-66,;>;<;6+;255,1;7>>>>3676'
-IL31_4368:1:1:997:10572	141	*	0	0	*	*	0	0	GATCTTCTGTGACTGGAAGAAAATGTGTTACATATTACATTTCTGTCCCCATTG	E?=EECE<EEEE98EEEEAEEBD??BE@AEAB><EEABCEEDEC<<EBDA=DEE
+\begin{lstlisting}[language=bash,tabsize=2,showspaces=false,showstringspaces=false,breaklines=true,basicstyle=\tiny]
 IL31_4368:1:1:997:15684	83	chr1	241356612	60	54M	=	241356442	-224	ATGTTGTTCAGAGCCTCCAAAGTTCCATCAGGATCAATCATAGCATTGATTGCN	.2.,4@8@;;;>669;*>;8>888-<>>>0@>:@@?<@?>@@@>66773*,1)(	XT:A:U	NM:i:1	SM:i:37	AM:i:37	X0:i:1	X1:i:0	XM:i:1	XO:i:0	XG:i:0	MD:Z:53T0
 IL31_4368:1:1:997:15684	163	chr1	241356442	60	54M	=	241356612	224	CAGCCTCAGATTCAGCATTCTCAAATTCAGCTGCGGCTGAAACAGCAGCAGGAC	EEEEDEEE9EAEEDEEEEEEEEEECEEAAEEDEE<CD=D=*BCAC?;CB,<D@,	XT:A:U	NM:i:1	SM:i:37	AM:i:37	X0:i:1	X1:i:0	XM:i:1	XO:i:0	XG:i:0	MD:Z:53T0
-IL31_4368:1:1:997:15249	77	*	0	0	*	*	0	0	NCGTTATAATGGAATTATTTTTCTTCCTTTATTTAATGTGTTGACAAAGAGAAC	(916928.82@@<0>54;33222224;@2<?<<22;5=;;858>>><<<*0666
-IL31_4368:1:1:997:15249	141	*	0	0	*	*	0	0	AATGTTCTGAAACCTCTGAGAAAGCAAATATTTATTTTAATGAAAAATCCTTAT	EDEEC;EEE;EEE?EECE;7AEEEEEE07EECEA;D6D>+EE4E7EEE4;E=EA
-IL31_4368:1:1:997:6273	77	*	0	0	*	*	0	0	NTACGAAGAAGTATTTCATTGGGAGGAGCTTATCCAAATATTTCCTGTCTATCC	(**4*5-*&329>9+::@>2;;853+39;>0.<3)-)79)..'5<.>988*200
-IL31_4368:1:1:997:6273	141	*	0	0	*	*	0	0	ACATTTACCAAGACCAAAGGAAACTTACCTTGCAAGAATTAGACAGTTCATTTG	EEAAFFFEEFEFCFAFFAFCCFFEFEF>EFFFFB?ABA@ECEE=<F@DE@DDF;
 IL31_4368:1:1:997:1657	83	chr1	143630364	60	54M	=	143630066	-352	TACCTTTTTAAAGAGATCTAAAATTGTCACATGGTTATTAGATACAGAGGCCTN	7&$-+**2%%1(%%:69?9'22975>88977)/)'28289)266-4*/9&.**(	XT:A:U	NM:i:1	SM:i:37	AM:i:37	X0:i:1	X1:i:0	XM:i:1	XO:i:0	XG:i:0	MD:Z:53T0
 IL31_4368:1:1:997:1657	163	chr1	143630066	60	54M	=	143630364	352	CCCACCTCTCTCAATGTTTTCCATATGGCAGGGACTCAGCACAGGTGGATTAAT	A;0A?AA+@A<7A7019/<65,3A;'''07<A=<=>?7=?6&)'9('*%,>/(<	XT:A:U	NM:i:0	SM:i:37	AM:i:37	X0:i:1	X1:i:0	XM:i:0	XO:i:0	XG:i:0	MD:Z:54
-IL31_4368:1:1:997:5609	77	*	0	0	*	*	0	0	NGGTGTCTCTTACGGACAGCATTAAGCTAGATTCTTTTTAGACCGATCTGCCAA	(*+*&,1426<;@@??@>?9@@@<@4>>?>666260.)-*9;;;8>:>'0<418
-IL31_4368:1:1:997:5609	141	*	0	0	*	*	0	0	TCACTATCAGAAACAGAATGTATAACTTCCAAATCAGTAGGAAACACAAGGAAA	AEECECBEC@A;AC=<AEEEEAEEEE>AC,CE?ECCE9EAEC4E:<C>AC@EE)
-IL31_4368:1:1:997:14262	77	*	0	0	*	*	0	0	NGAGAACCAATGGGAAGCAGCCTGAGCTGCTGGAACCTATTCCCCATGACTTCA	(9136242-2@@@;96.>>>@@@@>0$<><>>2623.':**+3*03137..--.
-IL31_4368:1:1:997:14262	141	*	0	0	*	*	0	0	TGTTTTTTCTTTTTCTTTTTTTTTTGACAGTGCAGAGATTTTTTATCTTTTTAA	97'<2<.64.?7/3(891?=(6??6+<6<++/*..3(:'/'9::''&(1<>.(,
-IL31_4368:1:1:998:19914	77	*	0	0	*	*	0	0	NAGAGCATTGACACACATAAAAAATTAAAACAACCCTTTGTACTTACGGTAGAA	(/892<<>55@>>?<><<<7..())@@@;<<<22>65267<<@@<8>>..3;/$
-IL31_4368:1:1:998:19914	141	*	0	0	*	*	0	0	GAATGAAAGCAGAGACCCTGATCGAGCCCCAGAAAGATACACCTCCAGATTTTA	C?=CECE4CD<?8@==;EBE<=0@:@@92@???6<991>.<?A=@5?@99;971
 \end{lstlisting}
 \end{framed}
 \end{frame}
@@ -409,8 +395,8 @@ IL31_4368:1:1:998:19914	141	*	0	0	*	*	0	0	GAATGAAAGCAGAGACCCTGATCGAGCCCCAGAAAGAT
 \frametitle{SAM Example}
 \framesubtitle{Long Read}
 \begin{framed}\tiny
-\begin{lstlisting}[breaklines]
-fafbba63-37d6-45ec-8ef2-7aace6bedc64_Basecall_Alignment_template	2064	chr1	10610	1	112076H7M2I3M1I6M1D5M1I20M1D1M1D7M1D1M2D8M1I5M1D20M1I11M1D6M1D6M1D10M2D10M1I2M2I5M1I16M1I2M1I8M1I3M1I4M1I7M2I4M3I16M1D25M1D2M1D14M1I29M2D5M3I1M1I7M1I9M1I3M1I4M1I2M1D10M1I2M1I4M1I6M1I14M1D2M1D3M1D5M1I5M1I2M1I9M1D5M3D5M1D3M2D1M3D18M1D3M2D3M1D4M1D9M1I6M1D6M1I10M1I6M1I1M1I5M1I17M1D4M1D3M4I11M1I7M41127H	*	0	0	GCAACCCGGCGCGCGCGGCAGGGCGGCGGCGCGCGGTACCAGGTGAAGAAGCGGTAGCCGGCGGCAAGGAAGAGGAACCAGAAGAACCACAGGAACGCGCGTGAGGTAGGTGGCAGGCGCAGGCAGAACGGCAGCCAGTAGCAGCAGGCGGTGGCCCAGCAGCAGGCAGGCACGCAGGAGAACGCAGGTACGCAGGTGAGCGAGGCGCGAGCGCAGGCAGGCGGCGTGGCGCAGGCGCGAACACACGAAGGACCAGGCACAGCAGCAGGCACGCAGGCGGCGGCACAGGCGCGCGTACAGGACGACGCGCACGGCAGCAGCAGCGCGAACAGCGGCGCGGCGGCAGGCGGCAGCGGCGGCGGCAGGCGGCAGGCGGCGGCAGATCCAGAAGCGGCGCGGCGCAGCAGCGCGGAACGGTGGCGCGGCGGCAGCGCAGGCCGTACAGGCGGCGGCAGGCGGCGGTGACACGGGAGGTCGGCGGTAGCAGGCGCACACAGGCAGGCAGGTAGCAGGCGAGGTGAACGAGGCGG	(#%%(**.,(+%&$($('%$&**)*'$&$%&%&#$%%&(&#$&#'%'%%&$#&%%'%%$#$$('$###%%$%&&(*&&&$$&#&))*%%$$#%&(($$'#&%++//%**.&*)'&&(%(%$$$#$$%%%$&((())'+'--,,)$#&'%(%#(('''&%('+(('(&&%&$%%$%&'(*%')(%'%$'#&$''&'%#($%$&#$(%(%)()')((&&&%&&#'&$*%'&$'##&&#%#%###$$$$%%#$&($))**()*+,*&&$(()&$$%#%%&$&%%'%#&&&'%$&$$$&%%$"#($$&#$%%&%$&&&$$$$%%'%%%%$$&%(((%#$$%$$$#&%$#$(&''#$$%$##&$%+&'&&$#%%$#&)&)'$%$"(%(&/**+$%($)*&,''*$&#%%$$%$&$&%$#%$#"*))($$'#$&#()'+*--(%%'##%$%(%'&')'$%'+'/*''%#,%%),)-)($$"&))&%%#%'%%''&&$$$#$%'&$$%&$$$$#$%((((&))*'$'%'''()'%,,	NM:i:212	MD:Z:5T6T0T2^A1A6C5C1G0C0G4C1^C1^G3G3^C1^CC0G0C9G1^C1C4A0G0G1G0C1C0C1C0G2G0G0C1C1G4^A1A4^C0G0C1C0C1^C2C7^GC5G0A6C0C4C4C0A3G9G0C6C0C1G12C0A0C1T2T0A1C3^T1G2G0T2A16^A2^G1G0G1G2C0C1C0G5G3G0C4A0G2A2T2T0A1C2^GT0C7G0G5T0G14^A0G3C2C18A1A1A0C0A0T2^T2^C3^T0C6T4G1G0T1G0C2^A5^AGA1A3^A3^CT1^CGG3G2G0T0T2G2G3^T1T1^TT3^G1A2^A1A1T2C6C1^G3T7G1G0G4T5C5C5G1A1C0T2^C1T2^C7C2C1C4A3
+\begin{lstlisting}[language=bash,tabsize=2,showspaces=false,showstringspaces=false,breaklines=true,basicstyle=\tiny]
+named_template	2064	chr1	10610	1	112076H7M2I3M1I6M1D5M1I20M1D1M1D7M1D1M2D8M1I5M1D20M1I11M1D6M1D6M1D10M2D10M1I2M2I5M1I16M1I2M1I8M1I3M1I4M1I7M2I4M3I16M1D25M1D2M1D14M1I29M2D5M3I1M1I7M1I9M1I3M1I4M1I2M1D10M1I2M1I4M1I6M1I14M1D2M1D3M1D5M1I5M1I2M1I9M1D5M3D5M1D3M2D1M3D18M1D3M2D3M1D4M1D9M1I6M1D6M1I10M1I6M1I1M1I5M1I17M1D4M1D3M4I11M1I7M41127H	*	0	0	GCAACCCGGCGCGCGCGGCAGGGCGGCGGCGCGCGGTACCAGGTGAAGAAGCGGTAGCCGGCGGCAAGGAAGAGGAACCAGAAGAACCACAGGAACGCGCGTGAGGTAGGTGGCAGGCGCAGGCAGAACGGCAGCCAGTAGCAGCAGGCGGTGGCCCAGCAGCAGGCAGGCACGCAGGAGAACGCAGGTACGCAGGTGAGCGAGGCGCGAGCGCAGGCAGGCGGCGTGGCGCAGGCGCGAACACACGAAGGACCAGGCACAGCAGCAGGCACGCAGGCGGCGGCACAGGCGCGCGTACAGGACGACGCGCACGGCAGCAGCAGCGCGAACAGCGGCGCGGCGGCAGGCGGCAGCGGCGGCGGCAGGCGGCAGGCGGCGGCAGATCCAGAAGCGGCGCGGCGCAGCAGCGCGGAACGGTGGCGCGGCGGCAGCGCAGGCCGTACAGGCGGCGGCAGGCGGCGGTGACACGGGAGGTCGGCGGTAGCAGGCGCACACAGGCAGGCAGGTAGCAGGCGAGGTGAACGAGGCGG	(#%%(**.,(+%&$($('%$&**)*'$&$%&%&#$%%&(&#$&#'%'%%&$#&%%'%%$#$$('$###%%$%&&(*&&&$$&#&))*%%$$#%&(($$'#&%++//%**.&*)'&&(%(%$$$#$$%%%$&((())'+'--,,)$#&'%(%#(('''&%('+(('(&&%&$%%$%&'(*%')(%'%$'#&$''&'%#($%$&#$(%(%)()')((&&&%&&#'&$*%'&$'##&&#%#%###$$$$%%#$&($))**()*+,*&&$(()&$$%#%%&$&%%'%#&&&'%$&$$$&%%$"#($$&#$%%&%$&&&$$$$%%'%%%%$$&%(((%#$$%$$$#&%$#$(&''#$$%$##&$%+&'&&$#%%$#&)&)'$%$"(%(&/**+$%($)*&,''*$&#%%$$%$&$&%$#%$#"*))($$'#$&#()'+*--(%%'##%$%(%'&')'$%'+'/*''%#,%%),)-)($$"&))&%%#%'%%''&&$$$#$%'&$$%&$$$$#$%((((&))*'$'%'''()'%,,	NM:i:212	MD:Z:5T6T0T2^A1A6C5C1G0C0G4C1^C1^G3G3^C1^CC0G0C9G1^C1C4A0G0G1G0C1C0C1C0G2G0G0C1C1G4^A1A4^C0G0C1C0C1^C2C7^GC5G0A6C0C4C4C0A3G9G0C6C0C1G12C0A0C1T2T0A1C3^T1G2G0T2A16^A2^G1G0G1G2C0C1C0G5G3G0C4A0G2A2T2T0A1C2^GT0C7G0G5T0G14^A0G3C2C18A1A1A0C0A0T2^T2^C3^T0C6T4G1G0T1G0C2^A5^AGA1A3^A3^CT1^CGG3G2G0T0T2G2G3^T1T1^TT3^G1A2^A1A1T2C6C1^G3T7G1G0G4T5C5C5G1A1C0T2^C1T2^C7C2C1C4A3
 \end{lstlisting}
 \end{framed}
 \end{frame}
@@ -454,25 +440,6 @@ One row is one alignment, NOT one read.
 \end{frame}
 %%END(samspec1)
 
-\begin{frame}[fragile]
-\frametitle{SAM Example}
-\framesubtitle{SAM Body}
-
-\begin{table}[]
-\adjustbox{max height=\dimexpr\textheight-5.5cm\relax,
-           max width=\textwidth}{
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|}
-\hline
-\rowcolor[HTML]{C0C0C0} 
-\multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}\textbf{READNAME}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{FLAG}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{CHROM}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{POS}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{MAPQ}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{CIGAR}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{MATECHROM}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{MATE\_POS}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{TLEN}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{SEQ}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{QUALS}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{ATTRIBUTES}} \\ \hline
-{\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                          \\ \hline
-{\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                          \\ \hline
-{\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                         & {\color[HTML]{FFFFFF} }                                    & {\color[HTML]{FFFFFF} }                                   & {\color[HTML]{FFFFFF} }                                     & {\color[HTML]{FFFFFF} }                                          \\ \hline
-\end{tabular}
-}
-\end{table}
-
-\end{frame}
 
 %%BEGIN(samspec2)
 \begin{frame}[fragile]
@@ -501,6 +468,15 @@ One row is one alignment, NOT one read.
 \end{frame}
 %%END(samspec2)
 
+\begin{frame}[fragile]
+\frametitle{SAM Example}
+\framesubtitle{SAM Body}
+\includegraphics{structure_sam.png}
+
+(source: http://zyxue.github.io/2017/09/26/sam-format-example.html)
+
+\end{frame}
+
 
 
 %%BEGIN(samflags1)
@@ -528,6 +504,31 @@ $\square$ supplementary alignment
 \remoteimage{jeter03.png}{https://upload.wikimedia.org/wikibooks/en/f/f5/Byte45.png}{scale=0.7}
 \end{frame}
 %%END(samflags2)
+
+
+%%BEGIN(samflags1)
+\begin{frame} 
+\frametitle{SAM FLAGS}
+$\square$ 1 read paired.\\
+$\square$ 2 read mapped in proper pair.\\
+$\square$ 4 read unmapped.\\
+$\square$ 8 mate unmapped.\\
+$\square$ 16 read reverse strand.\\
+$\square$ 32 mate reverse strand.\\
+$\square$ 64 first in pair.\\
+$\square$ 128 second in pair.\\
+$\square$ 256 not primary alignment.\\
+$\square$ 512 read fails platform/vendor quality checks.\\
+$\square$ 1024 read is PCR or optical duplicate.\\
+$\square$ 2048 supplementary alignment
+
+
+
+Read Paired (1) +  Read Mapped in Proper Pair (2) + First in pairs (64) = 67.
+
+\end{frame}
+%%END(samflags1)
+
 
 %%BEGIN(samflags_all_svgs)
 
@@ -617,6 +618,43 @@ $\square$ supplementary alignment
 
 %%END(samflags_all_svgs)
 
+
+%%BEGIN(samspec1)
+\begin{frame}[fragile]
+\frametitle{SAM Specifications}
+\framesubtitle{Record Column}
+\begin{center}
+\small
+\begin{tabular}{rlll}
+  \hline
+  {\bf Col} & {\bf Field} & {\bf Type} & {\bf Brief description} \\
+  \hline
+  1 & {\sf QNAME} & String & Query template NAME\\
+  2 & {\sf FLAG} & Int & bitwise FLAG \\
+  3 & {\sf RNAME} & String & Reference sequence NAME\\
+  4 & {\sf POS} & Int & 1-based leftmost mapping POSition \\
+  5 & {\sf MAPQ} & Int & MAPping Quality \\
+  6 & {\sf CIGAR} & String & CIGAR string \\
+  7 & {\sf RNEXT} & String & Ref. name of the mate/next read\\
+  8 & {\sf PNEXT} & Int & Position of the mate/next read \\
+  9 & {\sf TLEN} & Int & observed Template LENgth \\
+  10 & {\sf SEQ} & String & segment SEQuence\\
+  11 & {\sf QUAL} & String & ASCII of Phred-scaled base QUALity+33 \\
+  12 & {\sf META} & metadata \\
+  \hline
+\end{tabular}
+\end{center}
+\end{frame}
+%%END(samspec1)
+
+
+\begin{frame} [fragile]
+\frametitle{SAM Cigar}
+\remoteimage{jeter08.jpg}{https://raw.githubusercontent.com/mozack/abra/master/misc/example.png}{scale=0.3}
+\end{frame}
+
+
+
 %%BEGIN(samcigar_all)
 \begin{frame} 
 \frametitle{SAM CIGAR}
@@ -642,11 +680,6 @@ The CIGAR string is a sequence of of base lengths and the associated operation. 
   \hline
   \end{tabular}
   \end{center}
-\end{frame}
-
-\begin{frame} [fragile]
-\frametitle{SAM Cigar}
-\remoteimage{jeter08.jpg}{https://raw.githubusercontent.com/mozack/abra/master/misc/example.png}{scale=0.3}
 \end{frame}
 
 
@@ -696,6 +729,36 @@ CIGAR: 3=1I3=1D2=1X2=
 
 
 %%END(samcigar_all)
+
+
+
+%%BEGIN(samspec1)
+\begin{frame}[fragile]
+\frametitle{SAM Specifications}
+\framesubtitle{Record Column}
+\begin{center}
+\small
+\begin{tabular}{rlll}
+  \hline
+  {\bf Col} & {\bf Field} & {\bf Type} & {\bf Brief description} \\
+  \hline
+  1 & {\sf QNAME} & String & Query template NAME\\
+  2 & {\sf FLAG} & Int & bitwise FLAG \\
+  3 & {\sf RNAME} & String & Reference sequence NAME\\
+  4 & {\sf POS} & Int & 1-based leftmost mapping POSition \\
+  5 & {\sf MAPQ} & Int & MAPping Quality \\
+  6 & {\sf CIGAR} & String & CIGAR string \\
+  7 & {\sf RNEXT} & String & Ref. name of the mate/next read\\
+  8 & {\sf PNEXT} & Int & Position of the mate/next read \\
+  9 & {\sf TLEN} & Int & observed Template LENgth \\
+  10 & {\sf SEQ} & String & segment SEQuence\\
+  11 & {\sf QUAL} & String & ASCII of Phred-scaled base QUALity+33 \\
+  12 & {\sf META} & metadata \\
+  \hline
+\end{tabular}
+\end{center}
+\end{frame}
+%%END(samspec1)
 
 
 %%BEGIN(samopttags)
